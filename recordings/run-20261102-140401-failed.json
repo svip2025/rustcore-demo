@@ -1,0 +1,4466 @@
+{
+  "schema_version": 1,
+  "recording_id": "recording_round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+  "title": "Scenario FAILED",
+  "description": "OPEN_REJECTED: rejected: FILL_RECOVERY_NOT_READY; deterministic risk policy",
+  "source": {
+    "kind": "TESTNET",
+    "label": "Binance USDⓈ-M 测试网"
+  },
+  "build": {
+    "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+    "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+  },
+  "created_at": "2026-11-02T14:05:14.876Z",
+  "started_at": "2026-11-02T14:04:01.631Z",
+  "ended_at": "2026-11-02T14:05:14.872Z",
+  "initial_state": {
+    "schema_version": 1,
+    "generated_at": "2026-11-02T14:04:01.631Z",
+    "source": {
+      "kind": "TESTNET",
+      "label": "Binance USDⓈ-M 测试网"
+    },
+    "build": {
+      "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+      "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+    },
+    "account": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "positions": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "open_orders": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "protection": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "risk_budget": {
+      "status": "NOT_PUBLISHED",
+      "source_as_of": null,
+      "published_at": null,
+      "age_ms": null,
+      "max_age_ms": 30000,
+      "last_publish_applied": null,
+      "reason": "本次 caller 尚未发布预算",
+      "utc_day": null,
+      "day_start_equity_usdt": null,
+      "equity_high_water_usdt": null,
+      "approximate_today_pnl_usdt": null,
+      "approximate_today_pnl_pct": null,
+      "drawdown_pct": null,
+      "total_exposure_pct": null
+    },
+    "kill_switch": {
+      "level": "UNKNOWN",
+      "reason": "等待当前运行的只读熔断观察",
+      "observed_at": null
+    },
+    "rustcore": {
+      "status": "UNKNOWN",
+      "checked_at": "2026-11-02T14:03:05.853Z",
+      "last_restart_at": null,
+      "reason": "尚未连接本次内核运行"
+    },
+    "active_round_id": null,
+    "latest_round": {
+      "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+      "trigger": "MANUAL",
+      "status": "FAILED",
+      "started_at": "2026-11-02T13:45:11.444Z",
+      "ended_at": "2026-11-02T13:45:21.529Z",
+      "reason": "READ_UNAVAILABLE: 4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth"
+    }
+  },
+  "initial_timeline": {
+    "schema_version": 1,
+    "generated_at": "2026-11-02T14:04:01.631Z",
+    "source": {
+      "kind": "TESTNET",
+      "label": "Binance USDⓈ-M 测试网"
+    },
+    "rounds": [
+      {
+        "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "trigger": "MANUAL",
+        "status": "FAILED",
+        "started_at": "2026-11-02T13:45:11.444Z",
+        "ended_at": "2026-11-02T13:45:21.529Z",
+        "reason": "READ_UNAVAILABLE: 4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+        "steps": [
+          {
+            "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+            "step_id": "step_fd136d9b-1d6a-41b1-af01-3643a061436e",
+            "sequence": 1,
+            "step": "preflight",
+            "started_at": "2026-11-02T13:45:11.447Z",
+            "expected": "测试网 One-way、全仓、BTCUSDT 1x、余额满足手工配置前提；读取真实账户预算",
+            "actual": {
+              "summary": "4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+              "code": "READ_UNAVAILABLE",
+              "account": null,
+              "position": null,
+              "open_orders": null,
+              "protection": null,
+              "fill": null,
+              "rustcore": {
+                "status": "OFFLINE",
+                "checked_at": "2026-11-02T13:45:21.519Z",
+                "last_restart_at": null,
+                "reason": "公开读取未能完成，旧事实不会刷新时间"
+              },
+              "risk_budget": {
+                "status": "UNAVAILABLE",
+                "source_as_of": null,
+                "published_at": null,
+                "age_ms": null,
+                "max_age_ms": 30000,
+                "last_publish_applied": null,
+                "reason": "账户读取未完成，不发布替代预算",
+                "utc_day": null,
+                "day_start_equity_usdt": null,
+                "equity_high_water_usdt": null,
+                "approximate_today_pnl_usdt": null,
+                "approximate_today_pnl_pct": null,
+                "drawdown_pct": null,
+                "total_exposure_pct": null
+              }
+            },
+            "reason": "4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+            "phase": "COMPLETED",
+            "ended_at": "2026-11-02T13:45:21.527Z",
+            "result": "UNKNOWN"
+          }
+        ]
+      }
+    ],
+    "next_cursor": null
+  },
+  "events": [
+    {
+      "schema_version": 1,
+      "event_id": "evt_93ef8264-611e-4b99-a861-78ff544f73f5",
+      "emitted_at": "2026-11-02T14:04:01.631Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "trigger": "MANUAL",
+        "status": "RUNNING",
+        "started_at": "2026-11-02T14:04:01.631Z",
+        "ended_at": null,
+        "reason": "Round started"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_1fee0483-d0e0-4a2b-98ac-f7a84ebb1f85",
+      "emitted_at": "2026-11-02T14:04:01.631Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:01.631Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "positions": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "risk_budget": {
+          "status": "NOT_PUBLISHED",
+          "source_as_of": null,
+          "published_at": null,
+          "age_ms": null,
+          "max_age_ms": 30000,
+          "last_publish_applied": null,
+          "reason": "本次 caller 尚未发布预算",
+          "utc_day": null,
+          "day_start_equity_usdt": null,
+          "equity_high_water_usdt": null,
+          "approximate_today_pnl_usdt": null,
+          "approximate_today_pnl_pct": null,
+          "drawdown_pct": null,
+          "total_exposure_pct": null
+        },
+        "kill_switch": {
+          "level": "UNKNOWN",
+          "reason": "等待当前运行的只读熔断观察",
+          "observed_at": null
+        },
+        "rustcore": {
+          "status": "UNKNOWN",
+          "checked_at": "2026-11-02T14:03:05.853Z",
+          "last_restart_at": null,
+          "reason": "尚未连接本次内核运行"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_bb1a4a53-6582-40da-931f-2ecdcd4a073c",
+      "emitted_at": "2026-11-02T14:04:01.633Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_1ae8701b-81a7-4446-906b-cf918eaa5aa4",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-11-02T14:04:01.633Z",
+        "expected": "测试网 One-way、全仓、BTCUSDT 1x、余额满足手工配置前提；读取真实账户预算",
+        "actual": {
+          "summary": "正在执行",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        },
+        "reason": "Step running",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_c0033ec9-492f-4bad-a8db-a795df8c9200",
+      "emitted_at": "2026-11-02T14:04:22.892Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:22.892Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.892Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "NOT_PUBLISHED",
+          "source_as_of": null,
+          "published_at": null,
+          "age_ms": null,
+          "max_age_ms": 30000,
+          "last_publish_applied": null,
+          "reason": "本次 caller 尚未发布预算",
+          "utc_day": null,
+          "day_start_equity_usdt": null,
+          "equity_high_water_usdt": null,
+          "approximate_today_pnl_usdt": null,
+          "approximate_today_pnl_pct": null,
+          "drawdown_pct": null,
+          "total_exposure_pct": null
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:22.892Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:22.892Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_c65dc31e-f6e6-4d48-82d5-e84ea3ece311",
+      "emitted_at": "2026-11-02T14:04:22.907Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:22.907Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.892Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:22.841Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 240,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:22.892Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:22.892Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_478a74c2-a184-4cfb-a238-98a46bc00c01",
+      "emitted_at": "2026-11-02T14:04:22.908Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_1ae8701b-81a7-4446-906b-cf918eaa5aa4",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-11-02T14:04:01.633Z",
+        "expected": "测试网 One-way、全仓、BTCUSDT 1x、余额满足手工配置前提；读取真实账户预算",
+        "actual": {
+          "summary": "账户设置通过只读检查；预算基准已重置",
+          "code": null,
+          "account": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": [],
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-11-02T14:04:22.892Z",
+            "last_restart_at": null,
+            "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+          },
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-11-02T14:04:22.667Z",
+            "published_at": "2026-11-02T14:04:22.907Z",
+            "age_ms": 240,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+            "utc_day": "2026-11-02",
+            "day_start_equity_usdt": "4955.91702421",
+            "equity_high_water_usdt": "4955.91702421",
+            "approximate_today_pnl_usdt": "0",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        },
+        "reason": "账户设置通过只读检查；预算基准已重置",
+        "phase": "COMPLETED",
+        "ended_at": "2026-11-02T14:04:22.908Z",
+        "result": "PASS"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_b3deb6c4-04b5-417e-95b2-dd2e280a1d8b",
+      "emitted_at": "2026-11-02T14:04:22.909Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_a1920a98-7470-4bc9-9ac1-57a6673b2a2b",
+        "sequence": 2,
+        "step": "cleanup_before",
+        "started_at": "2026-11-02T14:04:22.909Z",
+        "expected": "前置对账并清理本演示残留；不触碰未知持仓",
+        "actual": {
+          "summary": "正在执行",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        },
+        "reason": "Step running",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_0821185c-2e38-4018-8556-12fac0f4b00e",
+      "emitted_at": "2026-11-02T14:04:24.955Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:24.955Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:24.913Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:24.955Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:24.913Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:24.913Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 2288,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:24.955Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:24.955Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_ce6cffa1-761f-4f56-8beb-10981d2d5760",
+      "emitted_at": "2026-11-02T14:04:26.942Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:26.942Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:26.914Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:26.942Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:26.915Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:26.915Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 4276,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:26.942Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:26.942Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_a75ec08a-a505-4cf4-bb03-fe4802e6a7e8",
+      "emitted_at": "2026-11-02T14:04:28.955Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:28.955Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:28.916Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:28.955Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:28.917Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:28.917Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 6288,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:28.955Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:28.955Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_7d3731b0-242e-4474-a726-709d223ea7ad",
+      "emitted_at": "2026-11-02T14:04:30.949Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:30.949Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.949Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 8282,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:30.949Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:30.949Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_d3cdb209-7787-47c5-bdfa-c133baa8135e",
+      "emitted_at": "2026-11-02T14:04:32.909Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:32.909Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.949Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:22.907Z",
+          "age_ms": 10242,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算基准已重置；预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:30.949Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:30.949Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_8d4e833c-6c1d-4a62-a40e-741696af373c",
+      "emitted_at": "2026-11-02T14:04:32.917Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:32.917Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:30.949Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:30.916Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 10250,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:30.949Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:30.949Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_1ad7dec5-a784-4159-ab74-6a068539579f",
+      "emitted_at": "2026-11-02T14:04:32.952Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:32.952Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:32.918Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:32.952Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:32.918Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:32.918Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 10285,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:32.952Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:32.952Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_f25fafc6-a82a-4678-a3b2-9ca08b992bf6",
+      "emitted_at": "2026-11-02T14:04:34.941Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:34.941Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:34.918Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:34.941Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:34.919Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:34.919Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 12274,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:34.941Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:34.941Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_7b9947d3-368d-4555-9051-da168e0dbb5a",
+      "emitted_at": "2026-11-02T14:04:36.951Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:36.951Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:36.920Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:36.951Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:36.920Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:36.920Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 14284,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:36.951Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:36.951Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_e2259429-e757-4adf-98d5-5cad1741c55a",
+      "emitted_at": "2026-11-02T14:04:38.949Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:38.949Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:38.922Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:38.949Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:38.923Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:38.923Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 16282,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:38.949Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:38.949Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_3b5c1aa4-3622-445b-a92b-48e9ea05c7c9",
+      "emitted_at": "2026-11-02T14:04:40.956Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:40.956Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:40.923Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:40.956Z",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:40.923Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:40.923Z",
+          "source_as_of": "2026-11-02T14:04:03.268Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 18290,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:40.956Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:40.956Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_e6a83294-e559-4f79-8177-fa82358ee994",
+      "emitted_at": "2026-11-02T14:04:42.868Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:42.868Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.845Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.868Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.845Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.845Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 20202,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:42.868Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:42.868Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_d956b2cc-d0a3-4abb-8ee5-bccb6d806a8f",
+      "emitted_at": "2026-11-02T14:04:42.904Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:42.904Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.904Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 20237,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:42.904Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:42.904Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_164bc803-5016-49c5-aff7-c8d1e9c4d1fe",
+      "emitted_at": "2026-11-02T14:04:42.907Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_a1920a98-7470-4bc9-9ac1-57a6673b2a2b",
+        "sequence": 2,
+        "step": "cleanup_before",
+        "started_at": "2026-11-02T14:04:22.909Z",
+        "expected": "前置对账并清理本演示残留；不触碰未知持仓",
+        "actual": {
+          "summary": "完整对账确认零仓位、普通挂单和 Algo 挂单均为空",
+          "code": null,
+          "account": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": [],
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-11-02T14:04:42.904Z",
+            "last_restart_at": null,
+            "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+          },
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-11-02T14:04:22.667Z",
+            "published_at": "2026-11-02T14:04:32.917Z",
+            "age_ms": 20237,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "预算已发布；收益为权益变化近似值",
+            "utc_day": "2026-11-02",
+            "day_start_equity_usdt": "4955.91702421",
+            "equity_high_water_usdt": "4955.91702421",
+            "approximate_today_pnl_usdt": "0",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        },
+        "reason": "完整对账确认零仓位、普通挂单和 Algo 挂单均为空",
+        "phase": "COMPLETED",
+        "ended_at": "2026-11-02T14:04:42.907Z",
+        "result": "PASS"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_ee231904-9f03-4887-b21a-53085baac51e",
+      "emitted_at": "2026-11-02T14:04:42.908Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_79bbb43f-7971-4f0e-96e5-444036683abe",
+        "sequence": 3,
+        "step": "open_position",
+        "started_at": "2026-11-02T14:04:42.908Z",
+        "expected": "只提交一次真实开多意图，数量由默认风控自动计算；保存实际成交量与名义额",
+        "actual": {
+          "summary": "正在执行",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        },
+        "reason": "Step running",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_525f4921-047c-4031-a7f6-bac9b82a3645",
+      "emitted_at": "2026-11-02T14:04:42.911Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:42.911Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.904Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:22.667Z",
+          "published_at": "2026-11-02T14:04:32.917Z",
+          "age_ms": 20244,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:42.904Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:42.904Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_99f2a4b3-e141-4a33-a565-82a5c29e9158",
+      "emitted_at": "2026-11-02T14:04:42.917Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:42.917Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.904Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.873Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 250,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:42.904Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:42.904Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_30a5fe77-2f10-4789-8ff7-8aab9a8149b4",
+      "emitted_at": "2026-11-02T14:04:42.969Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:42.969Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.923Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.969Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:42.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 303,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:42.969Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:42.969Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_10bfc440-171f-4483-9429-dea209fc0128",
+      "emitted_at": "2026-11-02T14:04:44.956Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:44.956Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:44.923Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:44.956Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:44.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:44.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 2289,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:44.956Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:44.956Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_0067e15d-04ec-4c71-928c-c7d29e35143e",
+      "emitted_at": "2026-11-02T14:04:46.965Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:46.965Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:46.923Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:46.965Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:46.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:46.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 4299,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:46.965Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:46.965Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_702879d4-4975-453a-be23-4f409dcee5f2",
+      "emitted_at": "2026-11-02T14:04:48.971Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:48.971Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:48.923Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:48.971Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:48.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:48.923Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 6304,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:48.971Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:48.971Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_4399e797-8aa7-45dd-9468-eef0ec0f7758",
+      "emitted_at": "2026-11-02T14:04:50.973Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:50.973Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.973Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 8307,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:50.973Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:50.973Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_fc760aba-b355-4a3f-8a28-047e144010cc",
+      "emitted_at": "2026-11-02T14:04:52.912Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:52.912Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.973Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:42.917Z",
+          "age_ms": 10245,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:50.973Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:50.973Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_39e02497-c994-42fa-b59d-421d7f54729c",
+      "emitted_at": "2026-11-02T14:04:52.917Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:52.917Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.973Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "同一轮全账户普通及 Algo 快照"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:50.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 10250,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:50.973Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:50.973Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_b6c30b89-1ec2-440c-b160-a7ce2ac34a59",
+      "emitted_at": "2026-11-02T14:04:52.969Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:52.969Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:52.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:52.969Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:52.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:52.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 10304,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:52.969Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:52.969Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_0968e478-8ec3-47f6-a585-c2b1e09eb095",
+      "emitted_at": "2026-11-02T14:04:54.963Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:54.963Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:54.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:54.963Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:54.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:54.924Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 12296,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:54.963Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:54.963Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_56a23ddd-2da0-476a-8fb6-b0b7f38376b3",
+      "emitted_at": "2026-11-02T14:04:56.957Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:56.957Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:56.924Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:56.957Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:56.925Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:56.925Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 14291,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:56.957Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:56.957Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_795e69b7-2ef5-43c0-bde2-e026534aa936",
+      "emitted_at": "2026-11-02T14:04:58.962Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:04:58.962Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:58.925Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:04:58.962Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:58.925Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:04:58.925Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 16295,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:04:58.962Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:04:58.962Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_ad7a4f43-b34d-4cfe-ad4d-d412073a1f7a",
+      "emitted_at": "2026-11-02T14:05:00.954Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:00.954Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.954Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 18287,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:00.954Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:00.954Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_e84f2224-9fce-4a26-bf14-7578ae89a5d4",
+      "emitted_at": "2026-11-02T14:05:02.911Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:02.911Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.954Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:04:52.917Z",
+          "age_ms": 20244,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:00.954Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:00.954Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_e9aebbf1-ee69-4809-846a-c5390c7f629d",
+      "emitted_at": "2026-11-02T14:05:02.918Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:02.918Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:00.954Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:00.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 20251,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:00.954Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:00.954Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_67b36397-8841-424d-9779-f874e0f27441",
+      "emitted_at": "2026-11-02T14:05:02.976Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:02.976Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:02.927Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:02.976Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:02.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:02.927Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 20310,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:02.976Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:02.976Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_327612a4-159c-4d7d-837d-6e827d7cc6f2",
+      "emitted_at": "2026-11-02T14:05:03.171Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_79bbb43f-7971-4f0e-96e5-444036683abe",
+        "sequence": 3,
+        "step": "open_position",
+        "started_at": "2026-11-02T14:04:42.908Z",
+        "expected": "只提交一次真实开多意图，数量由默认风控自动计算；保存实际成交量与名义额",
+        "actual": {
+          "summary": "rejected: FILL_RECOVERY_NOT_READY; deterministic risk policy",
+          "code": "OPEN_REJECTED",
+          "account": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-11-02T14:05:02.976Z",
+            "last_restart_at": null,
+            "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+          },
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-11-02T14:04:42.667Z",
+            "published_at": "2026-11-02T14:05:02.917Z",
+            "age_ms": 20310,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "预算已发布；收益为权益变化近似值",
+            "utc_day": "2026-11-02",
+            "day_start_equity_usdt": "4955.91702421",
+            "equity_high_water_usdt": "4955.91702421",
+            "approximate_today_pnl_usdt": "0",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        },
+        "reason": "rejected: FILL_RECOVERY_NOT_READY; deterministic risk policy",
+        "phase": "COMPLETED",
+        "ended_at": "2026-11-02T14:05:03.171Z",
+        "result": "FAIL"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_0bcaef6d-cdb6-4799-9724-c8ae95057d95",
+      "emitted_at": "2026-11-02T14:05:03.178Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_9d910699-efbe-4f69-ab2d-d31575eed9e0",
+        "sequence": 4,
+        "step": "cleanup_after",
+        "started_at": "2026-11-02T14:05:03.178Z",
+        "expected": "失败后核对残留；不补挂保护、不重开仓",
+        "actual": {
+          "summary": "正在执行",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        },
+        "reason": "Step running",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_87b774da-9d6e-4b10-a07a-e869e09749e2",
+      "emitted_at": "2026-11-02T14:05:04.987Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:04.987Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:04.929Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:04.987Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:04.929Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:04.929Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 22321,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:04.987Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:04.987Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_576b9dfc-c450-41c4-ad34-d4278eafc887",
+      "emitted_at": "2026-11-02T14:05:06.966Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:06.966Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:06.929Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:06.966Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:06.929Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:06.929Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 24300,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:06.966Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:06.966Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_48244ae5-e3c7-4057-b956-083e5ab769d8",
+      "emitted_at": "2026-11-02T14:05:08.962Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:08.962Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:08.930Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:08.962Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:08.930Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:08.930Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 26295,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:08.962Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:08.962Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_2d01ef85-d7f1-4fa0-9f3f-8b6f708f664b",
+      "emitted_at": "2026-11-02T14:05:10.986Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:10.986Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.986Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 28319,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:10.986Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:10.986Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_aada96ed-1f86-44a4-8308-7f9eb1ff9c2b",
+      "emitted_at": "2026-11-02T14:05:12.911Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:12.911Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.986Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 30245,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "预算已发布；收益为权益变化近似值",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:10.986Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:10.986Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_619705c6-f8e7-44bb-ad4d-5f629e8dc7e5",
+      "emitted_at": "2026-11-02T14:05:12.913Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:12.913Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:10.986Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:10.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 30246,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "STALE_SOURCE: account.as_of_ms is older than 30 seconds",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:10.986Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:10.986Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_2aa0268c-cf3c-4b85-8898-cb0f5581ba2e",
+      "emitted_at": "2026-11-02T14:05:12.971Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:12.971Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "STALE",
+          "observed_at": "2026-11-02T14:05:12.933Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "账户源数据已过期"
+        },
+        "positions": {
+          "status": "STALE",
+          "observed_at": "2026-11-02T14:05:12.971Z",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "value": [],
+          "reason": "持仓或账户源数据过期"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:12.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:12.933Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 30304,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "STALE_SOURCE: account.as_of_ms is older than 30 seconds",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:12.971Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:12.971Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_7cf82fa2-a46f-4f77-b8fd-6e1f52722f94",
+      "emitted_at": "2026-11-02T14:05:14.849Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:14.849Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:14.824Z",
+          "source_as_of": "2026-11-02T14:05:14.655Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:14.849Z",
+          "source_as_of": "2026-11-02T14:05:14.655Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:14.825Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:14.825Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 32182,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "STALE_SOURCE: account.as_of_ms is older than 30 seconds",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:14.849Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:14.849Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_27d948a4-2337-43c5-bfe7-ffe7b4ea1af3",
+      "emitted_at": "2026-11-02T14:05:14.870Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "step_id": "step_9d910699-efbe-4f69-ab2d-d31575eed9e0",
+        "sequence": 4,
+        "step": "cleanup_after",
+        "started_at": "2026-11-02T14:05:03.178Z",
+        "expected": "失败后核对残留；不补挂保护、不重开仓",
+        "actual": {
+          "summary": "9 FAILED_PRECONDITION: local client order mapping is required for live query",
+          "code": "STEP_UNKNOWN",
+          "account": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-11-02T14:05:14.849Z",
+            "last_restart_at": null,
+            "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+          },
+          "risk_budget": {
+            "status": "STALE",
+            "source_as_of": "2026-11-02T14:04:42.667Z",
+            "published_at": "2026-11-02T14:05:02.917Z",
+            "age_ms": 32182,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "STALE_SOURCE: account.as_of_ms is older than 30 seconds",
+            "utc_day": "2026-11-02",
+            "day_start_equity_usdt": "4955.91702421",
+            "equity_high_water_usdt": "4955.91702421",
+            "approximate_today_pnl_usdt": "0",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        },
+        "reason": "9 FAILED_PRECONDITION: local client order mapping is required for live query",
+        "phase": "COMPLETED",
+        "ended_at": "2026-11-02T14:05:14.870Z",
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_4ae98f24-ace6-4d88-b136-7ed36c131edb",
+      "emitted_at": "2026-11-02T14:05:14.872Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+        "trigger": "MANUAL",
+        "status": "FAILED",
+        "started_at": "2026-11-02T14:04:01.631Z",
+        "ended_at": "2026-11-02T14:05:14.872Z",
+        "reason": "OPEN_REJECTED: rejected: FILL_RECOVERY_NOT_READY; deterministic risk policy"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_976b26b9-1e82-400e-9b3b-8540f9ef3480",
+      "emitted_at": "2026-11-02T14:05:14.872Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T14:05:14.872Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "f1362c95d5527689ff3d4dbe77afa12d6e6d8e86",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:14.824Z",
+          "source_as_of": "2026-11-02T14:05:14.655Z",
+          "value": {
+            "account_label": "testnet-demo",
+            "equity_usdt": "4955.91702421",
+            "available_usdt": "4955.91702421",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "交易所账户事实"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-11-02T14:05:14.849Z",
+          "source_as_of": "2026-11-02T14:05:14.655Z",
+          "value": [],
+          "reason": "完整账户范围的 BTCUSDT 持仓投影"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:14.825Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": null,
+          "reason": "当前 boot 的同一轮完整普通及 Algo 交易所快照尚不可用"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": "2026-11-02T14:05:14.825Z",
+          "source_as_of": "2026-11-02T14:04:22.912Z",
+          "value": [],
+          "reason": "当前无可验证持仓；空列表不代表历史保护验证通过"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-11-02T14:04:42.667Z",
+          "published_at": "2026-11-02T14:05:02.917Z",
+          "age_ms": 32182,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "STALE_SOURCE: account.as_of_ms is older than 30 seconds",
+          "utc_day": "2026-11-02",
+          "day_start_equity_usdt": "4955.91702421",
+          "equity_high_water_usdt": "4955.91702421",
+          "approximate_today_pnl_usdt": "0",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "全局、账户及演示 bot 的只读熔断状态",
+          "observed_at": "2026-11-02T14:05:14.849Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-11-02T14:05:14.849Z",
+          "last_restart_at": null,
+          "reason": "公开 gRPC 读取成功；恢复状态由场景单独核对"
+        },
+        "active_round_id": null,
+        "latest_round": {
+          "round_id": "round_01M6E95ZPXR3TN7QP59FX6Y7Q9",
+          "trigger": "MANUAL",
+          "status": "FAILED",
+          "started_at": "2026-11-02T14:04:01.631Z",
+          "ended_at": "2026-11-02T14:05:14.872Z",
+          "reason": "OPEN_REJECTED: rejected: FILL_RECOVERY_NOT_READY; deterministic risk policy"
+        }
+      }
+    }
+  ]
+}

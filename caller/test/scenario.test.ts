@@ -42,6 +42,12 @@ class MockRuntime implements Runtime {
   behavior: Behavior;
   restartChangesBoot = true;
   closeAcknowledgmentLost = false;
+  openingAcknowledgmentLost = false;
+  clientMappingMissing = false;
+  protectionUnknownReads = 0;
+  protectionAlwaysUnknown = false;
+  protectionUnknownMode: "in_progress" | "mixed" = "in_progress";
+  protectionVerificationRefreshes = 0;
   openingAccountUnavailableReads = 0;
   unavailableAccountBodies: Row[] = [];
   held = false;
@@ -84,9 +90,11 @@ class MockRuntime implements Runtime {
         const intent = rows(request.intents)[0]!;
         this.openKey = "mock-authority-" + String(intent.idempotency_key);
         if (this.behavior === "not_started") {
-          return { acks: [{ status: "STATUS_REJECTED", message: "FILL_RECOVERY_IN_PROGRESS phase=not_started" }] };
+          return { acks: [{ status: "STATUS_REJECTED", engine_order_id: "", reject_reason_code: "FILL_RECOVERY_NOT_READY",
+            message: "FILL_RECOVERY_NOT_READY phase=not_started" }] };
         }
         this.held = true;
+        if (this.openingAcknowledgmentLost) throw new Error("Mock opening response was lost after applying the write");
         return { acks: [{ status: "STATUS_ACCEPTED", engine_order_id: "mock-entry-order" }] };
       }
       if (method === "GetOrder") {
@@ -104,6 +112,7 @@ class MockRuntime implements Runtime {
         return { accepted: this.startupCancelAccepted };
       }
       if (method === "GetOrderByClientOrderId") {
+        if (this.clientMappingMissing) throw new Error("FAILED_PRECONDITION: mock client mapping does not exist");
         return { completed: true, found: this.behavior !== "not_started", order: { status: "filled", engine_order_id: "mock-entry-order" } };
       }
       if (method === "GetPositionCloseTarget") {
@@ -189,6 +198,17 @@ class MockRuntime implements Runtime {
         },
       },
     };
+    const running = this.store.getTimeline(1).rounds[0]?.steps.find(step => step.phase === "RUNNING");
+    if (this.held && running?.step === "verify_protection") {
+      this.protectionVerificationRefreshes++;
+      if (this.protectionAlwaysUnknown || this.protectionUnknownReads > 0) {
+        this.protectionUnknownReads--;
+        const venue = row(this.snapshot.accountOrders.venue);
+        const attempt = row(venue.latest_attempt);
+        if (this.protectionUnknownMode === "in_progress") attempt.status = "in_progress";
+        else { attempt.coverage = "symbols"; attempt.observation_id = "mock-newer-symbols-observation"; }
+      }
+    }
     if (accountUnavailable) this.unavailableAccountBodies.push(structuredClone(this.snapshot.account));
     this.lastReconcile = { accepted: true, completed: true, has_diff: false, local_position_zero_diff: true,
       all_positions_zero: !this.held, all_open_orders_empty: !this.startupEntry || this.startupCancelled, all_open_algo_orders_empty: !this.held };
@@ -295,6 +315,7 @@ test("SL PASS plus missing TP remains FAILED after successful safety close and c
     assert.equal(runtime.calls("ExecuteIntents").length, 1);
     assert.equal(runtime.calls("ClosePosition").length, 1);
     assert.equal(runtime.restartCount, 0);
+    assert.equal(runtime.protectionVerificationRefreshes, 1, "an explicit TP FAIL must not be retried");
     const round = runtime.store.getTimeline().rounds[0]!;
     assert.deepEqual(round.steps.map((step) => step.step), [
       "preflight", "cleanup_before", "open_position", "verify_protection", "close_position", "cleanup_after",
@@ -489,5 +510,111 @@ test("one unavailable account observation after opening does not invent account 
     assert.equal(round.steps[2]!.actual.fill?.notional_usdt, "100");
     assert.equal(round.steps[2]!.actual.account?.equity_usdt, "10000");
     loadRecording(runtime, result.round_id);
+  });
+});
+
+
+test("definitive rejection without an engine order skips absent client mapping but still proves account-wide cleanup", async () => {
+  await fixture("not_started", async (runtime) => {
+    runtime.clientMappingMissing = true;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run("MANUAL");
+    assert.equal(result.status, "FAILED");
+    assert.match(result.reason, /OPEN_REJECTED.*FILL_RECOVERY_NOT_READY/);
+    assert.equal(runtime.calls("ExecuteIntents").length, 1);
+    assert.equal(runtime.calls("GetOrderByClientOrderId").length, 0, "there is no mapping after this authoritative pre-order rejection");
+    assert.equal(runtime.calls("ClosePosition").length, 0);
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(round.steps.find(step => step.step === "open_position")?.result, "FAIL");
+    assert.equal(round.steps.find(step => step.step === "cleanup_after")?.result, "PASS");
+    assert.equal(round.status, "FAILED", "successful cleanup must not rewrite the original rejected opening");
+    const state = runtime.store.getState();
+    assert.equal(state.positions.status, "AVAILABLE");
+    assert.deepEqual(state.positions.value, []);
+    assert.equal(state.open_orders.status, "AVAILABLE");
+    assert.deepEqual(state.open_orders.value, []);
+    assert.ok(state.positions.source_as_of && Date.now() - Date.parse(state.positions.source_as_of) <= 30000);
+    assert.ok(state.open_orders.source_as_of && Date.now() - Date.parse(state.open_orders.source_as_of) <= 30000);
+    for (const field of ["accepted", "completed", "local_position_zero_diff", "all_positions_zero", "all_open_orders_empty", "all_open_algo_orders_empty"])
+      assert.equal(runtime.lastReconcile[field], true, "fresh full-account proof is still required: " + field);
+    assert.equal(runtime.lastReconcile.has_diff, false);
+    loadRecording(runtime, result.round_id);
+  });
+});
+
+test("unknown opening transport outcome retains the original client identity for readback and never resubmits", async () => {
+  await fixture("success", async (runtime) => {
+    runtime.openingAcknowledgmentLost = true;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run("MANUAL");
+    assert.equal(result.status, "FAILED");
+    assert.match(result.reason, /OPEN_SUBMISSION_UNKNOWN/);
+    const opening = runtime.calls("ExecuteIntents");
+    assert.equal(opening.length, 1);
+    const originalClientId = rows(opening[0]!.request.intents)[0]!.client_order_id_short;
+    const lookups = runtime.calls("GetOrderByClientOrderId");
+    assert.equal(lookups.length, 1, "transport uncertainty must still query the original mapping");
+    assert.equal(lookups[0]!.request.client_order_id_short, originalClientId);
+    assert.equal(runtime.calls("ClosePosition").length, 1, "the observed residual position is safely closed");
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(round.steps.find(step => step.step === "open_position")?.result, "UNKNOWN");
+    assert.equal(round.steps.find(step => step.step === "cleanup_after")?.result, "PASS");
+    assert.equal(round.status, "FAILED");
+    assert.equal(runtime.store.getState().positions.value?.length, 0);
+    loadRecording(runtime, result.round_id);
+  });
+});
+
+
+test("an in-progress or mixed observation stays UNKNOWN until a later same-full observation proves both legs", async () => {
+  for (const mode of ["in_progress", "mixed"] as const) {
+    await fixture("success", async (runtime) => {
+      runtime.protectionUnknownReads = 1;
+      runtime.protectionUnknownMode = mode;
+      runtime.config.phaseTimeoutMs = 1000;
+      const live: SseEvent[] = [];
+      runtime.store.subscribe(event => live.push(event));
+      const result = await new ScenarioRunner(runtime, runtime.options()).run("MANUAL");
+      assert.equal(result.status, "SUCCEEDED", result.reason);
+      assert.equal(runtime.protectionVerificationRefreshes, 2);
+      assert.equal(runtime.calls("ExecuteIntents").length, 1, "observation retries must never resubmit entry or protection");
+      const unknownIndex = live.findIndex(event => event.type === "state" && event.data.protection.value?.[0]?.sl.status === "UNKNOWN");
+      assert.ok(unknownIndex >= 0, "the intermediate UNKNOWN must remain in the public journal");
+      const provenIndex = live.findIndex((event, index) => index > unknownIndex && event.type === "state"
+        && event.data.protection.value?.[0]?.sl.status === "PASS" && event.data.protection.value?.[0]?.tp.status === "PASS");
+      assert.ok(provenIndex > unknownIndex, "only a later complete same-observation pair can pass");
+      const step = runtime.store.getTimeline().rounds[0]!.steps.find(item => item.step === "verify_protection")!;
+      assert.equal(step.result, "PASS");
+      assert.equal(step.actual.protection?.sl.status, "PASS");
+      assert.equal(step.actual.protection?.tp.status, "PASS");
+      assert.ok(step.actual.protection?.observation_id);
+      const recording = loadRecording(runtime, result.round_id);
+      assert.deepEqual(recording.events, live, "recording retains the exact UNKNOWN and subsequent PASS live events");
+    });
+  }
+});
+
+test("protection that remains UNKNOWN times out with its last reason, preserves FAILED, and safely closes", async () => {
+  await fixture("success", async (runtime) => {
+    runtime.protectionAlwaysUnknown = true;
+    runtime.config.phaseTimeoutMs = 30;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run("MANUAL");
+    assert.equal(result.status, "FAILED");
+    assert.match(result.reason, /DOUBLE_PROTECTION_NOT_PROVEN/);
+    assert.match(result.reason, /one successful available full-account observation is required/,
+      "timeout must preserve the original observation reason");
+    assert.doesNotMatch(result.reason, /观察窗口结束/, "a generic timeout must not replace the last UNKNOWN reason");
+    const round = runtime.store.getTimeline().rounds[0]!;
+    const failed = round.steps.find(step => step.step === "verify_protection")!;
+    assert.equal(failed.result, "UNKNOWN");
+    assert.equal(failed.actual.protection?.sl.status, "UNKNOWN");
+    assert.equal(failed.actual.protection?.tp.status, "UNKNOWN");
+    assert.equal(round.steps.some(step => step.step === "hold" || step.step === "restart_kernel"), false);
+    assert.deepEqual(round.steps.slice(-2).map(step => [step.step, step.result]), [["close_position", "PASS"], ["cleanup_after", "PASS"]]);
+    assert.equal(runtime.calls("ExecuteIntents").length, 1);
+    assert.equal(runtime.calls("ClosePosition").length, 1);
+    assert.equal(runtime.store.getState().positions.value?.length, 0);
+    assert.equal(runtime.store.getState().open_orders.value?.length, 0);
+    const recording = loadRecording(runtime, result.round_id);
+    assert.ok(recording.events.some(event => event.type === "state" && event.data.protection.value?.[0]?.sl.status === "UNKNOWN"));
+    assert.equal(round.status, "FAILED");
   });
 });

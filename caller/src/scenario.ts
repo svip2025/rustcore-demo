@@ -176,6 +176,29 @@ export class ScenarioRunner {
     return actual;
   }
 
+  private async waitProtection(code = 'DOUBLE_PROTECTION_NOT_PROVEN', ready?: () => boolean): Promise<StepActual> {
+    let lastUnknown: ScenarioFailure | null = null;
+    try {
+      return await this.wait(async () => {
+        try {
+          await this.runtime.refresh(true);
+          if (ready && !ready()) return null;
+          return this.verify();
+        } catch (error) {
+          if (error instanceof ScenarioFailure && error.outcome === 'UNKNOWN') {
+            lastUnknown = error;
+            return null;
+          }
+          throw error;
+        }
+      }, code);
+    } catch (error) {
+      if (error instanceof ScenarioFailure && error.code === code && error.outcome === 'UNKNOWN' && lastUnknown)
+        throw lastUnknown;
+      throw error;
+    }
+  }
+
   async run(trigger: RoundSummary['trigger']): Promise<RoundSummary> {
     const lock = await acquireFileLock(this.runtime.config.lockFile);
     const store = this.runtime.store;
@@ -227,8 +250,13 @@ export class ScenarioRunner {
             ack = rows((await this.runtime.rpc.unary('v2', 'ExecuteIntents', { credential_id: this.runtime.config.credentialId, run_mode: 'demo',
               intents: [intent], data_snapshot: data, schema_version: 1 })).acks)[0] ?? {};
           } catch { throw new ScenarioFailure('OPEN_SUBMISSION_UNKNOWN', '开仓调用结果未知；保留原身份读回，不重发', 'UNKNOWN'); }
-          if (ack.status !== 'STATUS_ACCEPTED' && ack.status !== 'STATUS_DUPLICATE')
+          if (ack.status !== 'STATUS_ACCEPTED' && ack.status !== 'STATUS_DUPLICATE') {
+            // A definitive rejection before order creation has no client mapping.
+            // Transport failures above retain the original identity for readback.
+            if (ack.status === 'STATUS_REJECTED' && (ack.engine_order_id === '' || ack.engine_order_id == null))
+              this.openClientId = null;
             throw new ScenarioFailure('OPEN_REJECTED', this.runtime.publicReason(ack.message ?? '开仓意图被内核拒绝'));
+          }
           return this.wait(async () => {
             await this.runtime.refresh();
             if (this.runtime.snapshot?.account.available !== true) return null;
@@ -242,11 +270,15 @@ export class ScenarioRunner {
             return { ...this.actual('默认风控自动定量开多已成交；已保存实际成交量及名义额'), fill };
           }, 'ENTRY_FILL_NOT_PROVEN');
         });
-        await this.step('verify_protection', 'SL 与 TP 分别由同一轮完整 Algo 快照证明', async () => { await this.runtime.refresh(true); return this.verify(); });
+        await this.step('verify_protection', 'SL 与 TP 分别由同一轮完整 Algo 快照证明', () => this.waitProtection());
         await this.step('hold', '持仓期间目标仍存在且双保护分别通过', async () => {
           const until = Date.now() + this.runtime.config.holdMs;
-          do { await (this.options.pause ?? sleep)(Math.min(2_000, Math.max(1, until - Date.now()))); await this.runtime.refresh(true); this.verify(); } while (Date.now() < until);
-          return this.verify();
+          let observed: StepActual;
+          do {
+            await (this.options.pause ?? sleep)(Math.min(2_000, Math.max(1, until - Date.now())));
+            observed = await this.waitProtection();
+          } while (Date.now() < until);
+          return observed;
         });
         const oldBoot = this.runtime.snapshot?.accountOrders.engine_boot_id;
         const quantity = this.positions().find(p => p.position_id === this.positionId)?.qty;
@@ -255,13 +287,11 @@ export class ScenarioRunner {
           if (!oldBoot || this.runtime.snapshot?.accountOrders.engine_boot_id === oldBoot) throw new ScenarioFailure('NEW_BOOT_NOT_PROVEN', '未证明新进程 boot', 'UNKNOWN');
           return this.actual('受管内核已重启，公开读取属于新 boot；持仓恢复在下一步核对');
         });
-        await this.step('verify_recovery', '新 boot 下对账无差异、原持仓数量一致，SL/TP 各自通过', () => this.wait(async () => {
-          await this.runtime.refresh();
+        await this.step('verify_recovery', '新 boot 下对账无差异、原持仓数量一致，SL/TP 各自通过', () => this.waitProtection('RECOVERY_NOT_PROVEN', () => {
           const position = this.positions().find(p => p.position_id === this.positionId);
-          if (!position || money(position.qty) !== money(quantity) || this.runtime.lastReconcile.completed !== true
-            || this.runtime.lastReconcile.has_diff !== false || this.runtime.lastReconcile.local_position_zero_diff !== true) return null;
-          return this.verify();
-        }, 'RECOVERY_NOT_PROVEN'));
+          return Boolean(position && money(position.qty) === money(quantity) && this.runtime.lastReconcile.completed === true
+            && this.runtime.lastReconcile.has_diff === false && this.runtime.lastReconcile.local_position_zero_diff === true);
+        }));
         await this.step('close_position', '精确平仓回执 filled、成交量一致、持仓为零、保护 cleaned', () => this.exactClose(this.positionId!));
         await this.step('cleanup_after', '全账户无持仓、无普通挂单、无 Algo 挂单', () => this.cleanup());
       } catch (error) {

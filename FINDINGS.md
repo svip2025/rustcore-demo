@@ -72,3 +72,17 @@ v2 quantity 字段 reserved，数量由风控计算；remaining_credential_notio
 真实轮次 `round_01M6E83G0JPS0ZX0XR5RHTCD1J`（MANUAL）于 `2026-11-02T13:45:11.444Z` 开始，在前置对账得到 `DEADLINE_EXCEEDED: ReconcileNow budget exhausted`，结束为 FAILED，没有提交开仓。原始 [TESTNET 录制](recordings/run-20261102-134511-failed.json) 保留 caller/内核具体版本、失败步骤及原因。
 
 这是 caller 接入配置问题，不作为内核风控故障：测试进程额外设置的旧名 `RUSTCORE_BINANCE_RPS=2` / `BURST=2` 实际以**请求权重**计量，全账户读取的成本远大于两次请求；caller 同时只给了 10 秒 gRPC 期限。处理是移除额外限流覆盖、沿用内核默认限流，并让 caller 的有界读取期限覆盖正常全账户对账。预算发布独立每 10 秒运行，源数据过期或不可用时仍不发布，不能用新时间刷新旧事实。原失败轮次不会覆盖；后续验证使用新的 MANUAL 轮次。
+
+## F-09：首个开仓准入拒绝及不存在的客户端映射
+
+MANUAL 轮次 `round_01M6E95ZPXR3TN7QP59FX6Y7Q9` 的账户前提、预算基准重置及前置清理通过，开仓明确返回 `FILL_RECOVERY_NOT_READY`。该 [FAILED 录制](recordings/run-20261102-140401-failed.json) 原样保留；RPC 没有提供 ready 的更细内部状态，不把 `not_started` 当作本次额外观察事实。
+
+caller 在明确拒绝且未产生 engine_order_id 后，仍用 client ID 查询不存在的订单映射，使后置清理得到 UNKNOWN。修正只针对这种明确否定回应：跳过不存在的映射查询，仍须完整 fresh-flat 证明清理；提交结果未知时继续用原 ID 读回，不重发开仓。原轮次及原 UNKNOWN 不修改。
+
+## F-10：成交后保护观察尚未满足完整快照条件
+
+MANUAL 轮次 `round_01M6E9BH2FT4VM34RVVFRX58N9` 开仓成交 `0.0095 BTC`、名义额 `741 USDT`，但双保护核验为 UNKNOWN：当前可读观察不满足同一轮、成功、完整账户的条件。随后精确平仓成交、保护清理及全账户零敞口检查均 PASS；[原录制](recordings/run-20261102-140703-failed.json) 保持 FAILED，没有进入持仓重启步骤。
+
+公开事件中完整对账后紧接符号范围对账；观察注册表的每次 begin 会使当前完整性失效，旧 full 只能带原时间展示，见固定提交 [account_order_observation.rs](https://github.com/svip2025/rustcore/blob/6a81a4aec7ee92a9cd6aebdaef6446515ac2d989/src/account_order_observation.rs)。这是实际读回时序与严格观察条件的交界，不能仅凭事件报告有两张 Algo 单便宣称 SL/TP 各自通过。后续 caller 在有界窗口内等待完整观察，FAIL 仍立即失败，持续 UNKNOWN 到期仍失败；不修改核验判据，不补挂保护，先前终结轮次不改写。
+
+测试网新入口随后实际返回 REQUEST_WEIGHT 上限 `6000/min`。后续演示使用内核已有的 Testnet 请求权重配置 `20/s`、burst `100`（持续值 `1200/min`），减少一次 full 读取与后台周期交错的时间；保留内核的 exit reserve、冷却及预算守卫，不修改后台对账周期或风控 policy，也不改变保护观察的 30 秒新鲜度要求。该速率配置不承诺每次观察一定成功。
