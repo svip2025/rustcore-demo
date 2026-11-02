@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+.recording-check-*.ts
+*.sock
+*.log

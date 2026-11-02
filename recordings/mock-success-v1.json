@@ -1,0 +1,3619 @@
+{
+  "schema_version": 1,
+  "build": {
+    "caller_commit": "mock-caller-v1",
+    "rustcore_commit": "mock-rustcore-v1"
+  },
+  "recording_id": "mock-success-v1",
+  "title": "[MOCK] 手写假数据：完整成功场景",
+  "description": "全部场景、时间、金额、成交和状态均为人为固定的虚构示例；仅供 UI 与拖动回放联调，非交易记录、非运行证据。 build 中的版本标识同样为手写虚构值，不是真实提交。",
+  "source": {
+    "kind": "MOCK",
+    "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+  },
+  "created_at": "2026-10-01T00:01:52.100Z",
+  "started_at": "2026-10-01T00:00:00.000Z",
+  "ended_at": "2026-10-01T00:01:52.100Z",
+  "initial_state": {
+    "schema_version": 1,
+    "build": {
+      "caller_commit": "mock-caller-v1",
+      "rustcore_commit": "mock-rustcore-v1"
+    },
+    "generated_at": "2026-10-01T00:00:00.000Z",
+    "source": {
+      "kind": "MOCK",
+      "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+    },
+    "account": {
+      "status": "AVAILABLE",
+      "observed_at": "2026-10-01T00:00:00.000Z",
+      "source_as_of": "2026-10-01T00:00:00.000Z",
+      "value": {
+        "account_label": "MOCK success account",
+        "equity_usdt": "10000.00",
+        "available_usdt": "10000.00",
+        "position_mode": "ONE_WAY",
+        "margin_mode": "CROSS",
+        "btc_leverage": 1
+      },
+      "reason": "手写假观测；非真实交易所读回。"
+    },
+    "positions": {
+      "status": "AVAILABLE",
+      "observed_at": "2026-10-01T00:00:00.000Z",
+      "source_as_of": "2026-10-01T00:00:00.000Z",
+      "value": [],
+      "reason": "手写假观测；非真实交易所读回。"
+    },
+    "open_orders": {
+      "status": "AVAILABLE",
+      "observed_at": "2026-10-01T00:00:00.000Z",
+      "source_as_of": "2026-10-01T00:00:00.000Z",
+      "value": [],
+      "reason": "手写假观测；非真实交易所读回。"
+    },
+    "protection": {
+      "status": "AVAILABLE",
+      "observed_at": "2026-10-01T00:00:00.000Z",
+      "source_as_of": "2026-10-01T00:00:00.000Z",
+      "value": [],
+      "reason": "手写假观测；非真实交易所读回。"
+    },
+    "risk_budget": {
+      "status": "FRESH",
+      "source_as_of": "2026-10-01T00:00:00.000Z",
+      "published_at": "2026-10-01T00:00:00.000Z",
+      "age_ms": 0,
+      "max_age_ms": 30000,
+      "last_publish_applied": true,
+      "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+      "utc_day": "2026-10-01",
+      "day_start_equity_usdt": "10000.00",
+      "equity_high_water_usdt": "10000.00",
+      "approximate_today_pnl_usdt": "0.00",
+      "approximate_today_pnl_pct": 0,
+      "drawdown_pct": 0,
+      "total_exposure_pct": 0
+    },
+    "kill_switch": {
+      "level": "none",
+      "reason": "手写假数据：无熔断闩锁。",
+      "observed_at": "2026-10-01T00:00:00.000Z"
+    },
+    "rustcore": {
+      "status": "ONLINE",
+      "checked_at": "2026-10-01T00:00:00.000Z",
+      "last_restart_at": null,
+      "reason": "手写假数据：内核在线。"
+    },
+    "active_round_id": null,
+    "latest_round": null
+  },
+  "initial_timeline": {
+    "schema_version": 1,
+    "generated_at": "2026-10-01T00:00:00.000Z",
+    "source": {
+      "kind": "MOCK",
+      "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+    },
+    "rounds": [],
+    "next_cursor": null
+  },
+  "events": [
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0001",
+      "emitted_at": "2026-10-01T00:00:01.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "status": "RUNNING",
+        "started_at": "2026-10-01T00:00:01.000Z",
+        "ended_at": null,
+        "reason": "手写假场景正在回放；非交易运行。",
+        "trigger": "SCHEDULED"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0002",
+      "emitted_at": "2026-10-01T00:00:01.100Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:01.100Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:01.100Z",
+          "source_as_of": "2026-10-01T00:00:01.100Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "10000.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:01.100Z",
+          "source_as_of": "2026-10-01T00:00:01.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:01.100Z",
+          "source_as_of": "2026-10-01T00:00:01.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:01.100Z",
+          "source_as_of": "2026-10-01T00:00:01.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:01.100Z",
+          "published_at": "2026-10-01T00:00:01.100Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:01.100Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:01.100Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0003",
+      "emitted_at": "2026-10-01T00:00:02.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-01",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-10-01T00:00:02.000Z",
+        "expected": "确认虚构账户为 ONE_WAY / CROSS / 1x，预算与内核可用。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0004",
+      "emitted_at": "2026-10-01T00:00:04.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:04.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:04.000Z",
+          "source_as_of": "2026-10-01T00:00:04.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "10000.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:04.000Z",
+          "source_as_of": "2026-10-01T00:00:04.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:04.000Z",
+          "source_as_of": "2026-10-01T00:00:04.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:04.000Z",
+          "source_as_of": "2026-10-01T00:00:04.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:04.000Z",
+          "published_at": "2026-10-01T00:00:04.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:04.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:04.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0005",
+      "emitted_at": "2026-10-01T00:00:05.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-01",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-10-01T00:00:02.000Z",
+        "expected": "确认虚构账户为 ONE_WAY / CROSS / 1x，预算与内核可用。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:00:05.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假观测：ONE_WAY / CROSS / 1x 账户与预算可用，内核在线。",
+          "code": null,
+          "account": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "10000.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-10-01T00:00:05.000Z",
+            "last_restart_at": null,
+            "reason": "手写假数据：内核在线。"
+          },
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-10-01T00:00:05.000Z",
+            "published_at": "2026-10-01T00:00:05.000Z",
+            "age_ms": 0,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+            "utc_day": "2026-10-01",
+            "day_start_equity_usdt": "10000.00",
+            "equity_high_water_usdt": "10000.00",
+            "approximate_today_pnl_usdt": "0.00",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0006",
+      "emitted_at": "2026-10-01T00:00:06.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-02",
+        "sequence": 2,
+        "step": "cleanup_before",
+        "started_at": "2026-10-01T00:00:06.000Z",
+        "expected": "确认开始前无持仓、无普通或保护挂单。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0007",
+      "emitted_at": "2026-10-01T00:00:08.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:08.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:08.000Z",
+          "source_as_of": "2026-10-01T00:00:08.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "10000.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:08.000Z",
+          "source_as_of": "2026-10-01T00:00:08.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:08.000Z",
+          "source_as_of": "2026-10-01T00:00:08.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:08.000Z",
+          "source_as_of": "2026-10-01T00:00:08.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:08.000Z",
+          "published_at": "2026-10-01T00:00:08.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:08.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:08.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0008",
+      "emitted_at": "2026-10-01T00:00:09.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-02",
+        "sequence": 2,
+        "step": "cleanup_before",
+        "started_at": "2026-10-01T00:00:06.000Z",
+        "expected": "确认开始前无持仓、无普通或保护挂单。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:00:09.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假观测：开始前已为空仓且无挂单。",
+          "code": null,
+          "account": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "10000.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": null,
+          "open_orders": [],
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0009",
+      "emitted_at": "2026-10-01T00:00:10.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-03",
+        "sequence": 3,
+        "step": "open_position",
+        "started_at": "2026-10-01T00:00:10.000Z",
+        "expected": "记录一笔虚构开仓成交的数量和名义金额。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0010",
+      "emitted_at": "2026-10-01T00:00:11.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:11.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:11.000Z",
+          "source_as_of": "2026-10-01T00:00:11.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:11.000Z",
+          "source_as_of": "2026-10-01T00:00:11.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0",
+              "entry_price": null,
+              "mark_price": "100000.00",
+              "notional_usdt": "0.00",
+              "state": "PENDING",
+              "source_as_of": "2026-10-01T00:00:11.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:11.000Z",
+          "source_as_of": "2026-10-01T00:00:11.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-entry-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "ENTRY",
+              "side": "BUY",
+              "order_type": "MARKET",
+              "quantity": "0.001",
+              "price": null,
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:11.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：尚未完成双保护观测。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:11.000Z",
+          "published_at": "2026-10-01T00:00:11.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:11.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:11.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0011",
+      "emitted_at": "2026-10-01T00:00:13.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:13.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:13.000Z",
+          "source_as_of": "2026-10-01T00:00:13.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:13.000Z",
+          "source_as_of": "2026-10-01T00:00:13.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "OPEN",
+              "source_as_of": "2026-10-01T00:00:13.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:13.000Z",
+          "source_as_of": "2026-10-01T00:00:13.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：尚未完成双保护观测。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:13.000Z",
+          "published_at": "2026-10-01T00:00:13.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:13.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:13.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0012",
+      "emitted_at": "2026-10-01T00:00:14.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-03",
+        "sequence": 3,
+        "step": "open_position",
+        "started_at": "2026-10-01T00:00:10.000Z",
+        "expected": "记录一笔虚构开仓成交的数量和名义金额。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:00:14.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假成交：买入 0.001 BTC，名义金额 100.00 USDT。",
+          "code": null,
+          "account": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0.001",
+            "entry_price": "100000.00",
+            "mark_price": "100000.00",
+            "notional_usdt": "100.00",
+            "state": "OPEN",
+            "source_as_of": "2026-10-01T00:00:14.000Z"
+          },
+          "open_orders": [],
+          "protection": null,
+          "fill": {
+            "side": "BUY",
+            "quantity": "0.001",
+            "average_price": "100000.00",
+            "notional_usdt": "100.00"
+          },
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0013",
+      "emitted_at": "2026-10-01T00:00:15.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-04",
+        "sequence": 4,
+        "step": "verify_protection",
+        "started_at": "2026-10-01T00:00:15.000Z",
+        "expected": "在同一虚构订单观测中分别证明 SL 与 TP。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0014",
+      "emitted_at": "2026-10-01T00:00:18.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:18.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:18.000Z",
+          "source_as_of": "2026-10-01T00:00:18.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:18.000Z",
+          "source_as_of": "2026-10-01T00:00:18.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:18.000Z",
+          "source_as_of": "2026-10-01T00:00:18.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:18.000Z",
+          "source_as_of": "2026-10-01T00:00:18.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-018000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:18.000Z",
+                "source_as_of": "2026-10-01T00:00:18.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:18.000Z",
+                "source_as_of": "2026-10-01T00:00:18.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:18.000Z",
+          "published_at": "2026-10-01T00:00:18.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:18.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:18.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0015",
+      "emitted_at": "2026-10-01T00:00:19.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-04",
+        "sequence": 4,
+        "step": "verify_protection",
+        "started_at": "2026-10-01T00:00:15.000Z",
+        "expected": "在同一虚构订单观测中分别证明 SL 与 TP。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:00:19.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假观测：SL 与 TP 分别通过，使用同一 observation_id。",
+          "code": null,
+          "account": null,
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0.001",
+            "entry_price": "100000.00",
+            "mark_price": "100000.00",
+            "notional_usdt": "100.00",
+            "state": "PROTECTED",
+            "source_as_of": "2026-10-01T00:00:18.000Z"
+          },
+          "open_orders": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            }
+          ],
+          "protection": {
+            "position_id": "mock-success-position-01",
+            "observation_id": "mock-success-venue-observation-01-018000",
+            "sl": {
+              "kind": "SL",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 SL 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-sl-01",
+              "trigger_price": "98000.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:00:18.000Z",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            },
+            "tp": {
+              "kind": "TP",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 TP 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-tp-01",
+              "trigger_price": "104500.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:00:18.000Z",
+              "source_as_of": "2026-10-01T00:00:18.000Z"
+            }
+          },
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0016",
+      "emitted_at": "2026-10-01T00:00:20.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-05",
+        "sequence": 5,
+        "step": "hold",
+        "started_at": "2026-10-01T00:00:20.000Z",
+        "expected": "在虚构持仓期保留双保护并持续展示新预算。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0017",
+      "emitted_at": "2026-10-01T00:00:30.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:30.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:30.000Z",
+          "source_as_of": "2026-10-01T00:00:30.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:30.000Z",
+          "source_as_of": "2026-10-01T00:00:30.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:30.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:30.000Z",
+          "source_as_of": "2026-10-01T00:00:30.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:30.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:30.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:30.000Z",
+          "source_as_of": "2026-10-01T00:00:30.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-030000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:30.000Z",
+                "source_as_of": "2026-10-01T00:00:30.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:30.000Z",
+                "source_as_of": "2026-10-01T00:00:30.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:30.000Z",
+          "published_at": "2026-10-01T00:00:30.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:30.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:30.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0018",
+      "emitted_at": "2026-10-01T00:00:40.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:40.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:40.000Z",
+          "source_as_of": "2026-10-01T00:00:40.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:40.000Z",
+          "source_as_of": "2026-10-01T00:00:40.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:40.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:40.000Z",
+          "source_as_of": "2026-10-01T00:00:40.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:40.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:40.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:40.000Z",
+          "source_as_of": "2026-10-01T00:00:40.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-040000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:40.000Z",
+                "source_as_of": "2026-10-01T00:00:40.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:40.000Z",
+                "source_as_of": "2026-10-01T00:00:40.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:40.000Z",
+          "published_at": "2026-10-01T00:00:40.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:40.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:40.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0019",
+      "emitted_at": "2026-10-01T00:00:49.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:49.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-049000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:49.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:00:49.000Z",
+          "last_restart_at": null,
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0020",
+      "emitted_at": "2026-10-01T00:00:50.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-05",
+        "sequence": 5,
+        "step": "hold",
+        "started_at": "2026-10-01T00:00:20.000Z",
+        "expected": "在虚构持仓期保留双保护并持续展示新预算。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:00:50.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假观测：持仓 30 秒，双保护仍存在。",
+          "code": null,
+          "account": null,
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0.001",
+            "entry_price": "100000.00",
+            "mark_price": "100000.00",
+            "notional_usdt": "100.00",
+            "state": "PROTECTED",
+            "source_as_of": "2026-10-01T00:00:49.000Z"
+          },
+          "open_orders": null,
+          "protection": {
+            "position_id": "mock-success-position-01",
+            "observation_id": "mock-success-venue-observation-01-049000",
+            "sl": {
+              "kind": "SL",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 SL 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-sl-01",
+              "trigger_price": "98000.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:00:49.000Z",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            "tp": {
+              "kind": "TP",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 TP 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-tp-01",
+              "trigger_price": "104500.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:00:49.000Z",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          },
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-10-01T00:00:49.000Z",
+            "published_at": "2026-10-01T00:00:49.000Z",
+            "age_ms": 0,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+            "utc_day": "2026-10-01",
+            "day_start_equity_usdt": "10000.00",
+            "equity_high_water_usdt": "10000.00",
+            "approximate_today_pnl_usdt": "0.00",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0021",
+      "emitted_at": "2026-10-01T00:00:51.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-06",
+        "sequence": 6,
+        "step": "restart_kernel",
+        "started_at": "2026-10-01T00:00:51.000Z",
+        "expected": "展示重启、离线与进程恢复在线；在线不代表恢复已完成。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0022",
+      "emitted_at": "2026-10-01T00:00:52.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:52.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-049000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 3000,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:52.000Z"
+        },
+        "rustcore": {
+          "status": "RESTARTING",
+          "checked_at": "2026-10-01T00:00:52.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：计划重启中。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0023",
+      "emitted_at": "2026-10-01T00:00:54.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:00:54.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-049000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 5000,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:00:54.000Z"
+        },
+        "rustcore": {
+          "status": "OFFLINE",
+          "checked_at": "2026-10-01T00:00:54.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：进程离线；保留的旧观测不能当作新读回。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0024",
+      "emitted_at": "2026-10-01T00:01:24.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:24.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-049000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 35000,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：重启期间保留的预算已超过 30 秒。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:24.000Z"
+        },
+        "rustcore": {
+          "status": "OFFLINE",
+          "checked_at": "2026-10-01T00:01:24.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：进程离线；保留的旧观测不能当作新读回。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0025",
+      "emitted_at": "2026-10-01T00:01:26.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:26.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:00:49.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "STALE",
+          "observed_at": "2026-10-01T00:00:49.000Z",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-01-049000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:00:49.000Z",
+                "source_as_of": "2026-10-01T00:00:49.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 37000,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：重启期间保留的预算已超过 30 秒。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:26.000Z"
+        },
+        "rustcore": {
+          "status": "RESTARTING",
+          "checked_at": "2026-10-01T00:01:26.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：计划重启中。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0026",
+      "emitted_at": "2026-10-01T00:01:30.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:30.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：进程已在线，账户恢复观测尚未完成。"
+        },
+        "positions": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：恢复中，未知不等于空仓。"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：恢复中，未知不等于无挂单。"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "手写假数据：等待重启后的独立双保护观测。"
+        },
+        "risk_budget": {
+          "status": "STALE",
+          "source_as_of": "2026-10-01T00:00:49.000Z",
+          "published_at": "2026-10-01T00:00:49.000Z",
+          "age_ms": 41000,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：重启期间保留的预算已超过 30 秒。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:30.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:30.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：进程在线但恢复尚未完成。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0027",
+      "emitted_at": "2026-10-01T00:01:31.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-06",
+        "sequence": 6,
+        "step": "restart_kernel",
+        "started_at": "2026-10-01T00:00:51.000Z",
+        "expected": "展示重启、离线与进程恢复在线；在线不代表恢复已完成。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:01:31.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假事件：内核已重启在线，尚需下一步证明恢复。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-10-01T00:01:30.000Z",
+            "last_restart_at": "2026-10-01T00:00:51.000Z",
+            "reason": "手写假数据：新进程已在线，恢复校验待执行。"
+          },
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0028",
+      "emitted_at": "2026-10-01T00:01:32.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-07",
+        "sequence": 7,
+        "step": "verify_recovery",
+        "started_at": "2026-10-01T00:01:32.000Z",
+        "expected": "重新观测持仓与独立 SL/TP，不能以进程在线替代恢复证明。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0029",
+      "emitted_at": "2026-10-01T00:01:34.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:34.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:34.000Z",
+          "source_as_of": "2026-10-01T00:01:34.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:34.000Z",
+          "source_as_of": "2026-10-01T00:01:34.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:01:34.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:34.000Z",
+          "source_as_of": "2026-10-01T00:01:34.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:34.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:34.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:34.000Z",
+          "source_as_of": "2026-10-01T00:01:34.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-02-094000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:34.000Z",
+                "source_as_of": "2026-10-01T00:01:34.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:34.000Z",
+                "source_as_of": "2026-10-01T00:01:34.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:34.000Z",
+          "published_at": "2026-10-01T00:01:34.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:34.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:34.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0030",
+      "emitted_at": "2026-10-01T00:01:37.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:37.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:37.000Z",
+          "source_as_of": "2026-10-01T00:01:37.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:37.000Z",
+          "source_as_of": "2026-10-01T00:01:37.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "PROTECTED",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:37.000Z",
+          "source_as_of": "2026-10-01T00:01:37.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:37.000Z",
+          "source_as_of": "2026-10-01T00:01:37.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-02-097000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:37.000Z",
+                "source_as_of": "2026-10-01T00:01:37.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:37.000Z",
+                "source_as_of": "2026-10-01T00:01:37.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:37.000Z",
+          "published_at": "2026-10-01T00:01:37.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:37.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:37.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0031",
+      "emitted_at": "2026-10-01T00:01:38.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-07",
+        "sequence": 7,
+        "step": "verify_recovery",
+        "started_at": "2026-10-01T00:01:32.000Z",
+        "expected": "重新观测持仓与独立 SL/TP，不能以进程在线替代恢复证明。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:01:38.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假恢复：持仓数量一致，新观测中的 SL 与 TP 均通过。",
+          "code": null,
+          "account": null,
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0.001",
+            "entry_price": "100000.00",
+            "mark_price": "100000.00",
+            "notional_usdt": "100.00",
+            "state": "PROTECTED",
+            "source_as_of": "2026-10-01T00:01:37.000Z"
+          },
+          "open_orders": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            }
+          ],
+          "protection": {
+            "position_id": "mock-success-position-01",
+            "observation_id": "mock-success-venue-observation-02-097000",
+            "sl": {
+              "kind": "SL",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 SL 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-sl-01",
+              "trigger_price": "98000.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:01:37.000Z",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            },
+            "tp": {
+              "kind": "TP",
+              "status": "PASS",
+              "reason": "手写假观测：已独立核对 TP 子单。",
+              "reason_code": "MOCK_LEG_OBSERVED",
+              "order_id": "mock-success-tp-01",
+              "trigger_price": "104500.00",
+              "venue_status": "NEW",
+              "observed_at": "2026-10-01T00:01:37.000Z",
+              "source_as_of": "2026-10-01T00:01:37.000Z"
+            }
+          },
+          "fill": null,
+          "rustcore": {
+            "status": "ONLINE",
+            "checked_at": "2026-10-01T00:01:37.000Z",
+            "last_restart_at": "2026-10-01T00:00:51.000Z",
+            "reason": "手写假数据：内核在线。"
+          },
+          "risk_budget": {
+            "status": "FRESH",
+            "source_as_of": "2026-10-01T00:01:37.000Z",
+            "published_at": "2026-10-01T00:01:37.000Z",
+            "age_ms": 0,
+            "max_age_ms": 30000,
+            "last_publish_applied": true,
+            "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+            "utc_day": "2026-10-01",
+            "day_start_equity_usdt": "10000.00",
+            "equity_high_water_usdt": "10000.00",
+            "approximate_today_pnl_usdt": "0.00",
+            "approximate_today_pnl_pct": 0,
+            "drawdown_pct": 0,
+            "total_exposure_pct": 0
+          }
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0032",
+      "emitted_at": "2026-10-01T00:01:39.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-08",
+        "sequence": 8,
+        "step": "close_position",
+        "started_at": "2026-10-01T00:01:39.000Z",
+        "expected": "记录虚构平仓成交，并确认持仓数量归零。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0033",
+      "emitted_at": "2026-10-01T00:01:40.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:40.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:40.000Z",
+          "source_as_of": "2026-10-01T00:01:40.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.00",
+            "available_usdt": "9900.00",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:40.000Z",
+          "source_as_of": "2026-10-01T00:01:40.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "side": "LONG",
+              "quantity": "0.001",
+              "entry_price": "100000.00",
+              "mark_price": "100000.00",
+              "notional_usdt": "100.00",
+              "state": "CLOSING",
+              "source_as_of": "2026-10-01T00:01:40.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:40.000Z",
+          "source_as_of": "2026-10-01T00:01:40.000Z",
+          "value": [
+            {
+              "order_id": "mock-success-sl-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "SL",
+              "side": "SELL",
+              "order_type": "STOP_MARKET",
+              "quantity": null,
+              "price": "98000.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:40.000Z"
+            },
+            {
+              "order_id": "mock-success-tp-01",
+              "position_id": "mock-success-position-01",
+              "symbol": "BTCUSDT",
+              "role": "TP",
+              "side": "SELL",
+              "order_type": "TAKE_PROFIT_MARKET",
+              "quantity": null,
+              "price": "104500.00",
+              "status": "NEW",
+              "source_as_of": "2026-10-01T00:01:40.000Z"
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:40.000Z",
+          "source_as_of": "2026-10-01T00:01:40.000Z",
+          "value": [
+            {
+              "position_id": "mock-success-position-01",
+              "observation_id": "mock-success-venue-observation-02-097000",
+              "sl": {
+                "kind": "SL",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 SL 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-sl-01",
+                "trigger_price": "98000.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:37.000Z",
+                "source_as_of": "2026-10-01T00:01:37.000Z"
+              },
+              "tp": {
+                "kind": "TP",
+                "status": "PASS",
+                "reason": "手写假观测：已独立核对 TP 子单。",
+                "reason_code": "MOCK_LEG_OBSERVED",
+                "order_id": "mock-success-tp-01",
+                "trigger_price": "104500.00",
+                "venue_status": "NEW",
+                "observed_at": "2026-10-01T00:01:37.000Z",
+                "source_as_of": "2026-10-01T00:01:37.000Z"
+              }
+            }
+          ],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:40.000Z",
+          "published_at": "2026-10-01T00:01:40.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.00",
+          "approximate_today_pnl_usdt": "0.00",
+          "approximate_today_pnl_pct": 0,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0.01
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:40.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:40.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0034",
+      "emitted_at": "2026-10-01T00:01:44.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:44.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:44.000Z",
+          "source_as_of": "2026-10-01T00:01:44.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.20",
+            "available_usdt": "10000.20",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:44.000Z",
+          "source_as_of": "2026-10-01T00:01:44.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:44.000Z",
+          "source_as_of": "2026-10-01T00:01:44.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:44.000Z",
+          "source_as_of": "2026-10-01T00:01:44.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:44.000Z",
+          "published_at": "2026-10-01T00:01:44.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.20",
+          "approximate_today_pnl_usdt": "0.20",
+          "approximate_today_pnl_pct": 2e-05,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:44.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:44.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0035",
+      "emitted_at": "2026-10-01T00:01:45.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-08",
+        "sequence": 8,
+        "step": "close_position",
+        "started_at": "2026-10-01T00:01:39.000Z",
+        "expected": "记录虚构平仓成交，并确认持仓数量归零。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:01:45.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假成交：卖出 0.001 BTC，名义金额 100.20 USDT；持仓数量归零。",
+          "code": null,
+          "account": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.20",
+            "available_usdt": "10000.20",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0",
+            "entry_price": "100000.00",
+            "mark_price": "100200.00",
+            "notional_usdt": "0.00",
+            "state": "CLOSED",
+            "source_as_of": "2026-10-01T00:01:44.000Z"
+          },
+          "open_orders": null,
+          "protection": null,
+          "fill": {
+            "side": "SELL",
+            "quantity": "0.001",
+            "average_price": "100200.00",
+            "notional_usdt": "100.20"
+          },
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0036",
+      "emitted_at": "2026-10-01T00:01:46.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-09",
+        "sequence": 9,
+        "step": "cleanup_after",
+        "started_at": "2026-10-01T00:01:46.000Z",
+        "expected": "确认无残留持仓和普通/Algo 挂单。",
+        "reason": "手写假步骤进行中。",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN",
+        "actual": {
+          "summary": "手写假步骤尚未给出完成观测。",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0037",
+      "emitted_at": "2026-10-01T00:01:50.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:50.000Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:50.000Z",
+          "source_as_of": "2026-10-01T00:01:50.000Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.20",
+            "available_usdt": "10000.20",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:50.000Z",
+          "source_as_of": "2026-10-01T00:01:50.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:50.000Z",
+          "source_as_of": "2026-10-01T00:01:50.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:50.000Z",
+          "source_as_of": "2026-10-01T00:01:50.000Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:50.000Z",
+          "published_at": "2026-10-01T00:01:50.000Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.20",
+          "approximate_today_pnl_usdt": "0.20",
+          "approximate_today_pnl_pct": 2e-05,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:50.000Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:50.000Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": "mock-success-round-01",
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "RUNNING",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": null,
+          "reason": "手写假场景正在回放；非交易运行。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0038",
+      "emitted_at": "2026-10-01T00:01:51.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "step_id": "mock-success-step-09",
+        "sequence": 9,
+        "step": "cleanup_after",
+        "started_at": "2026-10-01T00:01:46.000Z",
+        "expected": "确认无残留持仓和普通/Algo 挂单。",
+        "reason": "手写假场景：此步骤按设定通过。",
+        "phase": "COMPLETED",
+        "ended_at": "2026-10-01T00:01:51.000Z",
+        "result": "PASS",
+        "actual": {
+          "summary": "手写假观测：已无持仓与挂单，清理完成。",
+          "code": null,
+          "account": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.20",
+            "available_usdt": "10000.20",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "position": {
+            "position_id": "mock-success-position-01",
+            "symbol": "BTCUSDT",
+            "side": "LONG",
+            "quantity": "0",
+            "entry_price": "100000.00",
+            "mark_price": "100200.00",
+            "notional_usdt": "0.00",
+            "state": "CLOSED",
+            "source_as_of": "2026-10-01T00:01:50.000Z"
+          },
+          "open_orders": [],
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0039",
+      "emitted_at": "2026-10-01T00:01:52.000Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "mock-success-round-01",
+        "status": "SUCCEEDED",
+        "started_at": "2026-10-01T00:00:01.000Z",
+        "ended_at": "2026-10-01T00:01:52.000Z",
+        "reason": "手写假数据：九个步骤均通过；非真实交易成功记录。",
+        "trigger": "SCHEDULED"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "mock-success-event-0040",
+      "emitted_at": "2026-10-01T00:01:52.100Z",
+      "source": {
+        "kind": "MOCK",
+        "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "build": {
+          "caller_commit": "mock-caller-v1",
+          "rustcore_commit": "mock-rustcore-v1"
+        },
+        "generated_at": "2026-10-01T00:01:52.100Z",
+        "source": {
+          "kind": "MOCK",
+          "label": "手写假数据，仅用于界面与回放演示；非交易记录"
+        },
+        "account": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:52.100Z",
+          "source_as_of": "2026-10-01T00:01:52.100Z",
+          "value": {
+            "account_label": "MOCK success account",
+            "equity_usdt": "10000.20",
+            "available_usdt": "10000.20",
+            "position_mode": "ONE_WAY",
+            "margin_mode": "CROSS",
+            "btc_leverage": 1
+          },
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "positions": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:52.100Z",
+          "source_as_of": "2026-10-01T00:01:52.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "open_orders": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:52.100Z",
+          "source_as_of": "2026-10-01T00:01:52.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "protection": {
+          "status": "AVAILABLE",
+          "observed_at": "2026-10-01T00:01:52.100Z",
+          "source_as_of": "2026-10-01T00:01:52.100Z",
+          "value": [],
+          "reason": "手写假观测；非真实交易所读回。"
+        },
+        "risk_budget": {
+          "status": "FRESH",
+          "source_as_of": "2026-10-01T00:01:52.100Z",
+          "published_at": "2026-10-01T00:01:52.100Z",
+          "age_ms": 0,
+          "max_age_ms": 30000,
+          "last_publish_applied": true,
+          "reason": "手写假数据：最近一份预算仍在有效窗口内。",
+          "utc_day": "2026-10-01",
+          "day_start_equity_usdt": "10000.00",
+          "equity_high_water_usdt": "10000.20",
+          "approximate_today_pnl_usdt": "0.20",
+          "approximate_today_pnl_pct": 2e-05,
+          "drawdown_pct": 0,
+          "total_exposure_pct": 0
+        },
+        "kill_switch": {
+          "level": "none",
+          "reason": "手写假数据：无熔断闩锁。",
+          "observed_at": "2026-10-01T00:01:52.100Z"
+        },
+        "rustcore": {
+          "status": "ONLINE",
+          "checked_at": "2026-10-01T00:01:52.100Z",
+          "last_restart_at": "2026-10-01T00:00:51.000Z",
+          "reason": "手写假数据：内核在线。"
+        },
+        "active_round_id": null,
+        "latest_round": {
+          "round_id": "mock-success-round-01",
+          "status": "SUCCEEDED",
+          "started_at": "2026-10-01T00:00:01.000Z",
+          "ended_at": "2026-10-01T00:01:52.000Z",
+          "reason": "手写假数据：九个步骤均通过；非真实交易成功记录。",
+          "trigger": "SCHEDULED"
+        }
+      }
+    }
+  ]
+}

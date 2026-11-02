@@ -1,0 +1,3 @@
+[submodule "rustcore"]
+	path = rustcore
+	url = https://github.com/svip2025/rustcore.git

@@ -1,0 +1,27 @@
+{
+  "name": "rustcore-demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13 <23"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "check:recordings": "tsx scripts/check-recordings.ts",
+    "test": "tsx --test caller/test/*.test.ts",
+    "caller": "tsx scripts/start-caller.ts",
+    "scenario": "tsx scripts/run-scenario.ts",
+    "export:recording": "tsx scripts/export-recording.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "1.14.7",
+    "@grpc/proto-loader": "0.8.1",
+    "ulid": "3.0.2"
+  }
+}
