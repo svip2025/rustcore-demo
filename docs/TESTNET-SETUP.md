@@ -2,9 +2,9 @@
 
 执行版本补记：原始研究仍固定下述 `1986eac`。第 1 部分经单独授权，使用 [端点兼容 PR #2](https://github.com/svip2025/rustcore/pull/2) 的 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989` 进行集成测试，canonical 测试网 REST/WS 已更新，其他交易及风控判据未修改。
 
-状态（2026-11-02）：**第 0 步调研已审核通过；第 1 部分 caller 终端链路正在实现和验证，真实完整场景尚未通过。** 公网 HTTP/SSE 与部署尚未完成。
+执行状态补记（2026-11-02）：**第 0 步调研已审核通过；第 1 部分真实终端九步闭环和只读 HTTP/SSE 实机检查已通过。** 运行证据见 [TERMINAL-RUN.md](TERMINAL-RUN.md)，前端对接见 [CALLER-HANDOFF.md](CALLER-HANDOFF.md)；公网部署及长期运行尚未完成。
 
-下文保留原第 0 步静态源码研究、行号和未实测边界，不将后续只读账户检查倒填为源码调研或交易成功。当前实现选择见 [STEP1-DECISIONS.md](STEP1-DECISIONS.md)；旧测试网入口 418、新官方入口读取成功但 BTCUSDT 为 20x，以及待手动 1x/独立端点兼容 PR 的状态见 [F-07](../FINDINGS.md#f-07真实只读检查与尚未满足的账户前提)。
+下文保留原第 0 步静态源码研究、行号和未实测边界，不将后续运行结果倒填为当时的调研结论。当前实现选择见 [STEP1-DECISIONS.md](STEP1-DECISIONS.md)；旧入口 418、新入口首次读到 BTCUSDT 20x 的历史检查见 [F-07](../FINDINGS.md#f-07真实只读检查与尚未满足的账户前提)。账户所有者随后手动设为 1x，已通过接口读回；端点兼容 PR 已创建，集成固定到上述提交。
 
 源码基线：rustcore [1986eac011badfa268be9e2e7f9667e024fd046c](https://github.com/svip2025/rustcore/tree/1986eac011badfa268be9e2e7f9667e024fd046c)。下文链接固定到这一提交；后续 submodule 应固定版本后再实施。本步骤只读源码、proto、README，未使用交易所凭证、调用交易 RPC或重复进行 VPS 连通性调研。请求示例是待填运行时数据的协议模板，不是成功下单记录。
 

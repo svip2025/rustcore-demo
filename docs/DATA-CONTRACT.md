@@ -1,6 +1,6 @@
 # 公共数据契约 v1（已冻结）
 
-唯一类型定义是 [`shared/schema.ts`](../shared/schema.ts)。caller、web、SSE 和录制/回放共同导入该文件；不在各端另写同名响应类型。`schema_version` 固定为 `1`。本版已纳入冻结前的修订（预算命名、版本与触发来源）；HTTP 服务仍待实现。
+唯一类型定义是 [`shared/schema.ts`](../shared/schema.ts)。caller、web、SSE 和录制/回放共同导入该文件；不在各端另写同名响应类型。`schema_version` 固定为 `1`。本版已纳入冻结前的修订（预算命名、版本与触发来源）；HTTP/SSE 已按该契约实现并通过实机检查，见 [CALLER-HANDOFF.md](CALLER-HANDOFF.md)。
 
 ## 接口与类型
 

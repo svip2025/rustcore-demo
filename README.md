@@ -2,7 +2,7 @@
 
 Binance USDⓈ-M 期货测试网演示：通过 [rustcore](https://github.com/svip2025/rustcore) 的公开 gRPC 接口执行开仓、双保护、持仓、重启恢复和平仓，并保存每一步的真实结果。仅测试网，非金融软件。
 
-**当前：测试网终端九步闭环已通过，只读 HTTP/SSE 已实现并通过本地测试。** 2026-11-02 的真实轮次完成开仓、SL/TP 独立核验、持仓、杀进程重启、新 boot 下恢复、平仓和全账户清理，九步全部 PASS。
+**当前：第一部分 caller 已完成，测试网终端九步闭环及只读 HTTP/SSE 实机检查通过。** 2026-11-02 的真实轮次完成开仓、SL/TP 独立核验、持仓、杀进程重启、新 boot 下恢复、平仓和全账户清理，九步全部 PASS。前端入口与接口实测见 [对接说明](docs/CALLER-HANDOFF.md)。
 
 优先查看：[真实终端运行结果](docs/TERMINAL-RUN.md) · [成功录制](recordings/run-20261102-150145-succeeded.json) · [保留的五轮失败历史](docs/TERMINAL-RUN.md#保留的五轮失败)。另两份 `MOCK` 录制明确为手写假数据。
 
