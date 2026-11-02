@@ -34,6 +34,8 @@ class MockRpc implements Rpc {
   readError: Error | null = null;
   onReadyRead: (() => void) | null = null;
   accountGate: Promise<void> | null = null;
+  reconcileGate: Promise<void> | null = null;
+  reconcileError: Error | null = null;
   account: Row = { available: true, as_of_ms: String(NOW - 7), observed_at_ms: String(NOW),
     equity_usdt: '1000', available_usdt: '900', open_positions_count: '0', positions: [] };
   positions: Row = { positions: [], orphan_positions: [] };
@@ -47,8 +49,12 @@ class MockRpc implements Rpc {
       return { snapshot_stale: false, rows: [{ found: false }, { found: false }, { found: false }] };
     }
     if (method === 'EnsureMarketData') return { accepted: true };
-    if (method === 'ReconcileNow') return { accepted: true, completed: true, has_diff: false,
-      local_position_zero_diff: true, all_positions_zero: true, all_open_orders_empty: true, all_open_algo_orders_empty: true };
+    if (method === 'ReconcileNow') {
+      await this.reconcileGate;
+      if (this.reconcileError) throw this.reconcileError;
+      return { accepted: true, completed: true, has_diff: false,
+        local_position_zero_diff: true, all_positions_zero: true, all_open_orders_empty: true, all_open_algo_orders_empty: true };
+    }
     if (method === 'GetAccountState') {
       await this.accountGate;
       if (this.readError) throw this.readError;
@@ -123,6 +129,7 @@ test('timer cadence publishes every ten seconds while preserving original source
   assert.equal(rpc.budgets()[1]?.as_of_ms, String(NOW - 7));
   assert.equal(store.getState().risk_budget.source_as_of, new Date(NOW - 7).toISOString());
   rpc.account.equity_usdt = '1200'; rpc.account.as_of_ms = String(NOW + 10000);
+  await runtime.refresh(); // Populate the next timer's cache; do not assume an unread RPC response.
   t.mock.timers.tick(10000); await runtime.refresh();
   const view = store.getState().risk_budget;
   assert.equal(view.approximate_today_pnl_usdt, '200');
@@ -214,7 +221,7 @@ test('restart records RESTARTING then OFFLINE then ONLINE, observes the new boot
     rpc.account.equity_usdt = '1100'; rpc.account.as_of_ms = String(Date.now());
   };
   await runtime.restartKernel(); unsubscribe();
-  assert.deepEqual(statuses, ['RESTARTING', 'OFFLINE', 'ONLINE']);
+  assert.deepEqual(statuses, ['RESTARTING', 'OFFLINE', 'ONLINE', 'ONLINE']); // Read, then independent budget publication.
   assert.equal(runtime.snapshot?.accountOrders.engine_boot_id, 'boot-two');
   assert.equal(runtime.snapshot?.bootStartedAt, NOW + 1);
   assert.equal(rpc.current().request.since_seq, '9007199254740993');
@@ -295,4 +302,79 @@ test('a successful health reply cannot make an exited owned child ready', async 
   assert.equal(kernel.starts, 1);
   assert.equal(rpc.calls.some(call => call.method === 'EnsureMarketData'), false);
   assert.equal(runtime.isStarted, false);
+});
+
+async function flush(): Promise<void> {
+  for (let index = 0; index < 20; index++) await Promise.resolve();
+}
+
+test('a pending poll/full reconcile cannot block ten-second cached budget publication or hide its expiry', async (t) => {
+  const { runtime, store, rpc } = await fixture(t);
+  await runtime.start();
+  const oldAccount = structuredClone(store.getState().account), oldPositions = structuredClone(store.getState().positions);
+  let releaseAccount!: () => void, releaseReconcile!: () => void;
+  rpc.accountGate = new Promise<void>(resolve => { releaseAccount = resolve; });
+  rpc.reconcileGate = new Promise<void>(resolve => { releaseReconcile = resolve; });
+  try {
+    t.mock.timers.tick(2000); await flush(); // The ordinary read is now pending.
+    t.mock.timers.tick(8000); await flush(); // Full reconcile also starts, independently.
+    assert.equal(runtime.snapshot?.receivedAt, NOW);
+    assert.equal(rpc.budgets().length, 2);
+    assert.equal(rpc.budgets()[1]?.as_of_ms, String(NOW - 7));
+    t.mock.timers.tick(10000); await flush();
+    assert.equal(rpc.budgets().length, 3);
+    t.mock.timers.tick(10000); await flush();
+    assert.equal(rpc.budgets().length, 3, 'the old source is now over 30 seconds old, regardless of cached receipt time');
+    const state = store.getState();
+    assert.equal(state.risk_budget.status, 'STALE');
+    assert.equal(state.risk_budget.age_ms, 30007);
+    assert.equal(state.generated_at, new Date(NOW + 30000).toISOString());
+    assert.deepEqual(state.account, oldAccount);
+    assert.deepEqual(state.positions, oldPositions);
+    assert.equal(rpc.calls.filter(call => call.method === 'ReconcileNow').length, 2, 'only one background full request is in flight');
+  } finally {
+    releaseAccount(); releaseReconcile(); await runtime.refresh();
+  }
+});
+
+test('ordinary reads continue during full reconcile, while force waits for it and then obtains a new snapshot', async (t) => {
+  const { runtime, rpc } = await fixture(t);
+  await runtime.start();
+  let releaseReconcile!: () => void;
+  rpc.reconcileGate = new Promise<void>(resolve => { releaseReconcile = resolve; });
+  t.mock.timers.tick(10000);
+  await runtime.refresh();
+  assert.equal(runtime.snapshot?.receivedAt, NOW + 10000, 'normal poll did not await the full request');
+  let releaseAccount!: () => void;
+  rpc.accountGate = new Promise<void>(resolve => { releaseAccount = resolve; });
+  const olderRead = runtime.refresh();
+  await flush();
+  let forcedDone = false;
+  const forced = runtime.refresh(true).then(() => { forcedDone = true; });
+  const before = rpc.calls.filter(call => call.method === 'GetAccountState').length;
+  await flush(); assert.equal(forcedDone, false);
+  releaseReconcile(); await flush(); assert.equal(forcedDone, false, 'a read already in progress must be drained first');
+  releaseAccount(); await olderRead; await forced;
+  assert.equal(rpc.calls.filter(call => call.method === 'GetAccountState').length, before + 1);
+  assert.equal(rpc.calls.filter(call => call.method === 'ReconcileNow').length, 2, 'forced read joined the same full request');
+});
+
+test('read failure disables cached budget inputs until a fresh read succeeds; full failure does not stop ordinary reads', async (t) => {
+  const { runtime, store, rpc } = await fixture(t);
+  await runtime.start();
+  rpc.readError = new Error('synthetic read failure');
+  await assert.rejects(runtime.refresh());
+  const count = rpc.budgets().length;
+  t.mock.timers.tick(10000); await flush();
+  assert.equal(rpc.budgets().length, count);
+  assert.equal(store.getState().risk_budget.status, 'UNAVAILABLE');
+  rpc.readError = null;
+  rpc.reconcileError = new Error(`full failed ${TOKEN}`);
+  await runtime.refresh(true);
+  assert.equal(store.getState().rustcore.status, 'ONLINE');
+  assert.equal(runtime.lastReconcile.accepted, false);
+  assert.equal(runtime.lastReconcile.completed, false);
+  assert.equal(String(runtime.lastReconcile.message).includes(TOKEN), false);
+  t.mock.timers.tick(10000); await runtime.refresh(); await flush();
+  assert.equal(rpc.budgets().length, count + 1);
 });

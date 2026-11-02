@@ -42,6 +42,8 @@ class MockRuntime implements Runtime {
   behavior: Behavior;
   restartChangesBoot = true;
   closeAcknowledgmentLost = false;
+  openingAccountUnavailableReads = 0;
+  unavailableAccountBodies: Row[] = [];
   held = false;
   boot = "mock-boot-before-restart";
   bootStartedAt = Date.now() - 1000;
@@ -132,6 +134,8 @@ class MockRuntime implements Runtime {
 
   async refresh(_forceReconcile = false): Promise<void> {
     const now = Date.now(), start = now - 4, end = now - 1;
+    const accountUnavailable = this.held && this.openKey !== "" && this.openingAccountUnavailableReads > 0;
+    if (accountUnavailable) this.openingAccountUnavailableReads--;
     const position: Row = { position_id: this.positionId, credential_id: this.config.credentialId,
       bot_uid: BOT, symbol_key: BTC, direction: "long", state: "protected", qty: "0.001",
       entry_price: "100000", last_reconciled_ms: String(end) };
@@ -163,7 +167,8 @@ class MockRuntime implements Runtime {
     const observationId = "mock-observation-" + (++this.sequence);
     this.snapshot = {
       receivedAt: now, bootStartedAt: this.bootStartedAt,
-      account: { available: true, observed_at_ms: String(now), as_of_ms: String(end), equity_usdt: "10000",
+      account: accountUnavailable ? { available: false, unavailable_reason: "MOCK_ACCOUNT_SYNC_PENDING" }
+        : { available: true, observed_at_ms: String(now), as_of_ms: String(end), equity_usdt: "10000",
         available_usdt: this.held ? "9900" : "10000", positions: this.held ? [{
           symbol_key: BTC, side: "long", qty: "0.001", entry_price: "100000", mark_price: "100000",
         }] : [] },
@@ -184,10 +189,14 @@ class MockRuntime implements Runtime {
         },
       },
     };
+    if (accountUnavailable) this.unavailableAccountBodies.push(structuredClone(this.snapshot.account));
     this.lastReconcile = { accepted: true, completed: true, has_diff: false, local_position_zero_diff: true,
       all_positions_zero: !this.held, all_open_orders_empty: !this.startupEntry || this.startupCancelled, all_open_algo_orders_empty: !this.held };
     const state = projectSnapshot(this.store.getState(), this.snapshot, this.config.credentialId, this.settings);
-    state.risk_budget = { ...state.risk_budget, status: "FRESH", source_as_of: new Date(end).toISOString(),
+    state.risk_budget = accountUnavailable ? { ...state.risk_budget, status: "UNAVAILABLE",
+      age_ms: state.risk_budget.source_as_of ? now - Date.parse(state.risk_budget.source_as_of) : null,
+      reason: "MOCK account unavailable; no substitute budget was published" }
+      : { ...state.risk_budget, status: "FRESH", source_as_of: new Date(end).toISOString(),
       published_at: new Date(now).toISOString(), age_ms: now - end, last_publish_applied: true,
       utc_day: state.generated_at.slice(0, 10), day_start_equity_usdt: "10000", equity_high_water_usdt: "10000",
       approximate_today_pnl_usdt: "0", approximate_today_pnl_pct: 0, drawdown_pct: 0,
@@ -445,6 +454,40 @@ test("a refused startup cancellation is checked, never repeated, and cannot be m
     assert.equal(runtime.calls("GetPositionCloseTarget").length, 0);
     assert.equal(runtime.calls("ExecuteIntents").length, 0);
     assert.equal(runtime.store.getTimeline().rounds[0]!.steps[1]!.result, "FAIL");
+    loadRecording(runtime, result.round_id);
+  });
+});
+
+
+test("one unavailable account observation after opening does not invent account facts or resubmit the order", async () => {
+  await fixture("success", async (runtime) => {
+    runtime.openingAccountUnavailableReads = 1;
+    // This intentional two-observation case must tolerate parallel worker scheduling.
+    runtime.config.phaseTimeoutMs = 1000;
+    const live: SseEvent[] = [];
+    runtime.store.subscribe(event => live.push(event));
+    const result = await new ScenarioRunner(runtime, runtime.options()).run("MANUAL");
+    assert.equal(result.status, "SUCCEEDED", result.reason);
+    assert.equal(runtime.calls("ExecuteIntents").length, 1, "the original submitted opening must not be repeated");
+    assert.deepEqual(runtime.unavailableAccountBodies, [{ available: false, unavailable_reason: "MOCK_ACCOUNT_SYNC_PENDING" }],
+      "the unavailable observation must not acquire fabricated account balances, source time or positions");
+    const unavailable = live.filter((event) => event.type === "state" && event.data.account.status === "UNAVAILABLE");
+    assert.equal(unavailable.length, 1);
+    if (unavailable[0]?.type !== "state") throw new Error("missing unavailable account snapshot");
+    assert.equal(unavailable[0].data.account.value, null);
+    assert.equal(unavailable[0].data.account.source_as_of, null);
+    assert.equal(unavailable[0].data.positions.value, null);
+    assert.equal(unavailable[0].data.risk_budget.status, "UNAVAILABLE");
+    const missingIndex = live.indexOf(unavailable[0]);
+    const observedIndex = live.findIndex((event, index) => index > missingIndex && event.type === "state"
+      && event.data.account.status === "AVAILABLE" && event.data.positions.value?.[0]?.quantity === "0.001");
+    assert.ok(observedIndex > missingIndex, "successful fill handling must follow a later available same-scope observation");
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.deepEqual(round.steps.map(step => step.step), NINE_STEPS);
+    assert.equal(round.steps[2]!.result, "PASS");
+    assert.equal(round.steps[2]!.actual.fill?.quantity, "0.001");
+    assert.equal(round.steps[2]!.actual.fill?.notional_usdt, "100");
+    assert.equal(round.steps[2]!.actual.account?.equity_usdt, "10000");
     loadRecording(runtime, result.round_id);
   });
 });

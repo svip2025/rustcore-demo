@@ -66,3 +66,9 @@ v2 quantity 字段 reserved，数量由风控计算；remaining_credential_notio
 依据为该次工具的去敏输出，未另存独立 receipt。固定源码的测试网地址见 [venue.rs:7](https://github.com/svip2025/rustcore/blob/1986eac011badfa268be9e2e7f9667e024fd046c/src/venue.rs#L7)，URL 与显式 venue 的匹配仍由内核 `resolve_base_url` 约束；当前环境变量不能直接改成另一入口绕过校验。
 
 处理：旧入口的 418 / `-1003` 如实保留，不能据此判定为坏 Key；新入口只读成功也不能推断已经下单或恢复成功。用户随后手动调整杠杆，只读复核已确认 BTCUSDT 与 ETHUSDT 均为 `cross`、`1x`、`BOTH`。端点兼容通过独立授权的 [PR #2](https://github.com/svip2025/rustcore/pull/2) 处理，caller 只读检查切换到同一官方新测试网；演示 submodule 固定 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`，PR 尚未合并。这些检查未修改交易所设置、没有订单写入，也未通过完整场景。
+
+## F-08：首轮 caller 对账期限与额外限流配置不匹配
+
+真实轮次 `round_01M6E83G0JPS0ZX0XR5RHTCD1J`（MANUAL）于 `2026-11-02T13:45:11.444Z` 开始，在前置对账得到 `DEADLINE_EXCEEDED: ReconcileNow budget exhausted`，结束为 FAILED，没有提交开仓。原始 [TESTNET 录制](recordings/run-20261102-134511-failed.json) 保留 caller/内核具体版本、失败步骤及原因。
+
+这是 caller 接入配置问题，不作为内核风控故障：测试进程额外设置的旧名 `RUSTCORE_BINANCE_RPS=2` / `BURST=2` 实际以**请求权重**计量，全账户读取的成本远大于两次请求；caller 同时只给了 10 秒 gRPC 期限。处理是移除额外限流覆盖、沿用内核默认限流，并让 caller 的有界读取期限覆盖正常全账户对账。预算发布独立每 10 秒运行，源数据过期或不可用时仍不发布，不能用新时间刷新旧事实。原失败轮次不会覆盖；后续验证使用新的 MANUAL 轮次。

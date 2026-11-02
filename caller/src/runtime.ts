@@ -48,14 +48,17 @@ export class CallerRuntime {
   lastReconcile: Row = {};
   budgetNotes: string[] = [];
   private timer: ReturnType<typeof setInterval> | undefined;
+  private budgetTimer: ReturnType<typeof setInterval> | undefined;
   private reconnect: ReturnType<typeof setTimeout> | undefined;
   private subscription: { cancel(): void } | undefined;
   private polling: Promise<void> | null = null;
+  private reconciling: Promise<void> | null = null;
+  private publishingBudget: Promise<void> | null = null;
+  private budgetInputsAvailable = false;
   private stopped = true;
   private restarting = false;
   private bootStartedAt = Date.now();
   private lastReconciledAt = 0;
-  private lastBudgetAttempt = 0;
   private budget: RiskBudgetView;
   private streamGeneration = 0;
   private readonly shutdown = new AbortController();
@@ -65,7 +68,7 @@ export class CallerRuntime {
     const token = config.environment.RUSTCORE_GRPC_AUTH_TOKEN;
     this.rpc = rpc ?? new CoreRpc({ address: config.grpcAddress,
       protoDir: fileURLToPath(new URL('../../rustcore/proto/', import.meta.url)),
-      ...(token ? { token } : {}), deadlineMs: Math.min(config.phaseTimeoutMs, 10_000) });
+      ...(token ? { token } : {}), deadlineMs: Math.min(config.phaseTimeoutMs, 80_000) });
     this.calculator = new RiskBudgetCalculator(store.db);
     this.budget = store.getState().risk_budget;
   }
@@ -92,7 +95,11 @@ export class CallerRuntime {
       if (this.stopped) return;
       this.subscribe();
       await this.refresh(true);
-      if (!this.stopped) this.timer = setInterval(() => { void this.refresh().catch(() => {}); }, 2_000);
+      await this.publishBudget();
+      if (!this.stopped) {
+        this.timer = setInterval(() => { void this.refresh().catch(() => {}); }, 2_000);
+        this.budgetTimer = setInterval(() => { this.writeBudgetState(); void this.publishBudget().catch(() => {}); }, 10_000);
+      }
     } catch (error) {
       await this.stop();
       if (error instanceof ScenarioFailure) throw error;
@@ -144,19 +151,52 @@ export class CallerRuntime {
     });
   }
   async refresh(forceReconcile = false): Promise<void> {
-    if (this.polling) { await this.polling; if (forceReconcile) return this.refresh(true); return; }
     if (this.restarting || this.stopped) return;
-    this.polling = this.poll(forceReconcile).finally(() => { this.polling = null; });
+    if (forceReconcile) {
+      await this.fullReconcile();
+      // An already-running read can predate completion of the shared full
+      // reconcile. Wait it out, then require a new read for this force request.
+      if (this.polling) await this.polling.catch(() => {});
+      if (this.restarting || this.stopped) return;
+    } else if (Date.now() - this.lastReconciledAt >= 10_000) {
+      void this.fullReconcile();
+    }
+    if (this.polling) return this.polling;
+    this.polling = this.poll().finally(() => { this.polling = null; });
     return this.polling;
   }
-  private async poll(forceReconcile: boolean): Promise<void> {
+  private fullReconcile(): Promise<void> {
+    if (this.reconciling) return this.reconciling;
+    this.reconciling = (async () => {
+      try {
+        const result = await this.rpc.unary('v2', 'ReconcileNow', { credential_id: this.config.credentialId,
+          schema_version: 1, reason: 'testnet_demo_observation' });
+        if (!this.stopped && !this.restarting) this.lastReconcile = result;
+      } catch (error) {
+        if (!this.stopped && !this.restarting) this.lastReconcile = { accepted: false, completed: false,
+          reason_code: 'RECONCILE_UNAVAILABLE', message: this.publicReason(error) };
+      } finally {
+        if (!this.stopped && !this.restarting) this.lastReconciledAt = Date.now();
+      }
+    })().finally(() => { this.reconciling = null; });
+    return this.reconciling;
+  }
+  private budgetView(): RiskBudgetView {
+    const age = this.budget.source_as_of ? Date.now() - Date.parse(this.budget.source_as_of) : null;
+    return { ...this.budget, age_ms: age, status: !this.budgetInputsAvailable ? 'UNAVAILABLE'
+      : age !== null && age > this.budget.max_age_ms ? 'STALE' : this.budget.status };
+  }
+  private writeBudgetState(): void {
+    if (this.stopped || this.restarting) return;
+    const state = this.store.getState();
+    state.generated_at = new Date().toISOString();
+    state.risk_budget = this.budgetView();
+    this.store.setState(state);
+  }
+  private async poll(): Promise<void> {
     const request = { credential_id: this.config.credentialId, schema_version: 1 };
     try {
-      if (forceReconcile || Date.now() - this.lastReconciledAt >= 10_000) {
-        this.lastReconcile = await this.rpc.unary('v2', 'ReconcileNow', { ...request, reason: 'testnet_demo_observation' });
-        this.lastReconciledAt = Date.now();
-      }
-      if (this.stopped) return;
+      if (this.stopped || this.restarting) return;
       const [account, positions, orders, accountOrders, kills] = await Promise.all([
         this.rpc.unary('v2', 'GetAccountState', request),
         this.rpc.unary('v2', 'GetPositionStates', { ...request, include_closed: false }),
@@ -164,16 +204,15 @@ export class CallerRuntime {
         this.rpc.unary('v2', 'GetAccountOrderState', { ...request, max_items_per_section: 500 }),
         this.rpc.unary('v2', 'GetKillSwitchStates', { scope_keys: ['global', `cred:${this.config.credentialId}`, `bot:${BOT}`], schema_version: 1 }),
       ]);
-      if (this.stopped) return;
+      if (this.stopped || this.restarting) return;
       this.snapshot = { account, positions, orders, accountOrders, kills, receivedAt: Date.now(), bootStartedAt: this.bootStartedAt };
-      if (Date.now() - this.lastBudgetAttempt >= 10_000) await this.publishBudget();
+      this.budgetInputsAvailable = true;
       const state = projectSnapshot(this.store.getState(), this.snapshot, this.config.credentialId, this.settings);
-      const age = this.budget.source_as_of ? Date.now() - Date.parse(this.budget.source_as_of) : null;
-      state.risk_budget = { ...this.budget, age_ms: age,
-        status: age !== null && age > this.budget.max_age_ms ? 'STALE' : this.budget.status };
+      state.risk_budget = this.budgetView();
       this.store.setState(state);
     } catch (error) {
-      if (this.stopped) return;
+      if (this.stopped || this.restarting) return;
+      this.budgetInputsAvailable = false;
       const state = this.store.getState();
       state.generated_at = new Date().toISOString();
       state.rustcore = { ...state.rustcore, status: 'OFFLINE', checked_at: state.generated_at, reason: '公开读取未能完成，旧事实不会刷新时间' };
@@ -185,10 +224,19 @@ export class CallerRuntime {
     }
   }
   private async publishBudget(): Promise<void> {
+    if (this.stopped || this.restarting) return;
+    if (!this.snapshot || !this.budgetInputsAvailable) { this.writeBudgetState(); return; }
+    if (this.publishingBudget) return this.publishingBudget;
+    this.publishingBudget = this.publishBudgetOnce().finally(() => {
+      this.publishingBudget = null;
+      this.writeBudgetState();
+    });
+    return this.publishingBudget;
+  }
+  private async publishBudgetOnce(): Promise<void> {
     if (!this.snapshot) return;
-    this.lastBudgetAttempt = Date.now();
     const result = this.calculator.observe({ credentialId: this.config.credentialId, account: this.snapshot.account,
-      positionStates: this.snapshot.positions, nowMs: this.snapshot.receivedAt });
+      positionStates: this.snapshot.positions, nowMs: Date.now() });
     this.budgetNotes.push(...result.events.map(e => e.message));
     this.budgetNotes = this.budgetNotes.slice(-30);
     if (!result.publish) {
@@ -205,6 +253,7 @@ export class CallerRuntime {
       this.budgetNotes.push(...events.map(e => e.message));
       if (response.accepted !== true || applied !== true) reason = '预算响应未确认应用（applied 不为 true），已记录';
     } catch { reason = '预算发布结果未知；不将调用异常当作已应用'; }
+    if (this.stopped || this.restarting || !this.budgetInputsAvailable) return;
     const source = timestamp(result.budget.as_of_ms);
     this.budget = { status: accepted && applied === true && fresh(result.budget.as_of_ms) ? 'FRESH' : applied === false ? 'NOT_PUBLISHED' : 'UNAVAILABLE',
       source_as_of: source, published_at: new Date().toISOString(), age_ms: source ? Date.now() - Date.parse(source) : null,
@@ -218,9 +267,12 @@ export class CallerRuntime {
 
   async restartKernel(): Promise<void> {
     if (this.stopped) throw new ScenarioFailure('RUNTIME_STOPPED', 'caller 未运行，不能执行重启', 'UNKNOWN');
-    if (this.polling) await this.polling.catch(() => {});
-    if (this.stopped) return;
     this.restarting = true;
+    this.budgetInputsAvailable = false;
+    if (this.polling) await this.polling.catch(() => {});
+    if (this.reconciling) await this.reconciling;
+    if (this.publishingBudget) await this.publishingBudget.catch(() => {});
+    if (this.stopped) { this.restarting = false; return; }
     this.streamGeneration++;
     this.subscription?.cancel();
     this.subscription = undefined;
@@ -250,8 +302,8 @@ export class CallerRuntime {
     if (this.stopped) return;
     this.subscribe();
     this.lastReconciledAt = 0;
-    this.lastBudgetAttempt = 0;
     await this.refresh(true);
+    await this.publishBudget();
   }
   market(): { price: string; sourceAt: number } | null {
     for (const event of this.store.getCoreEvents().reverse()) {
@@ -281,13 +333,17 @@ export class CallerRuntime {
     this.shutdown.abort();
     this.streamGeneration++;
     if (this.timer) clearInterval(this.timer);
+    if (this.budgetTimer) clearInterval(this.budgetTimer);
     if (this.reconnect) clearTimeout(this.reconnect);
     this.timer = undefined;
+    this.budgetTimer = undefined;
     this.reconnect = undefined;
     this.subscription?.cancel();
     this.subscription = undefined;
     this.stopping = (async () => {
       if (this.polling) await this.polling.catch(() => {});
+      if (this.reconciling) await this.reconciling;
+      if (this.publishingBudget) await this.publishingBudget.catch(() => {});
       this.rpc.close();
       await this.kernel.stop();
     })();

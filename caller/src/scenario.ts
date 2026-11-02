@@ -230,7 +230,9 @@ export class ScenarioRunner {
           if (ack.status !== 'STATUS_ACCEPTED' && ack.status !== 'STATUS_DUPLICATE')
             throw new ScenarioFailure('OPEN_REJECTED', this.runtime.publicReason(ack.message ?? '开仓意图被内核拒绝'));
           return this.wait(async () => {
-            await this.runtime.refresh(); this.requireScope();
+            await this.runtime.refresh();
+            if (this.runtime.snapshot?.account.available !== true) return null;
+            this.requireScope();
             const order = row((await this.runtime.rpc.unary('next', 'GetOrder', { credential_id: this.runtime.config.credentialId, engine_order_id: ack.engine_order_id })).order);
             if (['rejected', 'cancelled', 'expired'].includes(String(order.status))) throw new ScenarioFailure('ENTRY_NOT_FILLED', '开仓订单已终结且未完成成交');
             const position = this.positions().find(p => p.bot_uid === BOT && p.symbol_key === BTC && p.direction === 'long');
@@ -243,7 +245,7 @@ export class ScenarioRunner {
         await this.step('verify_protection', 'SL 与 TP 分别由同一轮完整 Algo 快照证明', async () => { await this.runtime.refresh(true); return this.verify(); });
         await this.step('hold', '持仓期间目标仍存在且双保护分别通过', async () => {
           const until = Date.now() + this.runtime.config.holdMs;
-          do { await (this.options.pause ?? sleep)(Math.min(2_000, Math.max(1, until - Date.now()))); await this.runtime.refresh(); this.verify(); } while (Date.now() < until);
+          do { await (this.options.pause ?? sleep)(Math.min(2_000, Math.max(1, until - Date.now()))); await this.runtime.refresh(true); this.verify(); } while (Date.now() < until);
           return this.verify();
         });
         const oldBoot = this.runtime.snapshot?.accountOrders.engine_boot_id;

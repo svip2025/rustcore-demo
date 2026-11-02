@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "recording_id": "recording_round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+  "title": "Scenario FAILED",
+  "description": "READ_UNAVAILABLE: 4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+  "source": {
+    "kind": "TESTNET",
+    "label": "Binance USDⓈ-M 测试网"
+  },
+  "build": {
+    "caller_commit": "d7a19fa9cb8eb45d91f4f9a6d694461e5508c4e2",
+    "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+  },
+  "created_at": "2026-11-02T13:45:21.531Z",
+  "started_at": "2026-11-02T13:45:11.444Z",
+  "ended_at": "2026-11-02T13:45:21.529Z",
+  "initial_state": {
+    "schema_version": 1,
+    "generated_at": "2026-11-02T13:45:11.444Z",
+    "source": {
+      "kind": "TESTNET",
+      "label": "Binance USDⓈ-M 测试网"
+    },
+    "build": {
+      "caller_commit": "d7a19fa9cb8eb45d91f4f9a6d694461e5508c4e2",
+      "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+    },
+    "account": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "positions": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "open_orders": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "protection": {
+      "status": "UNKNOWN",
+      "observed_at": null,
+      "source_as_of": null,
+      "value": null,
+      "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+    },
+    "risk_budget": {
+      "status": "NOT_PUBLISHED",
+      "source_as_of": null,
+      "published_at": null,
+      "age_ms": null,
+      "max_age_ms": 30000,
+      "last_publish_applied": null,
+      "reason": "本次 caller 尚未发布预算",
+      "utc_day": null,
+      "day_start_equity_usdt": null,
+      "equity_high_water_usdt": null,
+      "approximate_today_pnl_usdt": null,
+      "approximate_today_pnl_pct": null,
+      "drawdown_pct": null,
+      "total_exposure_pct": null
+    },
+    "kill_switch": {
+      "level": "UNKNOWN",
+      "reason": "等待当前运行的只读熔断观察",
+      "observed_at": null
+    },
+    "rustcore": {
+      "status": "UNKNOWN",
+      "checked_at": "2026-11-02T13:44:54.146Z",
+      "last_restart_at": null,
+      "reason": "尚未连接本次内核运行"
+    },
+    "active_round_id": null,
+    "latest_round": null
+  },
+  "initial_timeline": {
+    "schema_version": 1,
+    "generated_at": "2026-11-02T13:45:11.444Z",
+    "source": {
+      "kind": "TESTNET",
+      "label": "Binance USDⓈ-M 测试网"
+    },
+    "rounds": [],
+    "next_cursor": null
+  },
+  "events": [
+    {
+      "schema_version": 1,
+      "event_id": "evt_14af2d9c-d618-4306-8aa7-4cd3db07da35",
+      "emitted_at": "2026-11-02T13:45:11.444Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "trigger": "MANUAL",
+        "status": "RUNNING",
+        "started_at": "2026-11-02T13:45:11.444Z",
+        "ended_at": null,
+        "reason": "Round started"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_52e1be00-5fc3-4971-9ffb-90614749c208",
+      "emitted_at": "2026-11-02T13:45:11.444Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T13:45:11.444Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "d7a19fa9cb8eb45d91f4f9a6d694461e5508c4e2",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "positions": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "open_orders": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "protection": {
+          "status": "UNKNOWN",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "risk_budget": {
+          "status": "NOT_PUBLISHED",
+          "source_as_of": null,
+          "published_at": null,
+          "age_ms": null,
+          "max_age_ms": 30000,
+          "last_publish_applied": null,
+          "reason": "本次 caller 尚未发布预算",
+          "utc_day": null,
+          "day_start_equity_usdt": null,
+          "equity_high_water_usdt": null,
+          "approximate_today_pnl_usdt": null,
+          "approximate_today_pnl_pct": null,
+          "drawdown_pct": null,
+          "total_exposure_pct": null
+        },
+        "kill_switch": {
+          "level": "UNKNOWN",
+          "reason": "等待当前运行的只读熔断观察",
+          "observed_at": null
+        },
+        "rustcore": {
+          "status": "UNKNOWN",
+          "checked_at": "2026-11-02T13:44:54.146Z",
+          "last_restart_at": null,
+          "reason": "尚未连接本次内核运行"
+        },
+        "active_round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "latest_round": {
+          "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T13:45:11.444Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_3f132858-5a21-464e-ab05-d941f60534b3",
+      "emitted_at": "2026-11-02T13:45:11.447Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "step_id": "step_fd136d9b-1d6a-41b1-af01-3643a061436e",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-11-02T13:45:11.447Z",
+        "expected": "测试网 One-way、全仓、BTCUSDT 1x、余额满足手工配置前提；读取真实账户预算",
+        "actual": {
+          "summary": "正在执行",
+          "code": null,
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": null,
+          "risk_budget": null
+        },
+        "reason": "Step running",
+        "phase": "RUNNING",
+        "ended_at": null,
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_c912ce23-d2d7-41ca-8963-7e5f21827f2f",
+      "emitted_at": "2026-11-02T13:45:21.519Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T13:45:21.519Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "d7a19fa9cb8eb45d91f4f9a6d694461e5508c4e2",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "positions": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "open_orders": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "protection": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "risk_budget": {
+          "status": "UNAVAILABLE",
+          "source_as_of": null,
+          "published_at": null,
+          "age_ms": null,
+          "max_age_ms": 30000,
+          "last_publish_applied": null,
+          "reason": "账户读取未完成，不发布替代预算",
+          "utc_day": null,
+          "day_start_equity_usdt": null,
+          "equity_high_water_usdt": null,
+          "approximate_today_pnl_usdt": null,
+          "approximate_today_pnl_pct": null,
+          "drawdown_pct": null,
+          "total_exposure_pct": null
+        },
+        "kill_switch": {
+          "level": "UNKNOWN",
+          "reason": "等待当前运行的只读熔断观察",
+          "observed_at": null
+        },
+        "rustcore": {
+          "status": "OFFLINE",
+          "checked_at": "2026-11-02T13:45:21.519Z",
+          "last_restart_at": null,
+          "reason": "公开读取未能完成，旧事实不会刷新时间"
+        },
+        "active_round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "latest_round": {
+          "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+          "trigger": "MANUAL",
+          "status": "RUNNING",
+          "started_at": "2026-11-02T13:45:11.444Z",
+          "ended_at": null,
+          "reason": "Round started"
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_c40fa1e5-7fe3-4c72-aef5-7a9ee9962329",
+      "emitted_at": "2026-11-02T13:45:21.527Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "step",
+      "data": {
+        "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "step_id": "step_fd136d9b-1d6a-41b1-af01-3643a061436e",
+        "sequence": 1,
+        "step": "preflight",
+        "started_at": "2026-11-02T13:45:11.447Z",
+        "expected": "测试网 One-way、全仓、BTCUSDT 1x、余额满足手工配置前提；读取真实账户预算",
+        "actual": {
+          "summary": "4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+          "code": "READ_UNAVAILABLE",
+          "account": null,
+          "position": null,
+          "open_orders": null,
+          "protection": null,
+          "fill": null,
+          "rustcore": {
+            "status": "OFFLINE",
+            "checked_at": "2026-11-02T13:45:21.519Z",
+            "last_restart_at": null,
+            "reason": "公开读取未能完成，旧事实不会刷新时间"
+          },
+          "risk_budget": {
+            "status": "UNAVAILABLE",
+            "source_as_of": null,
+            "published_at": null,
+            "age_ms": null,
+            "max_age_ms": 30000,
+            "last_publish_applied": null,
+            "reason": "账户读取未完成，不发布替代预算",
+            "utc_day": null,
+            "day_start_equity_usdt": null,
+            "equity_high_water_usdt": null,
+            "approximate_today_pnl_usdt": null,
+            "approximate_today_pnl_pct": null,
+            "drawdown_pct": null,
+            "total_exposure_pct": null
+          }
+        },
+        "reason": "4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth",
+        "phase": "COMPLETED",
+        "ended_at": "2026-11-02T13:45:21.527Z",
+        "result": "UNKNOWN"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_060fc0da-b710-40ab-97da-72998b35ed1a",
+      "emitted_at": "2026-11-02T13:45:21.529Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "round",
+      "data": {
+        "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+        "trigger": "MANUAL",
+        "status": "FAILED",
+        "started_at": "2026-11-02T13:45:11.444Z",
+        "ended_at": "2026-11-02T13:45:21.529Z",
+        "reason": "READ_UNAVAILABLE: 4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth"
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "evt_f36dba36-5489-4b40-88e3-0697193281b9",
+      "emitted_at": "2026-11-02T13:45:21.529Z",
+      "source": {
+        "kind": "TESTNET",
+        "label": "Binance USDⓈ-M 测试网"
+      },
+      "type": "state",
+      "data": {
+        "schema_version": 1,
+        "generated_at": "2026-11-02T13:45:21.529Z",
+        "source": {
+          "kind": "TESTNET",
+          "label": "Binance USDⓈ-M 测试网"
+        },
+        "build": {
+          "caller_commit": "d7a19fa9cb8eb45d91f4f9a6d694461e5508c4e2",
+          "rustcore_commit": "6a81a4aec7ee92a9cd6aebdaef6446515ac2d989"
+        },
+        "account": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "positions": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "open_orders": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "protection": {
+          "status": "UNAVAILABLE",
+          "observed_at": null,
+          "source_as_of": null,
+          "value": null,
+          "reason": "caller 已启动，等待当前运行版本的新观察；保留原始源时间"
+        },
+        "risk_budget": {
+          "status": "UNAVAILABLE",
+          "source_as_of": null,
+          "published_at": null,
+          "age_ms": null,
+          "max_age_ms": 30000,
+          "last_publish_applied": null,
+          "reason": "账户读取未完成，不发布替代预算",
+          "utc_day": null,
+          "day_start_equity_usdt": null,
+          "equity_high_water_usdt": null,
+          "approximate_today_pnl_usdt": null,
+          "approximate_today_pnl_pct": null,
+          "drawdown_pct": null,
+          "total_exposure_pct": null
+        },
+        "kill_switch": {
+          "level": "UNKNOWN",
+          "reason": "等待当前运行的只读熔断观察",
+          "observed_at": null
+        },
+        "rustcore": {
+          "status": "OFFLINE",
+          "checked_at": "2026-11-02T13:45:21.519Z",
+          "last_restart_at": null,
+          "reason": "公开读取未能完成，旧事实不会刷新时间"
+        },
+        "active_round_id": null,
+        "latest_round": {
+          "round_id": "round_01M6E83G0JPS0ZX0XR5RHTCD1J",
+          "trigger": "MANUAL",
+          "status": "FAILED",
+          "started_at": "2026-11-02T13:45:11.444Z",
+          "ended_at": "2026-11-02T13:45:21.529Z",
+          "reason": "READ_UNAVAILABLE: 4 DEADLINE_EXCEEDED: ReconcileNow budget exhausted; completed writes remain committed; reconcile again to obtain current truth"
+        }
+      }
+    }
+  ]
+}
