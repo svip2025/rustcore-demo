@@ -116,10 +116,12 @@ export class DemoStore {
   private journalWatermark(): string {
     return String(this.db.prepare("SELECT CAST(COALESCE(MAX(ordinal),0) AS TEXT) AS value FROM demo_journal").get()!.value);
   }
-  private emit(events: SseEvent[], type: "state" | "round" | "step", data: StateResponse | RoundSummary | TimelineStep, at: string): void {
+  private emit(events: SseEvent[], type: "state" | "timeline" | "resync" | "round" | "step",
+    data: StateResponse | TimelineResponse | { reason: string } | RoundSummary | TimelineStep, at: string): void {
     const last = this.lastEventTime();
     if (last && at < last) throw new Error("Public event time cannot move backwards");
-    const source = type === "state" ? (data as StateResponse).source
+    const source = type === "resync" ? this.getState().source
+      : type === "state" || type === "timeline" ? (data as StateResponse | TimelineResponse).source
       : parse<StateResponse>(this.db.prepare("SELECT initial_state AS body FROM demo_rounds WHERE round_id=?")
         .get((data as RoundSummary | TimelineStep).round_id)).source;
     const event = {
@@ -207,6 +209,20 @@ export class DemoStore {
 
   getTimeline(limit = 20, cursor?: string): TimelineResponse {
     return this.transaction(() => this.timeline(limit, cursor));
+  }
+
+  /** Subscribe before taking this durable baseline; deduplicate the returned IDs from live delivery. */
+  snapshotEvents(resync = false): SseEvent[] {
+    return this.transaction((events) => {
+      const at = this.now();
+      const state = { ...this.getState(), generated_at: at };
+      const timeline = { ...this.timeline(20), generated_at: at };
+      this.saveState(state);
+      if (resync) this.emit(events, "resync", { reason: "Full state and timeline baseline after reconnect" }, at);
+      this.emit(events, "state", state, at);
+      this.emit(events, "timeline", timeline, at);
+      return copy(events);
+    });
   }
 
   startRound(trigger: RoundSummary["trigger"], roundId = "round_" + randomUUID(), at = this.now()): RoundSummary {

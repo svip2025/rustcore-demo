@@ -68,6 +68,95 @@ test("state and old source/observation times survive reopening without being ref
   });
 });
 
+test("fresh and resync baselines persist full envelopes while preserving observation times", () => {
+  fixture((file, store, time) => {
+    const state = store.getState();
+    state.generated_at = at(time - 2000);
+    state.account = { status: "STALE", observed_at: at(time - 3000), source_as_of: at(time - 4000),
+      value: null, reason: "Synthetic older account observation" };
+    store.setState(state);
+    const seen: SseEvent[] = [];
+    store.subscribe((event) => {
+      assert.ok(store.db.prepare("SELECT 1 FROM demo_journal WHERE event_id=?").get(event.event_id));
+      seen.push(event);
+    });
+    const fresh = store.snapshotEvents();
+    assert.deepEqual(fresh.map((event) => event.type), ["state", "timeline"]);
+    const baseline = fresh[0]!;
+    assert.equal(baseline.type, "state");
+    if (baseline.type !== "state") throw new Error("Expected state baseline");
+    assert.ok(baseline.data.generated_at > state.generated_at);
+    assert.deepEqual(baseline.data, { ...state, generated_at: baseline.emitted_at });
+    assert.equal(fresh[1]!.type, "timeline");
+    if (fresh[1]!.type !== "timeline") throw new Error("Expected timeline baseline");
+    assert.equal(fresh[1]!.data.generated_at, baseline.emitted_at);
+    assert.deepEqual(fresh[1]!.data.rounds, []);
+
+    const resync = store.snapshotEvents(true);
+    assert.deepEqual(resync.map((event) => event.type), ["resync", "state", "timeline"]);
+    assert.ok(resync[0]!.type === "resync" && resync[0]!.data.reason.length > 0);
+    const expected = [...fresh, ...resync];
+    assert.deepEqual(seen, expected);
+    assert.equal(new Set(expected.map((event) => event.event_id)).size, expected.length);
+    assert.ok(expected.every((event) => JSON.stringify(event.source) === JSON.stringify(OPTIONS.source)));
+    const persisted = () => store.db.prepare("SELECT body FROM demo_journal ORDER BY ordinal").all()
+      .slice(1).map((row) => JSON.parse(String(row.body)) as SseEvent);
+    assert.deepEqual(persisted(), expected);
+    store.close();
+    const reopened = new DemoStore(file, OPTIONS);
+    try {
+      const saved = reopened.db.prepare("SELECT body FROM demo_journal ORDER BY ordinal").all()
+        .slice(1).map((row) => JSON.parse(String(row.body)) as SseEvent);
+      assert.deepEqual(saved, expected);
+      assert.deepEqual(reopened.getState().account, state.account);
+    } finally { reopened.close(); }
+  });
+});
+
+test("baseline captures twenty consistent rounds before later live events and remains in recordings", () => {
+  fixture((file, store, time) => {
+    for (let index = 0; index < 21; index++) {
+      const id = "history-" + index;
+      store.startRound("MANUAL", id, at(time + index * 2));
+      store.finishRound(id, "FAILED", "Synthetic not_started", at(time + index * 2 + 1));
+    }
+    const seen: SseEvent[] = [];
+    store.subscribe((event) => seen.push(event));
+    store.startRound("MANUAL", "baseline-round", at(time + 42));
+    let inject = true;
+    store.subscribe((event) => {
+      if (inject && event.type === "state") {
+        inject = false;
+        store.startStep("baseline-round", "preflight", "Synthetic readiness", actual(), at(time + 43));
+      }
+    });
+    const snapshot = store.snapshotEvents(true);
+    assert.deepEqual(seen.map((event) => event.type), ["round", "state", "resync", "state", "timeline", "step"]);
+    assert.deepEqual(snapshot, seen.slice(2, 5));
+    const timeline = snapshot[2]!;
+    assert.equal(timeline.type, "timeline");
+    if (timeline.type !== "timeline") throw new Error("Expected timeline baseline");
+    assert.equal(timeline.data.rounds.length, 20);
+    assert.equal(timeline.data.rounds[0]!.round_id, "baseline-round");
+    assert.deepEqual(timeline.data.rounds[0]!.steps, []);
+    assert.equal(timeline.data.rounds[19]!.round_id, "history-2");
+    assert.ok(timeline.data.next_cursor);
+    const running = store.getTimeline().rounds[0]!.steps[0]!;
+    store.finishStep("baseline-round", running.step_id, "PASS", "Synthetic ready", actual(), at(time + 44));
+    store.finishRound("baseline-round", "FAILED", "Synthetic not_started after readiness", at(time + 45));
+    const recording = store.exportRecording("baseline-round");
+    assert.deepEqual(recording.events, seen);
+    assert.deepEqual(recording.source, OPTIONS.source);
+    assert.deepEqual(recording.build, OPTIONS.build);
+    store.snapshotEvents(true);
+    assert.deepEqual(store.exportRecording("baseline-round").events, recording.events);
+    store.close();
+    const reopened = new DemoStore(file, OPTIONS);
+    try { assert.deepEqual(reopened.exportRecording("baseline-round").events, recording.events); }
+    finally { reopened.close(); }
+  });
+});
+
 test("round precedes its steps, sequences are continuous, and completed steps cannot be replaced", () => {
   fixture((_file, store, time) => {
     const seen: SseEvent[] = [];

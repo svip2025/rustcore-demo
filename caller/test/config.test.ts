@@ -3,7 +3,7 @@ import { chmodSync, existsSync, mkdtempSync, rmSync, symlinkSync, writeFileSync 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { ConfigError, credentialLocator, loadDemoConfig, parseEnvironmentFile } from "../src/config.js";
+import { ConfigError, credentialLocator, httpSettings, loadDemoConfig, parseEnvironmentFile } from "../src/config.js";
 
 function fixture(fn: (file: string, directory: string, write: (changes?: Record<string, string | undefined>) => void) => void) {
   const directory = mkdtempSync(join(tmpdir(), "rustcore-config-"));
@@ -31,6 +31,18 @@ function configError(action: () => unknown, code: string): ConfigError {
   }
   throw new Error("expected a configuration error");
 }
+
+test('HTTP defaults to independent loopback and only explicitly trusts a local proxy', () => {
+  fixture((file, _directory, write) => {
+    assert.deepEqual(httpSettings(loadDemoConfig(['--env', file])), { hostname: '127.0.0.1', port: 8787, trustProxy: false });
+    write({ DEMO_HTTP_ADDR: '[::1]:8088', DEMO_PUBLIC_ORIGIN: 'https://demo.example.com', DEMO_TRUST_PROXY: '1' });
+    assert.deepEqual(httpSettings(loadDemoConfig(['--env', file])), { hostname: '::1', port: 8088, allowedOrigin: 'https://demo.example.com', trustProxy: true });
+    for (const value of ['0.0.0.0:8787', '127.0.0.1:50051', '127.0.0.1:0']) {
+      write({ DEMO_HTTP_ADDR: value });
+      configError(() => httpSettings(loadDemoConfig(['--env', file])), 'CONFIG_HTTP');
+    }
+  });
+});
 
 test("literal environment parsing never expands variables or executes shell text", () => {
   const directory = mkdtempSync(join(tmpdir(), "rustcore-config-literal-"));

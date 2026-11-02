@@ -19,6 +19,20 @@ export interface DemoConfig {
   connectOnly: boolean;
 }
 
+export function httpSettings(config: DemoConfig): {
+  hostname: string; port: number; allowedOrigin?: string; trustProxy: boolean;
+} {
+  const bind = config.environment.DEMO_HTTP_ADDR ?? '127.0.0.1:8787';
+  const match = /^(127\.0\.0\.1|\[::1\]):([0-9]+)$/.exec(bind);
+  if (!match || Number(match[2]) < 1 || Number(match[2]) > 65535 || bind === config.grpcAddress)
+    fail('CONFIG_HTTP', 'DEMO_HTTP_ADDR 必须使用独立 loopback 和有效端口');
+  const proxy = config.environment.DEMO_TRUST_PROXY ?? '0';
+  if (proxy !== '0' && proxy !== '1') fail('CONFIG_HTTP', 'DEMO_TRUST_PROXY 必须为 0 或 1');
+  const allowedOrigin = config.environment.DEMO_PUBLIC_ORIGIN;
+  return { hostname: match[1] === '[::1]' ? '::1' : '127.0.0.1', port: Number(match[2]),
+    ...(allowedOrigin ? { allowedOrigin } : {}), trustProxy: proxy === '1' };
+}
+
 /** Messages deliberately contain field names, never values, paths or OS errors. */
 export class ConfigError extends Error {
   constructor(readonly code: string, message: string) {
