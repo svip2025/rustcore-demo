@@ -16,14 +16,14 @@ const MAX_QUEUED_BYTES = 4 * 1024 * 1024;
 const MAX_RATE_BUCKETS = 10_000;
 const encoder = new TextEncoder();
 
-function available(state: StateResponse, now: number): boolean {
-  const recent = (at: string | null) => {
+function recent(at: string | null, now: number): boolean {
     const time = at === null ? NaN : Date.parse(at);
     return Number.isFinite(time) && time <= now && now - time <= 30_000;
-  };
-  return state.rustcore.status === 'ONLINE' && recent(state.rustcore.checked_at)
+}
+function available(state: StateResponse, now: number): boolean {
+  return state.rustcore.status === 'ONLINE' && recent(state.rustcore.checked_at, now)
     && [state.account, state.positions, state.open_orders, state.protection]
-      .every(value => value.status === 'AVAILABLE' && value.value !== null && recent(value.source_as_of));
+      .every(value => value.status === 'AVAILABLE' && value.value !== null && recent(value.source_as_of, now));
 }
 
 /** Only public store projections are reachable through this app. */
@@ -91,8 +91,13 @@ export function createReadOnlyApp(store: DemoStore, options: ReadOnlyHttpOptions
 
   app.get('/api/health', context => {
     const state = store.getState();
-    const healthy = available(state, Date.now());
+    const now = Date.now();
+    // Health covers transport/account dependencies. A normal reconcile can
+    // temporarily invalidate protection coverage without making HTTP unavailable.
+    const healthy = state.rustcore.status === 'ONLINE' && recent(state.rustcore.checked_at, now)
+      && state.account.status === 'AVAILABLE' && state.account.value !== null && recent(state.account.source_as_of, now);
     return context.json({ schema_version: 1, status: healthy ? 'healthy' : 'degraded',
+      snapshot_complete: available(state, now),
       dependencies: { rustcore: state.rustcore.status, account: state.account.status,
         positions: state.positions.status, open_orders: state.open_orders.status,
         protection: state.protection.status, risk_budget: state.risk_budget.status },

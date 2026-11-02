@@ -56,6 +56,8 @@ curl -N http://127.0.0.1:8787/api/stream
 
 只接受 GET；默认每 IP 每分钟 120 次请求，忽略未授权的转发 IP 头。浏览器跨域读取须显式配置 `DEMO_PUBLIC_ORIGIN` 为一个精确站点 origin；未配置时仅允许同源或无 Origin 请求。只有在 loopback 反向代理明确覆盖 `X-Real-IP` 时才开启 `DEMO_TRUST_PROXY=1`。SSE 任何带游标的重连均 `resync → state → timeline`，随后接续实时事件；所有基线游标持久化，事实源时间保持不变。
 
+`health` 分开报告服务依赖与 `snapshot_complete`：后台对账期间挂单/保护快照可暂为 UNKNOWN，仍在 state 中如实展示；内核离线或账户事实不可用/过期则返回 503。服务健康不代表开仓准入或双保护通过。
+
 每轮逐步保存预期、实际、`PASS/FAIL/UNKNOWN` 和原因；失败保留为 `FAILED`，不自动重试开仓。同一轮不能重做失败步骤。F-01 已知的空库私有流 `not_started` 可能使首次开仓失败；保留该轮、让常驻内核继续运行，经本机明确操作可创建新的 **MANUAL 独立轮次**，使用新的身份，不能隐藏首次失败或重发旧意图。
 
 结束的成功或失败轮次会自动导出录制；也可明确导出指定轮次：

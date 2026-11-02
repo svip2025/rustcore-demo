@@ -60,7 +60,7 @@ test('state and timeline expose only the public store contract, preserve source 
   assert.deepEqual(store.getState(), initial, 'reads do not refresh source observations');
 });
 
-test('health requires fresh available facts as well as an online core without mutating them', async t => {
+test('health requires fresh account/core dependencies while reporting snapshot completeness separately', async t => {
   const { app, store } = fixture(t);
   const now = Date.now();
   t.mock.timers.enable({ apis: ['Date'], now });
@@ -88,6 +88,13 @@ test('health requires fresh available facts as well as an online core without mu
   state.open_orders.source_as_of = state.generated_at;
   state.protection.source_as_of = state.generated_at;
   state.protection.status = 'PARTIAL';
+  store.setState(state);
+  const partial = await app.request('/api/health');
+  assert.equal(partial.status, 200);
+  assert.equal((await partial.json() as { snapshot_complete: boolean }).snapshot_complete, false);
+  assert.equal(store.getState().protection.status, 'PARTIAL');
+  state.generated_at = new Date(Date.now()).toISOString();
+  state.account.status = 'UNAVAILABLE';
   store.setState(state);
   assert.equal((await app.request('/api/health')).status, 503);
 });
