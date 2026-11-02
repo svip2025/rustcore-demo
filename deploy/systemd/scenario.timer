@@ -1,0 +1,11 @@
+[Unit]
+Description=Run one testnet scenario every six hours
+
+[Timer]
+OnActiveSec=30s
+OnUnitActiveSec=6h
+AccuracySec=1s
+Unit=scenario.service
+
+[Install]
+WantedBy=timers.target

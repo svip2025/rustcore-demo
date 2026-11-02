@@ -1,0 +1,29 @@
+# Render DEMO_DOMAIN explicitly; import this site from the host's Caddyfile.
+# Preserve any existing host sites in separate imported files. Caddy 2.6 compatible.
+{$DEMO_DOMAIN} {
+  encode gzip
+  header {
+    Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
+    X-Content-Type-Options nosniff
+    Referrer-Policy no-referrer
+  }
+  @write not method GET
+  respond @write "Read only" 405
+  @hidden path_regexp hidden (^|/)\.
+  respond @hidden 404
+  handle /api/* {
+    reverse_proxy 127.0.0.1:8787 {
+      header_up X-Real-IP {remote_host}
+    }
+  }
+  handle_path /recordings/* {
+    root * /srv/rustcore-demo-recordings
+    header Cache-Control "no-store"
+    file_server
+  }
+  handle {
+    root * /srv/rustcore-demo-web/current/dist
+    try_files {path} /index.html
+    file_server
+  }
+}

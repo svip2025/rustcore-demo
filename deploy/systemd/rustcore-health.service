@@ -1,0 +1,17 @@
+[Unit]
+Description=Read-only caller health check
+After=caller.service
+
+[Service]
+Type=oneshot
+User=rustcore-demo
+Group=rustcore-demo
+ExecStart=/usr/bin/curl --fail --silent --show-error --max-time 20 --output /dev/null http://127.0.0.1:8787/api/health
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

@@ -1,0 +1,19 @@
+[Unit]
+Description=Publish already-public completed recordings atomically
+
+[Service]
+Type=oneshot
+User=rustcore-demo
+Group=rustcore-demo
+WorkingDirectory=/opt/rustcore-demo/current
+ExecStart=/usr/bin/python3 /opt/rustcore-demo/current/deploy/publish-recordings.py --private-dir /var/lib/rustcore-demo/recordings --public-dir /srv/rustcore-demo-recordings
+UMask=0022
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/srv/rustcore-demo-recordings
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX

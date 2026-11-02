@@ -1,0 +1,9 @@
+[Unit]
+Description=Publish recordings after manual or scheduled scenarios finish
+
+[Path]
+PathChanged=/var/lib/rustcore-demo/recordings
+Unit=rustcore-recordings.service
+
+[Install]
+WantedBy=multi-user.target

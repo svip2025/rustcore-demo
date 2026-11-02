@@ -1,0 +1,12 @@
+[Unit]
+Description=Additional rustcore-demo host and Docker ingress guard
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/rustcore-demo/firewall.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

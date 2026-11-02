@@ -7,7 +7,7 @@ import type { Context } from 'hono';
 import { httpSettings, loadDemoConfig } from '../caller/src/config.js';
 import { prepareStore } from '../caller/src/bootstrap.js';
 import { acquireFileLock } from '../caller/src/file-lock.js';
-import { ManagedKernel } from '../caller/src/kernel-process.js';
+import { createKernel } from '../caller/src/systemd-kernel.js';
 import { openLocalControl } from '../caller/src/local-control.js';
 import { CallerRuntime } from '../caller/src/runtime.js';
 import { ScenarioRunner } from '../caller/src/scenario.js';
@@ -20,7 +20,8 @@ let shutdown: (() => Promise<void>) | undefined;
 try {
   const config = loadDemoConfig();
   const http = httpSettings(config);
-  for (const path of [config.callerDbFile, config.kernelDbFile, config.lockFile]) await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+  for (const path of [config.callerDbFile, config.lockFile, ...(config.kernelMode === 'child' ? [config.kernelDbFile] : [])])
+    await mkdir(dirname(path), { recursive: true, mode: 0o700 });
   const instance = await acquireFileLock(`${config.callerDbFile}.instance.lock`);
   let store: DemoStore | undefined;
   let runtime: CallerRuntime | undefined;
@@ -39,7 +40,7 @@ try {
   })();
   store = new DemoStore(config.callerDbFile, { source: config.source, build: config.build });
   prepareStore(store, config);
-  runtime = new CallerRuntime(config, store, new ManagedKernel(config));
+  runtime = new CallerRuntime(config, store, createKernel(config));
   const runner = new ScenarioRunner(runtime);
   const proxyIp = (c: Context): string => {
     const remote = getConnInfo(c).remote.address ?? 'unknown';

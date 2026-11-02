@@ -7,6 +7,7 @@ export interface DemoConfig {
   credentialId: string;
   grpcAddress: string;
   kernelBinary: string;
+  kernelMode: 'child' | 'systemd';
   kernelDbFile: string;
   callerDbFile: string;
   lockFile: string;
@@ -130,6 +131,9 @@ export function loadDemoConfig(argv: readonly string[] = process.argv.slice(2)):
     } else fail("CONFIG_ARGUMENT", "仅支持 --env <文件> 和 --connect-only 参数");
   }
   const environment = readPrivateEnvironment(envFile);
+  const kernelMode = environment.DEMO_KERNEL_MODE ?? 'child';
+  if (kernelMode !== 'child' && kernelMode !== 'systemd')
+    fail('CONFIG_KERNEL_MODE', 'DEMO_KERNEL_MODE 必须为 child 或 systemd');
   if (required(environment, "ENGINE_LIVE_ENABLED") !== "0")
     fail("CONFIG_MAINNET", "ENGINE_LIVE_ENABLED 必须为 0");
   if (required(environment, "ENGINE_STAGE_MAX") !== "demo")
@@ -172,7 +176,7 @@ export function loadDemoConfig(argv: readonly string[] = process.argv.slice(2)):
   environment.RUSTCORE_GRPC_ADDR = grpcAddress;
   environment.RUSTCORE_DB_URL = `sqlite://${kernelDbFile}`;
   return {
-    envFile, credentialId, grpcAddress,
+    envFile, credentialId, grpcAddress, kernelMode,
     kernelBinary: absoluteFile(environment.DEMO_KERNEL_BINARY ?? resolve("rustcore/target/release/rustcore"), "DEMO_KERNEL_BINARY"),
     kernelDbFile, callerDbFile, lockFile,
     holdMs: duration(environment, "DEMO_HOLD_MS", 180_000),

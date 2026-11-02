@@ -7,7 +7,7 @@ import { runPreflight, TESTNET_READ_ORIGIN } from "../src/preflight.js";
 const T = Date.parse("2026-11-02T12:00:00.000Z");
 const config: DemoConfig = {
   envFile: "/private/env", credentialId: "9001", grpcAddress: "127.0.0.1:50051",
-  kernelBinary: "/private/rustcore", kernelDbFile: "/private/kernel.db", callerDbFile: "/private/caller.db",
+  kernelBinary: "/private/rustcore", kernelMode: 'child', kernelDbFile: "/private/kernel.db", callerDbFile: "/private/caller.db",
   lockFile: "/private/round.lock", holdMs: 1000, phaseTimeoutMs: 2000, connectOnly: false,
   source: { kind: "TESTNET", label: "测试网" }, build: { caller_commit: "unknown", rustcore_commit: "unknown" },
   environment: { BINANCE_API_KEY_H39303031: "fake-private-api-key", BINANCE_API_SECRET_H39303031: "fake-private-api-secret" },

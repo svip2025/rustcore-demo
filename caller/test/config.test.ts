@@ -72,8 +72,24 @@ test("a 600 explicit environment yields dedicated databases and only validated f
     assert.equal(config.holdMs, 180_000);
     assert.equal(config.phaseTimeoutMs, 120_000);
     assert.equal(config.connectOnly, false);
+    assert.equal(config.kernelMode, 'child');
     assert.ok(Object.isFrozen(config.environment));
     assert.equal(Object.hasOwn(config.environment, "HOME"), false);
+  });
+});
+
+test('kernel supervision mode is explicit, bounded, and compatible with connect-only', () => {
+  fixture((file, _directory, write) => {
+    write({ DEMO_KERNEL_MODE: 'systemd' });
+    const systemd = loadDemoConfig(['--env', file]);
+    assert.equal(systemd.kernelMode, 'systemd');
+    assert.equal(systemd.connectOnly, false);
+    assert.equal(loadDemoConfig(['--env', file, '--connect-only']).connectOnly, true);
+    for (const mode of ['other.service', 'systemd; touch /tmp/fixture', 'SYSTEMD', '']) {
+      write({ DEMO_KERNEL_MODE: mode });
+      const error = configError(() => loadDemoConfig(['--env', file]), 'CONFIG_KERNEL_MODE');
+      assert.equal(error.message.includes(mode || '/tmp/fixture'), false);
+    }
   });
 });
 

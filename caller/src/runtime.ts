@@ -84,7 +84,7 @@ export class CallerRuntime {
     this.stopped = false;
     this.bootStartedAt = Date.now();
     try {
-      if (!this.config.connectOnly) await requireFreeGrpcPort(this.config.grpcAddress);
+      if (!this.config.connectOnly && this.config.kernelMode !== 'systemd') await requireFreeGrpcPort(this.config.grpcAddress);
       if (this.stopped) return;
       await this.kernel.start();
       if (this.stopped) return;
@@ -107,7 +107,7 @@ export class CallerRuntime {
     }
   }
   private requireOwnedKernel(): void {
-    if (!this.config.connectOnly && !this.kernel.isRunning)
+    if (!this.config.connectOnly && this.config.kernelMode !== 'systemd' && !this.kernel.isRunning)
       throw new ScenarioFailure('OWNED_KERNEL_EXITED', 'caller 持有的内核进程已退出，不能将其他服务当作就绪内核', 'UNKNOWN');
   }
   private async waitOnline(): Promise<void> {
@@ -283,7 +283,8 @@ export class CallerRuntime {
       this.reconnect = undefined;
       const state = this.store.getState(), at = new Date().toISOString();
       state.generated_at = at;
-      state.rustcore = { ...state.rustcore, status: 'RESTARTING', checked_at: at, reason: '本轮主动终止并重启自己持有的内核进程' };
+      state.rustcore = { ...state.rustcore, status: 'RESTARTING', checked_at: at,
+        reason: this.config.kernelMode === 'systemd' ? '本轮请求重启固定的独立内核服务' : '本轮主动终止并重启自己持有的内核进程' };
       state.risk_budget.status = 'STALE';
       this.store.setState(state);
       restartInvoked = true;

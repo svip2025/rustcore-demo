@@ -1,0 +1,11 @@
+[Unit]
+Description=Check the read-only HTTP health endpoint every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=10s
+Unit=rustcore-health.service
+
+[Install]
+WantedBy=timers.target

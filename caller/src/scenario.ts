@@ -283,7 +283,9 @@ export class ScenarioRunner {
         });
         const oldBoot = this.runtime.snapshot?.accountOrders.engine_boot_id;
         const quantity = this.positions().find(p => p.position_id === this.positionId)?.qty;
-        await this.step('restart_kernel', '终止自己持有的内核进程，保留数据库并启动新 boot', async () => {
+        await this.step('restart_kernel', this.runtime.config.kernelMode === 'systemd'
+          ? '重启固定的独立内核服务，保留数据库并证明新 boot'
+          : '终止自己持有的内核进程，保留数据库并启动新 boot', async () => {
           await this.runtime.restartKernel();
           if (!oldBoot || this.runtime.snapshot?.accountOrders.engine_boot_id === oldBoot) throw new ScenarioFailure('NEW_BOOT_NOT_PROVEN', '未证明新进程 boot', 'UNKNOWN');
           return this.actual('受管内核已重启，公开读取属于新 boot；持仓恢复在下一步核对');

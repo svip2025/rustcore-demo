@@ -6,13 +6,14 @@ import type { DemoConfig } from '../src/config.js';
 import { DemoStore } from '../src/store.js';
 import { BTC, type Row } from '../src/facts.js';
 import type { StepActual } from '../../shared/schema.js';
+import { SystemdKernel } from '../src/systemd-kernel.js';
 
 const NOW = Date.parse('2026-11-02T12:00:00.000Z');
 const TOKEN = 'synthetic-private-runtime-token';
 const SECRET = 'synthetic-private-runtime-secret';
 const config: DemoConfig = {
   envFile: '/tmp/runtime-fixture/env', credentialId: '9001', grpcAddress: '127.0.0.1:1',
-  kernelBinary: '/tmp/runtime-fixture/kernel', kernelDbFile: '/tmp/runtime-fixture/kernel.db',
+  kernelBinary: '/tmp/runtime-fixture/kernel', kernelMode: 'child', kernelDbFile: '/tmp/runtime-fixture/kernel.db',
   callerDbFile: ':memory:', lockFile: '/tmp/runtime-fixture/round.lock', holdMs: 1000, phaseTimeoutMs: 1000,
   source: { kind: 'MOCK', label: '离线运行时测试' }, build: { caller_commit: 'mock-runtime-v1', rustcore_commit: 'mock-kernel-v1' },
   environment: { ENGINE_LIVE_ENABLED: '0', ENGINE_STAGE_MAX: 'demo', RUSTCORE_GRPC_AUTH_TOKEN: TOKEN,
@@ -108,12 +109,12 @@ async function freeAddress(): Promise<string> {
   return address;
 }
 
-async function fixture(t: TestContext, grpcAddress?: string) {
+async function fixture(t: TestContext, grpcAddress?: string, overrides: Partial<DemoConfig> = {}) {
   const address = grpcAddress ?? await freeAddress();
   t.mock.timers.enable({ apis: ['Date', 'setInterval', 'setTimeout'], now: NOW });
   const store = new DemoStore(':memory:', { source: config.source, build: config.build });
   const rpc = new MockRpc(), kernel = new MockKernel();
-  const runtime = new CallerRuntime({ ...config, grpcAddress: address }, store, kernel, rpc);
+  const runtime = new CallerRuntime({ ...config, ...overrides, grpcAddress: address }, store, kernel, rpc);
   t.after(async () => { await runtime.stop(); store.close(); });
   return { runtime, store, rpc, kernel };
 }
@@ -353,6 +354,63 @@ test('a successful health reply cannot make an exited owned child ready', async 
   assert.equal(kernel.starts, 1);
   assert.equal(rpc.calls.some(call => call.method === 'EnsureMarketData'), false);
   assert.equal(runtime.isStarted, false);
+});
+
+test('systemd readiness does not require a caller-owned child handle', async t => {
+  const { runtime, rpc, kernel } = await fixture(t, undefined, { kernelMode: 'systemd' });
+  kernel.start = async () => { kernel.starts++; }; // The existing service is not a child.
+  await runtime.start();
+  assert.equal(kernel.isRunning, false);
+  assert.equal(runtime.isStarted, true);
+  assert.equal(rpc.calls.some(call => call.method === 'EnsureMarketData'), true);
+});
+
+test('systemd uses the existing listener, keeps reading through service recovery, and never stops or automatically restarts it', async t => {
+  const existing = createServer(socket => socket.end());
+  const address = await listen(existing);
+  t.mock.timers.enable({ apis: ['Date', 'setInterval', 'setTimeout'], now: NOW });
+  const store = new DemoStore(':memory:', { source: config.source, build: config.build });
+  const rpc = new MockRpc(), commands: { file: string; args: readonly string[] }[] = [];
+  const kernel = new SystemdKernel({ connectOnly: false, phaseTimeoutMs: 1000 }, {
+    command: async (file, args) => {
+      commands.push({ file, args });
+      if (file === '/usr/bin/sudo') {
+        t.mock.timers.tick(1);
+        rpc.boot = 'boot-three'; rpc.account.as_of_ms = String(Date.now());
+      }
+    },
+  });
+  const runtime = new CallerRuntime({ ...config, kernelMode: 'systemd', grpcAddress: address }, store, kernel, rpc);
+  try {
+    await runtime.start();
+    assert.equal(existing.listening, true);
+    assert.equal(commands.length, 1, 'existing service is verified, never spawned');
+    rpc.emit('9007199254740993', 'before-service-recovery');
+    rpc.readError = new Error('synthetic service unavailable');
+    rpc.current().error(new Error('synthetic stream disconnected'));
+    await assert.rejects(runtime.refresh(), /synthetic service unavailable/);
+    assert.equal(store.getState().rustcore.status, 'OFFLINE');
+    assert.equal(runtime.isStarted, true);
+    t.mock.timers.tick(2000); await runtime.refresh().catch(() => {});
+    assert.equal(rpc.subscriptions.length, 2, 'event reconnect continues while the service is unavailable');
+    rpc.readError = null; rpc.boot = 'boot-two'; rpc.account.as_of_ms = String(Date.now());
+    await runtime.refresh();
+    assert.equal(store.getState().rustcore.status, 'ONLINE');
+    assert.equal(runtime.snapshot?.accountOrders.engine_boot_id, 'boot-two');
+    assert.equal(commands.length, 1, 'service self-recovery requires no sudo intervention');
+    await runtime.restartKernel();
+    assert.equal(runtime.snapshot?.accountOrders.engine_boot_id, 'boot-three');
+    assert.equal(rpc.current().request.since_seq, '9007199254740993');
+    assert.deepEqual(commands[1], { file: '/usr/bin/sudo',
+      args: ['-n', '/usr/bin/systemctl', 'restart', 'rustcore.service'] });
+    await runtime.stop();
+    assert.equal(commands.length, 2, 'shutdown issues no service stop');
+    assert.equal(kernel.isRunning, true);
+    assert.equal(existing.listening, true);
+  } finally {
+    await runtime.stop(); store.close();
+    await new Promise<void>(resolve => existing.close(() => resolve()));
+  }
 });
 
 async function flush(): Promise<void> {

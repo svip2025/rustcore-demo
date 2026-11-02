@@ -10,7 +10,7 @@ import { KernelProcessError, ManagedKernel } from "../src/kernel-process.js";
 function config(directory: string): DemoConfig {
   return {
     envFile: join(directory, "env"), credentialId: "9001", grpcAddress: "127.0.0.1:50051",
-    kernelBinary: process.execPath, kernelDbFile: join(directory, "kernel.db"), callerDbFile: join(directory, "caller.db"),
+    kernelBinary: process.execPath, kernelMode: 'child', kernelDbFile: join(directory, "kernel.db"), callerDbFile: join(directory, "caller.db"),
     lockFile: join(directory, "round.lock"), holdMs: 1000, phaseTimeoutMs: 2000,
     source: { kind: "TESTNET", label: "测试网" }, build: { caller_commit: "unknown", rustcore_commit: "unknown" },
     environment: { ENGINE_LIVE_ENABLED: "0", ENGINE_STAGE_MAX: "demo", RUSTCORE_GRPC_ADDR: "127.0.0.1:50051",

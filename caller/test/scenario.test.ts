@@ -73,7 +73,7 @@ class MockRuntime implements Runtime {
     this.behavior = behavior;
     this.config = {
       envFile: join(directory, "unused-private-env"), credentialId: "9001", grpcAddress: "127.0.0.1:1",
-      kernelBinary: join(directory, "not-a-kernel"), kernelDbFile: join(directory, "unused-kernel.sqlite"),
+      kernelBinary: join(directory, "not-a-kernel"), kernelMode: 'child', kernelDbFile: join(directory, "unused-kernel.sqlite"),
       callerDbFile: join(directory, "caller.sqlite"), lockFile: join(directory, "scenario.lock"),
       holdMs: 1, phaseTimeoutMs: 10, source: MOCK_SOURCE, build: MOCK_BUILD, environment: {}, connectOnly: false,
     };

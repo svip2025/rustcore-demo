@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily online backup of both SQLite databases
+
+[Timer]
+OnCalendar=*-*-* 03:15:00 UTC
+Persistent=true
+RandomizedDelaySec=5min
+Unit=rustcore-backup.service
+
+[Install]
+WantedBy=timers.target
