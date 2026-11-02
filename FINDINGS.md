@@ -86,3 +86,13 @@ MANUAL 轮次 `round_01M6E9BH2FT4VM34RVVFRX58N9` 开仓成交 `0.0095 BTC`、名
 公开事件中完整对账后紧接符号范围对账；观察注册表的每次 begin 会使当前完整性失效，旧 full 只能带原时间展示，见固定提交 [account_order_observation.rs](https://github.com/svip2025/rustcore/blob/6a81a4aec7ee92a9cd6aebdaef6446515ac2d989/src/account_order_observation.rs)。这是实际读回时序与严格观察条件的交界，不能仅凭事件报告有两张 Algo 单便宣称 SL/TP 各自通过。后续 caller 在有界窗口内等待完整观察，FAIL 仍立即失败，持续 UNKNOWN 到期仍失败；不修改核验判据，不补挂保护，先前终结轮次不改写。
 
 测试网新入口随后实际返回 REQUEST_WEIGHT 上限 `6000/min`。后续演示使用内核已有的 Testnet 请求权重配置 `20/s`、burst `100`（持续值 `1200/min`），减少一次 full 读取与后台周期交错的时间；保留内核的 exit reserve、冷却及预算守卫，不修改后台对账周期或风控 policy，也不改变保护观察的 30 秒新鲜度要求。该速率配置不承诺每次观察一定成功。
+
+## F-11：小数 SL 的浮点尾差与交易所步长
+
+MANUAL 轮次 `round_01M6EAK2KQP2W51D7JXFMBKFP8` 的 TP 独立 PASS、SL FAIL（触发价与当前计划不一致）；精确平仓、保护清理及全账户零敞口检查均 PASS，整轮保留 [FAILED 录制](recordings/run-20261102-142839-failed.json)。caller 私有输入记录的 SL 为 `76984.8`，公共事件中的 SL 子单 requestedPrice 与交易所读回均为 `76984.9`，当时 BTC tick 为 `0.1`。
+
+源码路径是风险 sizing 把 stop 转为 f64，再以 12 位小数序列化为计划（[risk-policy decimal](https://github.com/svip2025/rustcore/blob/6a81a4aec7ee92a9cd6aebdaef6446515ac2d989/crates/risk-policy/src/lib.rs#L477)）；交易所过滤器对 SELL 价格向上对齐步长。单例数值复现 `76984.8 → 76984.800000000003 → 76984.9` 与实读子单吻合。该次原始 current-plan 字符串没有另存，不将源码推导说成原始字段读回。
+
+不在此工单修改内核精度逻辑。caller 后续 SL 规划使用合法整数 USDT 网格，且该网格必须为真实 tick 的整数倍（如 tick=0.1 时 grid=1）；仍按同一 1% 公式向下对齐，不改权益、policy 或内核自动定量。有效规划价、实际 tick 和 stop_grid 一并纳入配置摘要和私有输入记录。`verifyProtection` 仍要求计划/本地行/交易所精确一致，不以容差放行，不补挂保护；已有 FAILED 原样保留。
+
+整数网格兼容的是未触发 stop-distance clamp 的正常输入路径。最终实际止损距离和 RR 仍由内核按默认策略核算；若 clamp 重新计算浮点 SL，仍可能出现此精度边界，不能将该输入规划方式说成内核的普遍修复。

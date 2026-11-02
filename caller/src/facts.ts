@@ -51,6 +51,15 @@ export function priceAt(reference: string, fraction: string, tick: string, ceil 
   return format({ n: ((a + (ceil ? b - 1n : 0n)) / b) * t.n, s: t.s });
 }
 
+/** Valid integer grid avoids the kernel's f64-to-plan decimal tail before tick rounding. */
+export function integerPriceTick(tick: string): string {
+  const t = parse(tick);
+  if (t.n <= 0n) throw new Error('INVALID_TICK');
+  let a = t.n, b = 10n ** BigInt(t.s);
+  while (b !== 0n) [a, b] = [b, a % b];
+  return (t.n / a).toString();
+}
+
 /** Public text never forwards raw transport errors, account identifiers or URLs. */
 export function safeReason(value: unknown, hidden: readonly string[] = []): string {
   let output = String(value ?? 'UNKNOWN');

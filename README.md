@@ -2,7 +2,7 @@
 
 Binance USDⓈ-M 期货测试网演示：通过 [rustcore](https://github.com/svip2025/rustcore) 的公开 gRPC 接口执行开仓、双保护、持仓、重启恢复和平仓，并保存每一步的真实结果。仅测试网，非金融软件。
 
-**当前：第 0 步调研已获批，第 1 部分 caller 正在完成终端链路；真实完整场景尚未通过。** 已真实完成开仓、精确平仓和保护清理；双保护观察不足的轮次保持 FAILED，尚未验证持仓重启恢复。三份真实失败录制均保留，详见 [F-08 至 F-10](FINDINGS.md#f-08首轮-caller-对账期限与额外限流配置不匹配)。公网 HTTP/SSE 服务尚未实现，另两份 `MOCK` 录制是手写假数据，不能作为交易或恢复证据。
+**当前：第 0 步调研已获批，第 1 部分 caller 正在完成终端链路；真实完整场景尚未通过。** 已真实完成开仓、精确平仓和保护清理；观察不足及 SL 精度不一致的轮次均保持 FAILED，尚未验证持仓重启恢复。真实失败录制均保留，详见 [F-08 至 F-11](FINDINGS.md#f-08首轮-caller-对账期限与额外限流配置不匹配)。公网 HTTP/SSE 服务尚未实现，另两份 `MOCK` 录制是手写假数据，不能作为交易或恢复证据。
 
 2026-11-02 的真实只读检查中，内核旧测试网入口返回 HTTP 418 / `-1003`，已停止请求；当前官方入口的账户读取成功。账户所有者调整后，BTCUSDT 和 ETHUSDT 均已读回全仓、**1x**、单向持仓。内核端点兼容由单独授权的 [rustcore PR #2](https://github.com/svip2025/rustcore/pull/2) 处理，演示固定其具体提交，不依赖浮动分支；完整测试网场景仍待终端验证。见 [FINDINGS F-07](FINDINGS.md#f-07真实只读检查与尚未满足的账户前提)。
 
@@ -57,6 +57,7 @@ npm run --silent export:recording -- --env "$HOME/.config/rustcore-demo/env" --r
 - 数量由默认风控自动计算，默认单仓名义额上限 **1000 USDT**；不声称精确最小 lot，不伪造账户权益来缩量。时间线保存实际成交数量和名义额。
 - 账户所有者须手动设置 One-way、BTCUSDT 全仓、1x，并具备至少 100 USDT 的测试网 USDT 钱包余额。只读前置检查不会替用户设置账户；该场景前提与预算发布逻辑不同，真实低权益预算仍照发，由内核裁决。
 - SL 与 TP 分别核验，同一次完整交易所快照才能证明双保护；`protected` 不等于 TP 有效。缺失或无法证明则如实失败，不由 caller 自行补挂。重启恢复也须分别证明；平仓成交回执不等于保护单已清理。
+- SL 价格规划使用合法整数 USDT 网格，以避免当前内核小数 SL 序列化的精度边界；仍精确核对计划与交易所触发价，详见 [F-11](FINDINGS.md#f-11小数-sl-的浮点尾差与交易所步长)。
 - 日收益使用权益变化的近似值，可能包含未实现盈亏和资金变化；公开字段为 `approximate_today_pnl_*`。跨日高水位、首次/reset 基准与新鲜度见 [风险预算口径](docs/RISK-BUDGET.md)。
 
 实现决策见 [STEP1-DECISIONS.md](docs/STEP1-DECISIONS.md)，固定源码调研见 [TESTNET-SETUP.md](docs/TESTNET-SETUP.md)，共享 HTTP/SSE/录制契约见 [DATA-CONTRACT.md](docs/DATA-CONTRACT.md)。契约已定义不代表 HTTP 已上线。

@@ -8,7 +8,7 @@ import { acquireFileLock } from './file-lock.js';
 import { runPreflight, TESTNET_READ_ORIGIN } from './preflight.js';
 import { protectionResult, protectionView } from './projection.js';
 import { BOT, type CallerRuntime } from './runtime.js';
-import { BTC, money, nonzero, priceAt, row, rows, ScenarioFailure, text, type Row } from './facts.js';
+import { BTC, integerPriceTick, money, nonzero, priceAt, row, rows, ScenarioFailure, text, type Row } from './facts.js';
 
 type Runtime = Pick<CallerRuntime, 'config' | 'store' | 'rpc' | 'snapshot' | 'settings' | 'lastReconcile' | 'budgetNotes' | 'isStarted' | 'start' | 'refresh' | 'market' | 'fills' | 'restartKernel' | 'publicReason'>;
 interface Options { preflight?: typeof runPreflight; fetch?: typeof fetch; pause?: typeof sleep; recordDir?: string }
@@ -232,7 +232,8 @@ export class ScenarioRunner {
           const symbol = rows(row(await response.json()).symbols).find(s => s.symbol === 'BTCUSDT');
           const tick = money(rows(symbol?.filters).find(f => f.filterType === 'PRICE_FILTER')?.tickSize);
           if (!tick || !nonzero(tick)) throw new ScenarioFailure('TICK_SIZE_UNKNOWN', '缺少真实 BTCUSDT 价格步长', 'UNKNOWN');
-          const config = { symbol: BTC, stop_fraction: '0.99', take_profit_fraction: '1.025', tick_size: tick, policy: 'risk_policy_v3' };
+          const stopGrid = integerPriceTick(tick);
+          const config = { symbol: BTC, stop_fraction: '0.99', take_profit_fraction: '1.025', tick_size: tick, stop_grid: stopGrid, policy: 'risk_policy_v3' };
           const cycle = ulid(), key = `idem_${digest(`${this.roundId}|${cycle}|open_long`)}`;
           this.openClientId = `rcd_${ulid()}`;
           const data = { snapshot_id: `snap_${digest(`${market.sourceAt}|${market.price}|${tick}`).slice(0, 32)}`, quality_gate: 'pass', allow_open: true,
@@ -242,7 +243,7 @@ export class ScenarioRunner {
             action: 'open_long', order_type: 'market', limit_price: '', reduce_only: false, max_slippage_bps: 15,
             valid_until_ms: String(Date.now() + 30_000), config_hash: digest(JSON.stringify(config)), prompt_hash: `sha256:${digest('')}`,
             code_commit: this.runtime.config.build.rustcore_commit, policy_version: 'risk_policy_v3', schema_version: 1,
-            protection: { required: true, stop_loss_price: priceAt(market.price, '0.99', tick), take_profit_price: priceAt(market.price, '1.025', tick, true), confirm_timeout_ms: 5_000, schema_version: 1 } };
+            protection: { required: true, stop_loss_price: priceAt(market.price, '0.99', stopGrid), take_profit_price: priceAt(market.price, '1.025', tick, true), confirm_timeout_ms: 5_000, schema_version: 1 } };
           store.db.exec('CREATE TABLE IF NOT EXISTS demo_scenario_inputs (round_id TEXT PRIMARY KEY, body TEXT NOT NULL) STRICT');
           store.db.prepare('INSERT INTO demo_scenario_inputs(round_id,body) VALUES (?,?)').run(this.roundId, JSON.stringify({ config, market, data_snapshot: data, intent }));
           let ack: Row;
