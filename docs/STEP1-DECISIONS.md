@@ -34,9 +34,9 @@ SL 输入规划采用同时满足真实 tick 的合法整数 USDT 网格，规�
 
 私有环境文件默认 `/etc/rustcore-demo/env`，可用 `--env` 指定。必须为权限 600 的普通文件，仅支持字面环境赋值，不执行 shell；不继承父进程中未经验证的 Binance 覆盖项。固定 `ENGINE_LIVE_ENABLED=0`、`ENGINE_STAGE_MAX=demo`、per-credential `testnet`，gRPC 仅 loopback，内核/caller 数据库分开。配置项以仓库 [.env.example](../.env.example) 为准；模板不含任何 Key 值。
 
-每次实际构建分别读取 caller 和 submodule 的真实 Git 提交，填写 `DEMO_CALLER_COMMIT` 和 `DEMO_RUSTCORE_COMMIT`；`unknown` 不作为已验收版本。当前内核固定为测试网端点兼容提交 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`，来自独立 [PR #2](https://github.com/svip2025/rustcore/pull/2)，不依赖浮动分支。第 0 步研究中的 `1986eac` 保留为历史源码基线。
+每次实际构建分别读取 caller 和 submodule 的真实 Git 提交，填写 `DEMO_CALLER_COMMIT` 和 `DEMO_RUSTCORE_COMMIT`；`unknown` 不作为已验收版本。当前 submodule 固定为 rustcore main 合并提交 `f8a331a1a3ff035162ceca657b2467dc45583a61`。[PR #2](https://github.com/svip2025/rustcore/pull/2) 按 Create a merge commit 合并，保留端点兼容提交 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989` 为第二个父提交；两个提交的源码树一致。第 0 步研究中的 `1986eac` 保留为历史源码基线。
 
-成功轮次 `round_01M6ECFPAB9TS6H9Q46ATWP3JM` 使用 caller `d7c4d16ca72da9a1ab094f040fc1abea9a5edb21` 和上述内核提交，于 `2026-11-02T15:01:45.420Z` 至 `15:03:36.884Z` 完成九步 PASS：默认风控开多 0.0095 BTC、双保护分别通过、持仓、SIGKILL 后新 boot 恢复同一仓位数量、平仓及完整账户清理。实际账户已读回 One-way、全仓和 BTCUSDT **1x**；20x 是 [F-07](../FINDINGS.md#f-07真实只读检查与尚未满足的账户前提) 中的早期检查事实。
+成功轮次 `round_01M6ECFPAB9TS6H9Q46ATWP3JM` 使用 caller `d7c4d16ca72da9a1ab094f040fc1abea9a5edb21` 和内核 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`，于 `2026-11-02T15:01:45.420Z` 至 `15:03:36.884Z` 完成九步 PASS：默认风控开多 0.0095 BTC、双保护分别通过、持仓、SIGKILL 后新 boot 恢复同一仓位数量、平仓及完整账户清理。录制保持原指纹，该版本仍在 main 历史中。实际账户已读回 One-way、全仓和 BTCUSDT **1x**；20x 是 [F-07](../FINDINGS.md#f-07真实只读检查与尚未满足的账户前提) 中的早期检查事实。
 
 端点、对账和 caller 问题的原始失败及处理经过见 [F-07 至 F-12](../FINDINGS.md#f-07真实只读检查与尚未满足的账户前提)，不因后续成功改写旧轮次结果。
 

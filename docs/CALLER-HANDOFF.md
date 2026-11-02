@@ -34,7 +34,7 @@ ssh -F /home/debian/.ssh/config -o ExitOnForwardFailure=yes -N \
 
 ## 实机接口验证
 
-检查完成时间：`2026-11-02T15:49:56.649Z`。在线 caller 为 `2e252f78624711be7c1ac0a03591da2476ba5286`，内核为 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`（独立端点兼容 [PR #2](https://github.com/svip2025/rustcore/pull/2)，未合并）。验证只发送读取和被拒绝的 HTTP 方法请求，没有发起新交易轮次。
+检查完成时间：`2026-11-02T15:49:56.649Z`。该次在线 caller 为 `2e252f78624711be7c1ac0a03591da2476ba5286`，内核为 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`。端点兼容 [PR #2](https://github.com/svip2025/rustcore/pull/2) 随后按 Create a merge commit 合入 main；当前 submodule 固定为合并提交 `f8a331a1a3ff035162ceca657b2467dc45583a61`，原内核指纹仍在 main 历史中。验证只发送读取和被拒绝的 HTTP 方法请求，没有发起新交易轮次。
 
 | 检查 | 实际结果 |
 | --- | --- |

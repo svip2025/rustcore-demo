@@ -29,7 +29,9 @@ git rev-parse HEAD
 git -C rustcore rev-parse HEAD
 ```
 
-将输出分别填写到 `DEMO_CALLER_COMMIT`、`DEMO_RUSTCORE_COMMIT`。当前集成内核固定为端点兼容提交 `6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`（独立 PR，未合并）；示例中的 `unknown` 表示未指定构建，运行前必须填写实际 caller 提交，不能作为已验收构建的指纹。
+将输出分别填写到 `DEMO_CALLER_COMMIT`、`DEMO_RUSTCORE_COMMIT`。当前 submodule 固定到 rustcore main 的合并提交 `f8a331a1a3ff035162ceca657b2467dc45583a61`；[PR #2](https://github.com/svip2025/rustcore/pull/2) 使用 Create a merge commit 合并。示例中的 `unknown` 表示未指定构建，运行前必须填写实际 caller 提交，不能作为已验收构建的指纹。
+
+成功录制保留实际运行的 `rustcore_commit=6a81a4aec7ee92a9cd6aebdaef6446515ac2d989`。该提交是上述 main 合并提交的第二个父提交，仍可在 main 历史中核对；两者源码树完全相同。
 
 一个终端保持 caller 常驻：
 
