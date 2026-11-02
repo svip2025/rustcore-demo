@@ -62,9 +62,11 @@ sudo journalctl -u caller.service -u rustcore.service -n 80 --no-pager
 先按 [RUN-48H.md](RUN-48H.md) 启动 observer，并纳入实际 env、units/timer、Caddyfile、前端 BUILD-INFO 和原始 tgz 的冻结指纹。它必须先 armed，随后才能启动 timer：
 
 ```sh
+sudo install -d -o rustcore-demo -g rustcore-demo -m 700 /var/lib/rustcore-demo/observations
+sudo systemctl start rustcore-observe@attempt-001.service
 sudo -u rustcore-demo /usr/bin/python3 /opt/rustcore-demo/current/deploy/observe-48h.py status \
   --output /var/lib/rustcore-demo/observations/attempt-001
-sudo systemctl start scenario.timer
+sudo systemctl enable --now scenario.timer
 sudo systemctl status scenario.timer scenario.service --no-pager
 ```
 
@@ -87,7 +89,8 @@ sudo -u rustcore-demo /usr/bin/python3 /opt/rustcore-demo/current/deploy/observe
 以下是获准维护窗口内的操作，48 小时冻结期间不执行：
 
 ```sh
-sudo /opt/rustcore-demo/current/deploy/deploy.sh ACCEPTED_TAG_OR_FULLSHA
+sudo /opt/rustcore-demo/current/deploy/deploy.sh ACCEPTED_TAG_OR_FULLSHA \
+  --web-package /srv/rustcore-demo-web/rustcore-web-production-20261103-014852
 sudo /opt/rustcore-demo/current/deploy/rollback.sh PREVIOUS_TAG_OR_FULLSHA
 sudo systemctl start rustcore-backup.service
 sudo systemctl status rustcore-backup.service --no-pager
