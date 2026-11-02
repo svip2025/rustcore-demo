@@ -20,7 +20,7 @@ assert_release() {
   valid_release "$1" || return 1
   [[ -d $release_base/releases/$1 && -x $release_base/bin/$1/rustcore && -f $release_base/manifests/$1.json && -f $web_base/releases/$1/dist/index.html && -f $web_base/releases/$1/BUILD-INFO.json ]] || return 1
   local unsafe
-  unsafe=$(find "$release_base/releases/$1" "$release_base/bin/$1" "$web_base/releases/$1" -xdev \( ! -user root -o -perm /022 \) -print -quit)
+  unsafe=$(find "$release_base/releases/$1" "$release_base/bin/$1" "$web_base/releases/$1" -xdev \( ! -user root -o \( ! -type l -perm /022 \) \) -print -quit)
   [[ -z $unsafe ]] || { echo 'Release must be root-owned and unwritable by the service account.' >&2; return 1; }
 }
 quiesce() {

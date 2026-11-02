@@ -1,7 +1,9 @@
 # Render DEMO_DOMAIN explicitly; import this site from the host's Caddyfile.
 # Preserve any existing host sites in separate imported files. Caddy 2.6 compatible.
 {$DEMO_DOMAIN} {
-  encode gzip
+  # Caddy 2.6 gzip can buffer SSE; leave the live stream uncompressed.
+  @compress not path /api/stream
+  encode @compress gzip
   header {
     Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
     X-Content-Type-Options nosniff
