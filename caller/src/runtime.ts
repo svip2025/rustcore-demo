@@ -269,39 +269,54 @@ export class CallerRuntime {
     if (this.stopped) throw new ScenarioFailure('RUNTIME_STOPPED', 'caller 未运行，不能执行重启', 'UNKNOWN');
     this.restarting = true;
     this.budgetInputsAvailable = false;
-    if (this.polling) await this.polling.catch(() => {});
-    if (this.reconciling) await this.reconciling;
-    if (this.publishingBudget) await this.publishingBudget.catch(() => {});
-    if (this.stopped) { this.restarting = false; return; }
-    this.streamGeneration++;
-    this.subscription?.cancel();
-    this.subscription = undefined;
-    if (this.reconnect) clearTimeout(this.reconnect);
-    this.reconnect = undefined;
-    const state = this.store.getState(), at = new Date().toISOString();
-    state.rustcore = { status: 'RESTARTING', checked_at: at, last_restart_at: at, reason: '本轮主动终止并重启自己持有的内核进程' };
-    state.risk_budget.status = 'STALE';
-    this.store.setState(state);
+    let failure: ScenarioFailure | null = null;
+    let restartInvoked = false;
     try {
+      if (this.polling) await this.polling.catch(() => {});
+      if (this.reconciling) await this.reconciling;
+      if (this.publishingBudget) await this.publishingBudget.catch(() => {});
+      if (this.stopped) return;
+      this.streamGeneration++;
+      this.subscription?.cancel();
+      this.subscription = undefined;
+      if (this.reconnect) clearTimeout(this.reconnect);
+      this.reconnect = undefined;
+      const state = this.store.getState(), at = new Date().toISOString();
+      state.generated_at = at;
+      state.rustcore = { ...state.rustcore, status: 'RESTARTING', checked_at: at, reason: '本轮主动终止并重启自己持有的内核进程' };
+      state.risk_budget.status = 'STALE';
+      this.store.setState(state);
+      restartInvoked = true;
       await this.kernel.restart();
       if (this.stopped) return;
       this.requireOwnedKernel();
       this.bootStartedAt = Date.now();
-      const offline = this.store.getState();
-      offline.rustcore = { ...offline.rustcore, status: 'OFFLINE', checked_at: new Date().toISOString(), reason: '等待新进程公开接口' };
+      const offline = this.store.getState(), offlineAt = new Date().toISOString();
+      offline.generated_at = offlineAt;
+      offline.rustcore = { ...offline.rustcore, status: 'OFFLINE', checked_at: offlineAt, last_restart_at: offlineAt, reason: '等待新进程公开接口' };
       this.store.setState(offline);
       await this.waitOnline();
       if (this.stopped) return;
       await this.ensureMarket();
     } catch (error) {
-      const failed = this.store.getState();
-      failed.rustcore = { ...failed.rustcore, status: 'OFFLINE', checked_at: new Date().toISOString(), reason: '受管内核重启未完成，恢复结果未知' };
-      this.store.setState(failed);
-      throw new ScenarioFailure('KERNEL_RESTART_FAILED', this.publicReason(error), 'UNKNOWN');
+      failure = new ScenarioFailure('KERNEL_RESTART_FAILED', this.publicReason(error), 'UNKNOWN');
+      try {
+        const failed = this.store.getState(), failedAt = new Date().toISOString();
+        failed.generated_at = failedAt;
+        failed.rustcore = { ...failed.rustcore, status: !restartInvoked && this.kernel.isRunning ? 'ONLINE' : 'OFFLINE', checked_at: failedAt,
+          reason: restartInvoked ? '受管内核重启未完成，恢复结果未知' : '重启未执行，继续观察原内核' };
+        this.store.setState(failed);
+      } catch { /* Preserve the original failure; recovery must not depend on a diagnostic state write. */ }
     } finally { this.restarting = false; }
     if (this.stopped) return;
     this.subscribe();
     this.lastReconciledAt = 0;
+    if (failure) {
+      // In particular, a pre-kill journal failure must not strand the original
+      // process without reads/events needed for the scenario's safety close.
+      void this.refresh().catch(() => {});
+      throw failure;
+    }
     await this.refresh(true);
     await this.publishBudget();
   }

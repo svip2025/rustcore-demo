@@ -5,6 +5,7 @@ import { CallerRuntime, type Rpc, type RuntimeKernel } from '../src/runtime.js';
 import type { DemoConfig } from '../src/config.js';
 import { DemoStore } from '../src/store.js';
 import { BTC, type Row } from '../src/facts.js';
+import type { StepActual } from '../../shared/schema.js';
 
 const NOW = Date.parse('2026-11-02T12:00:00.000Z');
 const TOKEN = 'synthetic-private-runtime-token';
@@ -224,11 +225,61 @@ test('restart records RESTARTING then OFFLINE then ONLINE, observes the new boot
   assert.deepEqual(statuses, ['RESTARTING', 'OFFLINE', 'ONLINE', 'ONLINE']); // Read, then independent budget publication.
   assert.equal(runtime.snapshot?.accountOrders.engine_boot_id, 'boot-two');
   assert.equal(runtime.snapshot?.bootStartedAt, NOW + 1);
+  assert.equal(store.getState().rustcore.last_restart_at, new Date(NOW + 1).toISOString());
   assert.equal(rpc.current().request.since_seq, '9007199254740993');
   assert.equal(kernel.restarts, 1);
   assert.equal(store.getState().risk_budget.day_start_equity_usdt, '1000');
   assert.equal(store.getState().risk_budget.approximate_today_pnl_usdt, '100');
   assert.equal(rpc.calls.filter(value => value.method === 'EnsureMarketData').length, 2);
+});
+
+test('restart state advances past a later startStep journal event without refreshing source facts', async (t) => {
+  const { runtime, store, kernel } = await fixture(t);
+  await runtime.start();
+  store.startRound('MANUAL', 'restart-order-regression');
+  const oldStateTime = store.getState().generated_at;
+  const oldSource = store.getState().account.source_as_of;
+  t.mock.timers.tick(500);
+  const actual: StepActual = { summary: 'synthetic restart', code: null, account: null, position: null,
+    open_orders: null, protection: null, fill: null, rustcore: null, risk_budget: null };
+  const step = store.startStep('restart-order-regression', 'restart_kernel', 'restart the owned child', actual);
+  assert.equal(store.getState().generated_at, oldStateTime, 'a step can be newer than the stored state snapshot');
+  assert.ok(step.started_at > oldStateTime);
+  const stateTimes: string[] = [];
+  const unsubscribe = store.subscribe(event => { if (event.type === 'state') stateTimes.push(event.data.generated_at); });
+  await runtime.restartKernel(); unsubscribe();
+  assert.equal(kernel.restarts, 1);
+  assert.ok(stateTimes.every(time => time >= step.started_at));
+  assert.equal(store.getState().account.source_as_of, oldSource);
+});
+
+test('a restart state-write exception before killing the child restores stream and reads and still permits stop', async (t) => {
+  const { runtime, store, rpc, kernel } = await fixture(t);
+  await runtime.start();
+  const before = store.getState();
+  before.rustcore.last_restart_at = new Date(NOW - 1000).toISOString();
+  store.setState(before);
+  const originalStream = rpc.current();
+  const setState = store.setState.bind(store);
+  let rejectOnce = true;
+  t.mock.method(store, 'setState', (...args: Parameters<DemoStore['setState']>) => {
+    if (rejectOnce) { rejectOnce = false; throw new Error('synthetic journal failure'); }
+    return setState(...args);
+  });
+  await assert.rejects(runtime.restartKernel(), /synthetic journal failure/);
+  assert.equal(kernel.restarts, 0, 'the journal failure occurs before any kernel restart');
+  assert.equal(store.getState().rustcore.last_restart_at, before.rustcore.last_restart_at);
+  assert.equal(originalStream.cancelled, true);
+  assert.equal(rpc.subscriptions.length, 2);
+  rpc.emit('9007199254740993', 'after-restart-write-failure');
+  assert.equal(store.getCoreCursor(), '9007199254740993');
+  const reads = rpc.calls.filter(call => call.method === 'GetAccountState').length;
+  await runtime.refresh();
+  t.mock.timers.tick(2000); await runtime.refresh();
+  assert.ok(rpc.calls.filter(call => call.method === 'GetAccountState').length > reads);
+  assert.equal(store.getState().rustcore.status, 'ONLINE');
+  await runtime.stop();
+  assert.equal(kernel.stops, 1);
 });
 
 test('stop aborts a startup wait and an in-flight refresh cannot write public state after shutdown', async (t) => {

@@ -96,3 +96,11 @@ MANUAL 轮次 `round_01M6EAK2KQP2W51D7JXFMBKFP8` 的 TP 独立 PASS、SL FAIL（
 不在此工单修改内核精度逻辑。caller 后续 SL 规划使用合法整数 USDT 网格，且该网格必须为真实 tick 的整数倍（如 tick=0.1 时 grid=1）；仍按同一 1% 公式向下对齐，不改权益、policy 或内核自动定量。有效规划价、实际 tick 和 stop_grid 一并纳入配置摘要和私有输入记录。`verifyProtection` 仍要求计划/本地行/交易所精确一致，不以容差放行，不补挂保护；已有 FAILED 原样保留。
 
 整数网格兼容的是未触发 stop-distance clamp 的正常输入路径。最终实际止损距离和 RR 仍由内核按默认策略核算；若 clamp 重新计算浮点 SL，仍可能出现此精度边界，不能将该输入规划方式说成内核的普遍修复。
+
+## F-12：重启状态事件的旧生成时间与 caller 异常恢复
+
+MANUAL 轮次 `round_01M6EBBXRDXQD5QBJN1SE294W3` 的开仓、SL/TP 独立核验和持仓均 PASS。进入重启步骤后，caller 复用了旧 `StateResponse.generated_at`，触发持久事件的单调时间检查 `Public event time cannot move backwards`，流程在调用终止内核前中断。此前没有发生本轮计划中的持仓重启；[原 FAILED 录制](recordings/run-20261102-144213-failed.json) 保留。
+
+异常同时让 caller 的 restarting 标志未恢复、事件订阅未恢复。后续精确平仓结果无法在该轮被 caller 完整证实，清理步骤也没有通过。随后独立的公开 gRPC 对账已实际确认 `completed=true`、`has_diff=false`、全部仓位为零、普通与 Algo 挂单均为空，本地差异为零。这份后续观察不能倒改已完成的 UNKNOWN/FAIL 步骤。
+
+修正仅在 caller：每条新状态更新自己的 generated_at，保留事实 observed_at/source_as_of；整个重启过程用 finally 恢复调度状态，尚未终止内核就失败时恢复读取与订阅。持久日志的单调时间检查保持不变。
