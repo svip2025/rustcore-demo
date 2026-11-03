@@ -44,6 +44,7 @@ activate() {
   assert_release "$name" || return
   systemctl stop caller.service rustcore.service || return
   /usr/bin/python3 "$release_base/releases/$name/deploy/release-env.py" "$name" || return
+  switch_link "$release_base/bin/$name/rustcore" "$release_base/kernel-current" || return
   switch_link "$release_base/releases/$name" "$release_base/current" || return
   switch_link "$web_base/releases/$name" "$web_base/current" || return
   install -o root -g root -m 0644 "$release_base/releases/$name"/deploy/systemd/* /etc/systemd/system/ || return

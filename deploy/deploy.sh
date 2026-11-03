@@ -40,7 +40,9 @@ if [[ ! -d $release ]]; then
   core_commit=$(git -C "$release/rustcore" rev-parse HEAD)
   printf '{"caller_commit":"%s","rustcore_commit":"%s"}\n' "$commit" "$core_commit" > "$release_base/manifests/$name.json"
   chown -R root:root "$release" "$release_base/bin/$name" "$web_base/releases/$name"
-  chmod -R go-w "$release" "$release_base/bin/$name" "$web_base/releases/$name"
+  # The deploy shell uses umask 077; published source/static assets still need
+  # read/traverse access for the separate caller and Caddy service users.
+  chmod -R a+rX,go-w "$release" "$release_base/bin/$name" "$web_base/releases/$name"
 fi
 assert_release "$name"
 previous=''

@@ -104,3 +104,44 @@ MANUAL 轮次 `round_01M6EBBXRDXQD5QBJN1SE294W3` 的开仓、SL/TP 独立核验�
 异常同时让 caller 的 restarting 标志未恢复、事件订阅未恢复。后续精确平仓结果无法在该轮被 caller 完整证实，清理步骤也没有通过。随后独立的公开 gRPC 对账已实际确认 `completed=true`、`has_diff=false`、全部仓位为零、普通与 Algo 挂单均为空，本地差异为零。这份后续观察不能倒改已完成的 UNKNOWN/FAIL 步骤。
 
 修正仅在 caller：每条新状态更新自己的 generated_at，保留事实 observed_at/source_as_of；整个重启过程用 finally 恢复调度状态，尚未终止内核就失败时恢复读取与订阅。持久日志的单调时间检查保持不变。
+
+## F-13：交易所平仓后持久额度预留未释放（修复与验证通过）
+
+2026-11-03 的第二、第三轮 SCHEDULED 开仓均被 `RESERVATION_CONFLICT; deterministic risk policy` 拒绝；前置检查、前置清理和失败后清理均 PASS，没有新开仓成交。两轮 FAILED 及其录制保留，不能通过重发、清空额度表、修改权益或重置数据库把失败隐藏。原 `attempt-001` 于 `2026-11-03T10:30:56.686Z` 标记为 `STOPPED / DEPLOYMENT_BUG`，其三轮 SCHEDULED 为一轮 SUCCEEDED、两轮 FAILED；STOPPED 是观测 attempt 状态，不改写任何 round。修复前备份回执已确认 `scenario.timer=inactive`，原窗口不构成 48 小时通过证据。
+
+固定内核 `f8a331a1a3ff035162ceca657b2467dc45583a61` 的 Entry 准入会按最终 sizing 增加 `notional_reservations`，后续准入读取该持久余额；正常交易所成交平仓、对账归零和精确平仓终结没有对应的额度释放。依据为 [Entry 预留](https://github.com/svip2025/rustcore/blob/f8a331a1a3ff035162ceca657b2467dc45583a61/src/svc.rs#L2922)、[持久余额读取](https://github.com/svip2025/rustcore/blob/f8a331a1a3ff035162ceca657b2467dc45583a61/src/risk.rs#L1150)、[仓位关闭](https://github.com/svip2025/rustcore/blob/f8a331a1a3ff035162ceca657b2467dc45583a61/src/position_state.rs#L936)及[交易所精确平仓终结](https://github.com/svip2025/rustcore/blob/f8a331a1a3ff035162ceca657b2467dc45583a61/src/position_close.rs#L1254)。用户已单独授权修复这一内核业务缺口，修复与验证结果如下。
+
+2026-11-03 11:38:34.913656 UTC 已从只读源创建 SQLite 在线备份，`quick_check=ok`；备份文件权限 600，目录权限 700。备份 SHA256 为 `c3cec497dad42889ab770621e8aed6d7de65abbca35da705b7c42bb5c034578a`。私有去敏回执为 `pre-fix-backup.json`、`historical-entry-reservations.json`、`historical-safe-closes.json`。
+
+历史只读关联已实际完成：`demo_scenario_inputs` 的 Entry intent 关联 `risk_verdicts` 与原始 Entry 订单，取 `sizing_json.final_notional_usdt` 作为最终预留金额；再以 Entry 订单关联仓位，并用 `position_close_requests.target_json.entry_engine_order_id` 限定原 Entry 的平仓回执。11 月 2 日共六笔实际开仓，六笔仓位均为 `closed`、`qty=0`，均有 `filled / EXCHANGE_FILLED` 平仓回执；Entry 与 close 的成交行已分别读回，成交量一致，symbol scope 均已知。六笔保护清理均为 `complete / exchange_truth / truth_confirmed`。
+
+| 轮次开始时间（UTC，2026-11-02） | 原轮次状态 | 实际开仓 / 平仓 BTC | Entry 最终预留 USDT |
+| --- | --- | --- | --- |
+| 14:07:03.248 | FAILED | 0.0095 / 0.0095 | 743.3875536315 |
+| 14:28:39.161 | FAILED | 0.0095 / 0.0095 | 743.276982297 |
+| 14:42:13.390 | FAILED | 0.0095 / 0.0095 | 743.188153122 |
+| 15:01:45.420 | SUCCEEDED | 0.0095 / 0.0095 | 743.0420824155 |
+| 18:18:41.518 | SUCCEEDED | 0.0096 / 0.0096 | 742.9617763125 |
+| 18:27:54.564 | SUCCEEDED | 0.0096 / 0.0096 | 742.7737818945 |
+
+六笔原始最终预留以 Decimal 相加为 `4458.6303296730 USDT`，与此前实读仍占用的 `4458.630329673 USDT` 相等。预留金额与交易所成交名义额分别记录：例如首笔 Entry 成交名义额为 `741.0000 USDT`，其最终预留为 `743.3875536315 USDT`，释放依据须使用原预留金额。第一笔缺少 `position_execution_provenance` 匹配证明；其余五笔该证明匹配且 venue 为 `testnet`。六笔均已读回语义 epoch 键匹配、请求 stage 为 `demo`，第一笔的证明缺口仍保留，不补造来源。
+
+特别保留 11 月 2 日三轮失败后的安全处理边界：14:07、14:28 两轮原录制的精确平仓、保护清理及完整账户零敞口检查均 PASS；14:42 轮自身的后置清理未获证明。此次读回其后续持久回执为 `filled / EXCHANGE_FILLED`，frozen outcome 为 `closed / 0`，但这份后续真值及独立 flat 观察均不倒改原轮 UNKNOWN/FAIL。
+
+修复集中在正常对账 `Finalize` 阶段：同轮交易所仓位读取覆盖目标 symbol/direction，Entry 已终结，读取开始时间严格晚于 Entry 创建及最后更新时间，本地仓位为 `closed / 0` 且交易所该 scope 为 flat，才进入共用回收。单独的本地零仓位或平仓成交回执不足以释放。实现见 [reconcile.rs](https://github.com/svip2025/rustcore/blob/9d78049fda170939bfa21cbbd0e837eb88e5af2f/src/reconcile.rs#L2440) 与 [reservation_release.rs](https://github.com/svip2025/rustcore/blob/9d78049fda170939bfa21cbbd0e837eb88e5af2f/src/reservation_release.rs#L29)。
+
+| 平仓 / 恢复路径 | 共用回收依据 |
+| --- | --- |
+| `ClosePosition` 精确平仓 | 正常成交终结后，在对账 `Finalize` 取得上述 fresh-flat 真值。 |
+| 普通 reduce-only 平仓 | 成交和仓位真值使本地仓位关闭后，走同一 `Finalize` 回收。 |
+| 失败轮次的安全平仓 | 使用相同精确平仓与 fresh-flat 回收；原轮次 FAILED 不影响已证实额度归还，也不被改写。 |
+| 重启恢复、旧版本遗留的已关闭仓位 | 后续正常对账重新扫描持久仓位和 Entry；不依赖进程内记忆。 |
+| 交易所手动平仓、SL / TP 触发平仓 | 对账确认关闭并取得 fresh-flat 真值后共用回收；不要求一定存在 caller 的精确平仓请求。 |
+
+每笔只归还原 Entry 对应批准 / resize verdict 中的 `sizing_json.final_notional_usdt`，使用精确十进制减法。新增 [0046 迁移](https://github.com/svip2025/rustcore/blob/9d78049fda170939bfa21cbbd0e837eb88e5af2f/migrations/0046_notional_reservation_releases.sql) 以 `entry_engine_order_id` 为主键、`risk_verdict_id` 为唯一键；释放 marker 与余额扣减在同一事务提交，并使用账户预留锁和原余额校验。重复对账、并发执行及进程重启都不能重复归还同一 Entry；金额不足或归属不明时保留预留并报告原因，不清空整个账户额度池。
+
+legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一 Entry、唯一引用的批准 verdict、账户 / bot / symbol / direction 一致、语义 epoch 幂等键匹配、replay stage 为 `demo` / `live_small` / `live`，并有同交易所订单、已知 symbol scope 的真实正数量成交。已有 provenance 若冲突则不走 fallback；fallback 只证明额度归属，不恢复精确平仓权限。
+
+修复前真库回归 `exchange_close_reconcile_releases_exact_original_entry_reservation` 已实际 RED（实际 `237.125`、期望 `100`），修复后已 GREEN；另七项专项检查通过，涵盖 MySQL 并发、SQLite 回滚、进程重启、legacy 及守卫条件。本地全量测试 exit 0，顶层聚合为 **1400 PASS / 0 FAIL / 31 ignored**，不重复计入 filtered 子 helper；`RUSTCORE_REQUIRE_MYSQL_TESTS=1` 且 MySQL fixture 健康，fmt / clippy 通过。[CI 41632219712](https://github.com/svip2025/rustcore/actions/runs/41632219712) 的 test、fmt、clippy 三项均成功。修复提交 `9d78049fda170939bfa21cbbd0e837eb88e5af2f` 已通过 [PR #3](https://github.com/svip2025/rustcore/pull/3) 合并，merge commit 为 `cdd7916458855375a4dfe5b543e8a47b2d75fc78`。
+
+存量释放由后续成功对账按上述 fresh-flat 判据执行；部署读回及新 48 小时窗口见运行回执。旧 `attempt-001` 和全部原始失败记录保留；新 attempt 从新的首个 SCHEDULED/RUNNING 重新计时，规则见 [RUN-48H.md](docs/RUN-48H.md)。本节的修复与测试通过不代表 48 小时观测通过。
