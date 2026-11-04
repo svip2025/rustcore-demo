@@ -12,6 +12,7 @@ import { acquireFileLock, type FileLock } from '../caller/src/file-lock.js';
 import { row, ScenarioFailure, type Row } from '../caller/src/facts.js';
 import { requestLocalRound } from '../caller/src/local-control.js';
 import { Round2Schedule } from '../caller/src/round2-schedule.js';
+import { isIP } from 'node:net';
 
 const executeFile = promisify(execFile);
 const networkScript = fileURLToPath(new URL('./fault-network.py', import.meta.url));
@@ -70,7 +71,11 @@ export async function main(arguments_: string[]): Promise<void> {
       run: (scenario, onEvent) => requestLocalRound(`${config.callerDbFile}.sock`, 'MANUAL', onEvent, scenario),
       network: seconds => withF3Network(seconds, join(dirname(file), `${basename(file)}.f3-${randomUUID()}.json`), {
         command: async arguments_ => {
-          const { stdout } = await executeFile('sudo', ['-n', '--', '/usr/bin/python3', networkScript, ...arguments_], {
+          // sudo may strip SSH_CONNECTION. Carry only its validated peer address
+          // as an explicit argument so DNS can never select the operator's peer.
+          const peer = process.env.SSH_CONNECTION?.split(/\s+/)[0];
+          const peerArgument = arguments_[0] === '--inject' && peer && isIP(peer) ? ['--ssh-peer', peer] : [];
+          const { stdout } = await executeFile('sudo', ['-n', '--', '/usr/bin/python3', networkScript, ...arguments_, ...peerArgument], {
             shell: false, timeout: 120_000, maxBuffer: 16_384,
           });
           return row(JSON.parse(stdout.trim()));

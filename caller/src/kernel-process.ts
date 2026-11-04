@@ -48,6 +48,15 @@ export class ManagedKernel {
     });
   }
 
+  /** F1/F2: crash only this caller's child; restart is a separate observed action. */
+  crash(): Promise<void> {
+    return this.serialized(async () => {
+      if (this.config.connectOnly || this.owned === undefined || this.owned.exited)
+        throw new KernelProcessError('KERNEL_NOT_MANAGED', '故障工具只能终止自己持有且仍在运行的内核子进程');
+      await this.terminateOwned('SIGKILL');
+    });
+  }
+
   stop(): Promise<void> {
     return this.serialized(async () => {
       if (this.config.connectOnly || this.owned === undefined) return;

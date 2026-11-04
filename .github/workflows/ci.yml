@@ -1,0 +1,26 @@
+name: Candidate offline checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  caller:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.2'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run check:recordings
+      - run: python3 scripts/test-fault-network.py -v
+      - run: npm --prefix web test
+      - run: node --test web/scripts/build.test.mjs web/scripts/serve.test.mjs
+      - run: npm --prefix web run build
