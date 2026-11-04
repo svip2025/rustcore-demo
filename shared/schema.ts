@@ -1,5 +1,5 @@
-/** Frozen public contract v1. See docs/DATA-CONTRACT.md for wire/replay rules. */
-export const SCHEMA_VERSION = 1 as const;
+/** Public contract v2. Original v1 wire types are frozen in schema-v1.ts. */
+export const SCHEMA_VERSION = 2 as const;
 
 export type IsoTimestamp = string; // UTC ISO 8601, including milliseconds and Z.
 export type DecimalString = string; // Base-10 decimal; never a JS money number.
@@ -157,7 +157,55 @@ export type TimelineStep = TimelineStepBase & (
   | { phase: 'COMPLETED'; ended_at: IsoTimestamp; result: CheckResult }
 );
 
+export type ScenarioId = 'S1' | 'S2' | 'S3' | 'S4' | 'S5' | 'F1' | 'F2' | 'F3' | 'F4';
+export interface ScenarioConfig {
+  scenario_id: ScenarioId;
+  direction: 'LONG' | 'SHORT';
+  symbol: 'BTCUSDT';
+  sl_pct: DecimalString; // Requested ratio; never silently changed by a policy.
+  tp_pct: DecimalString;
+  max_hold_ms: number;
+  exit_mode: 'ACTIVE_CLOSE' | 'WAIT_SL' | 'WAIT_TP' | 'FUNDING_WINDOW';
+  policy_version: 'risk_policy_v3' | 'risk_policy_testnet_v1';
+  funding_settlement_at: IsoTimestamp | null;
+}
+export interface FundingEntry {
+  public_id: string;
+  transaction_at: IsoTimestamp;
+  symbol: 'BTCUSDT';
+  asset: 'USDT';
+  amount_usdt: DecimalString; // Signed income, negative means a charge.
+}
+export interface RoundMetrics {
+  step_durations_ms: Partial<Record<ScenarioStep, number>>;
+  unknown_duration_ms: number;
+  unknown_windows: { started_at: IsoTimestamp; ended_at: IsoTimestamp; duration_ms: number }[];
+  protection_confirmation_ms: number | null; // Conservative upper bound: before Entry RPC to independently proven pair.
+  reference_price: DecimalString | null;
+  planned_sl_price: DecimalString | null;
+  planned_tp_price: DecimalString | null;
+  effective_sl_pct: DecimalString | null;
+  effective_tp_pct: DecimalString | null;
+  tick_size: DecimalString | null;
+  stop_grid: DecimalString | null;
+  accounting_status: 'UNKNOWN' | 'COMPLETE';
+  accounting_start_at: IsoTimestamp | null;
+  accounting_end_at: IsoTimestamp | null;
+  gross_pnl_usdt: DecimalString | null;
+  fees_usdt: DecimalString | null;
+  funding_usdt: DecimalString | null;
+  net_pnl_usdt: DecimalString | null;
+  funding_entries: FundingEntry[] | null;
+  equity_before_usdt: DecimalString | null;
+  equity_after_usdt: DecimalString | null;
+  trigger_observed_at: IsoTimestamp | null;
+  trigger_source_at: IsoTimestamp | null; // Exchange fill timestamp, kept separate from local receipt time.
+  flat_confirmed_at: IsoTimestamp | null;
+}
+
 export interface RoundSummary {
+  scenario: ScenarioConfig | null; // null only when faithfully consuming legacy v1.
+  metrics: RoundMetrics | null;
   round_id: string;
   trigger: 'SCHEDULED' | 'MANUAL';
   status: 'RUNNING' | 'SUCCEEDED' | 'FAILED';

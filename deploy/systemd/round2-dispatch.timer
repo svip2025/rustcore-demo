@@ -1,0 +1,11 @@
+[Unit]
+Description=2A absolute schedule dispatcher (test VPS only)
+
+[Timer]
+OnCalendar=*-*-* *:*:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=round2-dispatch.service
+
+[Install]
+WantedBy=timers.target

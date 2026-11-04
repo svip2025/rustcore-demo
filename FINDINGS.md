@@ -155,3 +155,23 @@ legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一
 最终调度使用 `OnCalendar=*-*-* 00/6:00:00 UTC`，在 UTC 00、06、12、18 点各执行一次，`Persistent=false` 不补跑历史时点。新 observer 先 arm，再启用 timer，首轮也等待真实 calendar 触发；没有人工 bootstrap。timer/manual 仍走同一 caller 文件锁。无交易 calendar 回归以二十秒网格加速验证：连续三次 reload 不增加执行、不改变下一次时间，只有正常网格到期才产生第二次执行。
 
 另一份相对定时试验中，瞬时 oneshot 在启用 timer 前已退出并被回收，下一次时间为 `infinity`；失败回执保留。这也说明相对定时方案需要额外维持首次 service 的时间锚，最终 calendar 方案不依赖它。修复不改 caller 业务、内核、风控或原录制；部署后另建 attempt，从首个真正的 SCHEDULED/RUNNING 从零观察。
+
+## F-15：正常 listenKeyExpired 被忽略（2A 离线修复候选）
+
+冻结内核的用户数据流读取器遇到格式合法的 `listenKeyExpired` 时，解析成功后交给未处理该事件的 sink，未结束当前 cycle，也未立即撤销 ready。畸形失效帧已有测试，不能代替正常失效事件的判据。
+
+2026-11-04 先以真实 SQLite 和受控本地 WebSocket 帧复现 RED：`round2_valid_listen_key_expired_stops_reader_before_next_frame` 断言合法失效帧必须结束读取失败。修复在读取器 envelope 路径立即处理该事件，撤销 ready、推进恢复 generation，并复用重连、补成交与 REST 对账流程。同名回归及受测试网守卫限制的主动断流/失效注入专项已 GREEN。证据名为 `f15-listenkey-red-clean.log`、`kernel-round2-green-3.log`；完整本地索引见本次 `RUSTCORE-ROUND2-PREP.md` 交接。
+
+该结论仅证明本地受控事件和数据库恢复分支。真实测试网 listenKey 生命周期、失效通知格式和断流期间真实止损触发后的清理仍为“待测试网实测”。未修改第一轮运行版本或原监控；F-13、F-14 编号与原始事实保持不变。
+
+## F-16：2A 候选排期未覆盖完整资金费窗口与 MANUAL 间隔
+
+前置候选 `4e8ab2662a6864bf3e8edfbbdc6b76460481c29b` 的 S4 插入判断仅检查开仓时刻，导致 T0 对齐资金费结算时，23h50m 开始的 S4 会持仓进入 24–30h 故障段；普通 dispatcher 又只比较自己认领的轮次及 caller 当前是否运行，未计入刚结束的 MANUAL 轮。两个问题均发生在未部署候选，不能归因于第一轮冻结版本。
+
+修复前的独立真实 CLI/SQLite 用例与排期断言分别保留 `scheduler-manual-spacing-red.log`、`scheduler-funding-overlap-red.log`。后续候选按 S4 完整二十分钟窗口排除故障段，并读取 caller 的实际 latest_round 开始时间，距最近任意轮不足三十分钟时将正常自动 slot 保留为 BUSY。负责人明确允许的同组故障/S1 例外仍只由 MANUAL 故障工具执行，不扩散到普通 dispatcher。修复后专项与全量/CI 结果见最终交接索引；没有修改工单基线或任何运行中服务。
+
+## F-17：慢 CI 暴露模拟交易所共享限流桶和旧快照夹具的时间竞赛
+
+候选内核 `854cd95fdd07804863601611dd8f9ec56eeab17b` 的本地全量为 1417 PASS / 0 FAIL，但 [CI 41826496251](https://github.com/svip2025/rustcore/actions/runs/41826496251) 的核心测试为 1290 PASS / 2 FAIL，不能将本地 PASS 作为远端通过。`exchange_close_contract_vector` 的模拟对账在继承的进程级限流队列超时；`exchange_close_never_finalizes_from_a_position_read_older_than_the_close_order` 则要求整次真实 Reconcile 在人为预设的未来八秒之前完成，慢 CI 已越过该前提。完整远端日志保留为 `kernel-ci-854cd95-failed.log`。原 CI 未保存桶余额；后续零 token/零 refill 是独立受控机制复现，不冒称原 CI 的余额实测。
+
+后续修复只针对夹具隔离与确定性时序：每个模拟交易所使用独立 route，旧读数测试通过可控读数开始点证明实际 interleaving。资金安全判据仍是旧读数不得终结平仓，随后严格更新的读数才能终结；不调整生产风控或超时，不跳过用例。最终候选的专项、全量、fmt/clippy 与适用 CI 必须重新实际通过，结果以交接回执为准。

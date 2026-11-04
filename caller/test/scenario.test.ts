@@ -11,6 +11,7 @@ import { projectSnapshot, type AccountSettings, type CoreSnapshot } from "../src
 import { BOT } from "../src/runtime.js";
 import { ScenarioRunner } from "../src/scenario.js";
 import { DemoStore } from "../src/store.js";
+import { scenarioFor } from '../src/scenario-config.js';
 
 type Runtime = ConstructorParameters<typeof ScenarioRunner>[0];
 type Options = NonNullable<ConstructorParameters<typeof ScenarioRunner>[1]>;
@@ -51,6 +52,17 @@ class MockRuntime implements Runtime {
   openingAccountUnavailableReads = 0;
   unavailableAccountBodies: Row[] = [];
   held = false;
+  direction: 'long' | 'short' = 'long';
+  stopPrice = '99000';
+  tpPrice = '102500';
+  protectionTrigger: 'sl' | 'tp' | null = null;
+  triggerDelayReads = 0;
+  triggerSourceDelayMs: number | null = 0;
+  triggerResidualReads = 0;
+  triggerUnknownReads = 0;
+  dropWithoutFill = false;
+  fundingRows: Row[] = [];
+  fundingComplete = true;
   boot = "mock-boot-before-restart";
   bootStartedAt = Date.now() - 1000;
   restartCount = 0;
@@ -93,7 +105,11 @@ class MockRuntime implements Runtime {
           return { acks: [{ status: "STATUS_REJECTED", engine_order_id: "", reject_reason_code: "FILL_RECOVERY_NOT_READY",
             message: "FILL_RECOVERY_NOT_READY phase=not_started" }] };
         }
+        this.direction = intent.action === 'open_short' ? 'short' : 'long';
+        this.stopPrice = String(row(intent.protection).stop_loss_price);
+        this.tpPrice = String(row(intent.protection).take_profit_price);
         this.held = true;
+        this.emitFill('entry', this.openKey);
         if (this.openingAcknowledgmentLost) throw new Error("Mock opening response was lost after applying the write");
         return { acks: [{ status: "STATUS_ACCEPTED", engine_order_id: "mock-entry-order" }] };
       }
@@ -124,6 +140,7 @@ class MockRuntime implements Runtime {
         assert.equal(request.expected_boot_id, this.boot, "close must use a freshly read target from the current boot");
         this.closeRef = String(request.request_ref);
         this.held = false;
+        this.emitFill('exit', this.closeKey);
         if (this.closeAcknowledgmentLost) throw new Error("Mock close response was lost after applying the close");
         return { request_status: "accepted" };
       }
@@ -133,35 +150,50 @@ class MockRuntime implements Runtime {
           engine_order_id: "mock-exit-order", position_observation: { status: "observed", state: "closed", quantity: "0" },
           protection_observation: { status: "cleaned" } };
       }
+      if (method === 'GetFundingHistory') return { complete: this.fundingComplete, source_as_of_ms: String(Date.now()),
+        start_time_ms: request.start_time_ms, end_time_ms: request.end_time_ms,
+        total_funding_usdt: this.fundingRows.length ? '-0.01234567' : '0', entries: this.fundingRows };
       throw new Error("Unexpected mocked RPC: " + method);
     },
     streamEvents: () => { throw new Error("Scenario unit tests must not create a real stream"); },
     close: () => undefined,
   };
 
+  emitFill(role: string, key: string): void {
+    const seq = String(this.store.getCoreEvents().length + 1);
+    this.store.appendCoreEvent(seq, 'mock-fill-' + seq, { event_type: 'fill', idempotency_key: key,
+      payload_json: JSON.stringify({ positionId: this.positionId, orderRole: role, exchangeTradeId: 'trade-' + seq,
+        tsExchangeMs: role.startsWith('protection_') ? this.triggerSourceDelayMs === null ? null : Date.now() - this.triggerSourceDelayMs : Date.now(), fillQty: '0.001', fillPrice: role === 'entry' ? '100000' : '100100', fee: '0.04', feeAsset: 'USDT',
+        realizedPnl: role === 'entry' ? '0' : this.direction === 'long' ? '0.1' : '-0.1' }) });
+  }
   async start(): Promise<void> { this.isStarted = true; await this.refresh(true); }
 
   async refresh(_forceReconcile = false): Promise<void> {
     const now = Date.now(), start = now - 4, end = now - 1;
+    const currentStep = this.store.getTimeline(1).rounds[0]?.steps.find(step => step.phase === 'RUNNING');
+    if (this.held && currentStep?.step === 'hold' && (this.protectionTrigger || this.dropWithoutFill) && this.triggerDelayReads-- <= 0) {
+      this.held = false;
+      if (!this.dropWithoutFill) this.emitFill('protection_' + this.protectionTrigger, 'mock-protection-fill');
+    }
     const accountUnavailable = this.held && this.openKey !== "" && this.openingAccountUnavailableReads > 0;
     if (accountUnavailable) this.openingAccountUnavailableReads--;
     const position: Row = { position_id: this.positionId, credential_id: this.config.credentialId,
-      bot_uid: BOT, symbol_key: BTC, direction: "long", state: "protected", qty: "0.001",
+      bot_uid: BOT, symbol_key: BTC, direction: this.direction, state: "protected", qty: "0.001",
       entry_price: "100000", last_reconciled_ms: String(end) };
     const localPosition: Row = { ...position, raw_state: "protected", quantity: "0.001" };
     const plan: Row = { position_id: this.positionId, credential_id: this.config.credentialId,
-      bot_uid: BOT, symbol_key: BTC, direction: "long", generation: "1",
-      stop_loss_price: "99000", take_profit_price: "102500", association_status: "matched" };
+      bot_uid: BOT, symbol_key: BTC, direction: this.direction, generation: "1",
+      stop_loss_price: this.stopPrice, take_profit_price: this.tpPrice, association_status: "matched" };
     const localOrders = (["sl", "tp"] as const).map((kind): Row => ({
       protection_order_id: "mock-private-" + kind, credential_id: this.config.credentialId, position_id: this.positionId,
       kind, generation: "1", exchange_algo_id: "mock-algo-" + kind, client_algo_id: "mock-client-" + kind,
       association_status: "matched", current_plan_generation_match: true, verified_projection: true,
-      trigger_price: kind === "sl" ? "99000" : "102500", raw_status: "confirmed",
+      trigger_price: kind === "sl" ? this.stopPrice : this.tpPrice, raw_status: "confirmed",
     }));
     const venueOrders = (this.behavior === "missing_tp" ? ["sl"] : ["sl", "tp"]).map((kind): Row => ({
       algo_id: "mock-algo-" + kind, client_algo_id: "mock-client-" + kind, identity_valid: true, symbol: "BTCUSDT",
-      order_type: kind === "sl" ? "STOP_MARKET" : "TAKE_PROFIT_MARKET", side: "SELL", position_side: "BOTH",
-      trigger_price: kind === "sl" ? "99000" : "102500", close_position: true, status: "NEW",
+      order_type: kind === "sl" ? "STOP_MARKET" : "TAKE_PROFIT_MARKET", side: this.direction === "long" ? "SELL" : "BUY", position_side: "BOTH",
+      trigger_price: kind === "sl" ? this.stopPrice : this.tpPrice, close_position: true, status: "NEW",
     }));
     const startup: Row = { engine_order_id: "mock-startup-entry", credential_id: this.config.credentialId,
       bot_uid: this.startupEntryOwner, symbol_key: BTC, order_role: "entry", action: "open_long",
@@ -179,7 +211,7 @@ class MockRuntime implements Runtime {
       account: accountUnavailable ? { available: false, unavailable_reason: "MOCK_ACCOUNT_SYNC_PENDING" }
         : { available: true, observed_at_ms: String(now), as_of_ms: String(end), equity_usdt: "10000",
         available_usdt: this.held ? "9900" : "10000", positions: this.held ? [{
-          symbol_key: BTC, side: "long", qty: "0.001", entry_price: "100000", mark_price: "100000",
+          symbol_key: BTC, side: this.direction, qty: "0.001", entry_price: "100000", mark_price: "100000",
         }] : [] },
       positions: { positions: this.held ? [position] : [], orphan_positions: [] },
       orders: { orders: openLocal.map(order => ({ ...order, status: order.raw_status })) },
@@ -221,16 +253,21 @@ class MockRuntime implements Runtime {
       utc_day: state.generated_at.slice(0, 10), day_start_equity_usdt: "10000", equity_high_water_usdt: "10000",
       approximate_today_pnl_usdt: "0", approximate_today_pnl_pct: 0, drawdown_pct: 0,
       total_exposure_pct: this.held ? 0.01 : 0, reason: "MOCK budget; not a real account observation" };
+    if (currentStep?.step === 'hold' && !this.held) {
+      if (this.triggerResidualReads-- > 0) this.lastReconcile.all_open_algo_orders_empty = false;
+      if (this.triggerUnknownReads-- > 0) { state.positions.status = 'UNKNOWN'; this.lastReconcile.completed = false; }
+    }
     this.store.setState(state);
   }
 
   market(): { price: string; sourceAt: number } { return { price: "100000", sourceAt: Date.now() }; }
   fills(key: string, side: "BUY" | "SELL") {
     this.fillLookups.push({ key, side });
-    if (side === "BUY" && key !== this.openKey) return null;
-    if (side === "SELL" && key !== this.closeKey) return null;
-    return { side, quantity: "0.001", average_price: side === "BUY" ? "100000" : "100100",
-      notional_usdt: side === "BUY" ? "100" : "100.1" };
+    const openSide = this.direction === 'long' ? 'BUY' : 'SELL';
+    if (key !== this.openKey && key !== this.closeKey) return null;
+    if ((key === this.openKey && side !== openSide) || (key === this.closeKey && side === openSide)) return null;
+    return { side, quantity: "0.001", average_price: key === this.openKey ? "100000" : "100100",
+      notional_usdt: key === this.openKey ? "100" : "100.1" };
   }
   async restartKernel(): Promise<void> {
     this.restartCount++;
@@ -304,6 +341,24 @@ test("a not_started opening is sent once, stays FAILED, and a new MANUAL round c
     assert.deepEqual(runtime.store.getTimeline().rounds.find((round) => round.round_id === first.round_id), old);
     assert.deepEqual(loadRecording(runtime, first.round_id), firstRecording);
     assert.equal(readdirSync(join(runtime.directory, "recordings")).length, 2);
+  });
+});
+
+test("S5 direction is carried into the actual opening intent instead of silently opening long", async () => {
+  await fixture("success", async runtime => {
+    Object.assign(runtime.config, { scenario: { scenario_id: 'S5', direction: 'SHORT', symbol: 'BTCUSDT',
+      sl_pct: '0.01', tp_pct: '0.025', max_hold_ms: 1, exit_mode: 'ACTIVE_CLOSE',
+      policy_version: 'risk_policy_v3', funding_settlement_at: null } });
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL');
+    assert.equal(result.status, 'SUCCEEDED');
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(round.metrics?.accounting_status, 'COMPLETE');
+    assert.equal(round.metrics?.net_pnl_usdt, '-0.18');
+    assert.equal(round.steps.find(s => s.step === 'close_position')?.actual.fill?.side, 'BUY');
+    const intent = rows(runtime.calls('ExecuteIntents')[0]!.request.intents)[0]!;
+    assert.equal(intent.action, 'open_short');
+    assert.ok(Number(row(intent.protection).stop_loss_price) > 100000);
+    assert.ok(Number(row(intent.protection).take_profit_price) < 100000);
   });
 });
 
@@ -616,5 +671,154 @@ test("protection that remains UNKNOWN times out with its last reason, preserves 
     const recording = loadRecording(runtime, result.round_id);
     assert.ok(recording.events.some(event => event.type === "state" && event.data.protection.value?.[0]?.sl.status === "UNKNOWN"));
     assert.equal(round.status, "FAILED");
+  });
+});
+
+for (const [id, leg] of [['S2', 'sl'], ['S3', 'tp']] as const) for (const direction of ['LONG', 'SHORT'] as const) {
+  test(`${id} ${direction} waits for the designated exchange fill, fresh flat and sibling cleanup without active close or restart`, async () => {
+    await fixture('success', async runtime => {
+      runtime.protectionTrigger = leg;
+      runtime.triggerUnknownReads = 1;
+      runtime.triggerResidualReads = 3;
+      const scenario = { ...scenarioFor(id, direction), max_hold_ms: 300 };
+      const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', scenario);
+      assert.equal(result.status, 'SUCCEEDED', result.reason);
+      const round = runtime.store.getTimeline().rounds[0]!;
+      assert.deepEqual(round.scenario, scenario);
+      assert.deepEqual(round.steps.map(step => step.step), ['preflight', 'cleanup_before', 'open_position', 'verify_protection', 'hold', 'cleanup_after']);
+      assert.equal(runtime.calls('ClosePosition').length, 0);
+      assert.equal(runtime.restartCount, 0);
+      assert.equal(round.metrics?.accounting_status, 'COMPLETE');
+      assert.ok(round.metrics?.trigger_observed_at);
+      assert.ok(round.metrics?.flat_confirmed_at);
+      assert.equal(round.metrics?.unknown_windows.length, 1);
+      const intent = rows(runtime.calls('ExecuteIntents')[0]!.request.intents)[0]!;
+      assert.equal(intent.policy_version, 'risk_policy_testnet_v1');
+      assert.equal(row(intent.protection).stop_loss_price, direction === 'LONG' ? id === 'S2' ? '99850' : '97000' : id === 'S2' ? '100150' : '103000');
+      const recording = loadRecording(runtime, result.round_id);
+      assert.equal(recording.schema_version, 2);
+      assert.ok(recording.events.some(event => event.type === 'state' && event.data.positions.status === 'UNKNOWN'));
+    });
+  });
+}
+
+test('a protection timeout is FAILED even when subsequent safety close and cleanup pass', async () => {
+  await fixture('success', async runtime => {
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', { ...scenarioFor('S2'), max_hold_ms: 1 });
+    assert.equal(result.status, 'FAILED');
+    assert.match(result.reason, /PROTECTION_TRIGGER_TIMEOUT/);
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(round.steps.find(step => step.step === 'hold')?.result, 'FAIL');
+    assert.equal(round.steps.find(step => step.step === 'cleanup_after')?.result, 'PASS');
+    assert.equal(runtime.calls('ClosePosition').length, 1);
+    assert.equal(runtime.calls('ExecuteIntents').length, 1);
+    assert.equal(runtime.restartCount, 0);
+  });
+});
+
+test('flat without an attributable protection fill is UNKNOWN and cannot pass the trigger scenario', async () => {
+  await fixture('success', async runtime => {
+    runtime.dropWithoutFill = true;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', { ...scenarioFor('S2'), max_hold_ms: 5 });
+    assert.equal(result.status, 'FAILED');
+    assert.equal(runtime.store.getTimeline().rounds[0]!.steps.find(step => step.step === 'hold')?.result, 'UNKNOWN');
+    assert.equal(runtime.calls('ClosePosition').length, 0);
+    assert.equal(runtime.store.getTimeline().rounds[0]!.metrics?.trigger_observed_at, null);
+  });
+});
+
+test('the opposite protection leg filling does not pass the requested trigger scenario', async () => {
+  await fixture('success', async runtime => {
+    runtime.protectionTrigger = 'tp';
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', { ...scenarioFor('S2'), max_hold_ms: 100 });
+    assert.equal(result.status, 'FAILED');
+    assert.match(result.reason, /UNEXPECTED_PROTECTION_TRIGGER/);
+    assert.equal(runtime.calls('ClosePosition').length, 0);
+    assert.equal(runtime.store.getTimeline().rounds[0]!.steps.at(-1)?.result, 'PASS');
+  });
+});
+
+for (const complete of [true, false]) test(`S4 settlement ledger ${complete ? 'complete' : 'incomplete'} is retained in net PnL and acceptance`, async t => {
+  await fixture('success', async runtime => {
+    const settlement = Math.ceil((Date.now() + 600000) / 28800000) * 28800000;
+    let simulatedNow = settlement - 600000;
+    t.mock.method(Date, 'now', () => simulatedNow);
+    runtime.fundingComplete = complete;
+    runtime.fundingRows = [{ public_id: 'funding-ledger-mock-row', transaction_time_ms: String(settlement), symbol: 'BTCUSDT', asset: 'USDT', amount_usdt: '-0.01234567' }];
+    const options = runtime.options({ pause: async <T>(_delay?: number, value?: T) => { simulatedNow += 1200000; return value as T; } });
+    const result = await new ScenarioRunner(runtime, options).run('MANUAL', scenarioFor('S4', 'LONG', new Date(settlement).toISOString()));
+    const round = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(result.status, complete ? 'SUCCEEDED' : 'FAILED', result.reason);
+    assert.equal(runtime.restartCount, 0);
+    assert.equal(runtime.calls('ClosePosition').length, 1);
+    assert.equal(round.metrics?.accounting_status, complete ? 'COMPLETE' : 'UNKNOWN');
+    assert.equal(round.metrics?.funding_usdt, complete ? '-0.01234567' : null);
+    assert.equal(round.metrics?.net_pnl_usdt, complete ? '0.00765433' : null);
+    if (complete) assert.equal(round.metrics?.funding_entries?.[0]?.amount_usdt, '-0.01234567');
+    else assert.match(result.reason, /FUNDING_ACCOUNTING_NOT_PROVEN/);
+    assert.equal(round.steps.some(step => step.step === 'restart_kernel'), false);
+    t.mock.restoreAll();
+  });
+});
+
+test('a concurrent differently configured run cannot change the active intent, and private recovery cannot race it or create another round', async () => {
+  await fixture('success', async runtime => {
+    let release!: () => void, reached!: () => void;
+    const waiting = new Promise<void>(resolve => { reached = resolve; });
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const base = runtime.options();
+    const runner = new ScenarioRunner(runtime, { ...base, preflight: async config => { reached(); await gate; return base.preflight!(config); } });
+    const active = runner.run('SCHEDULED', { ...scenarioFor('S1'), max_hold_ms: 1 });
+    await waiting;
+    await assert.rejects(runner.run('MANUAL', { ...scenarioFor('S5'), max_hold_ms: 1 }), error => error instanceof Error && 'code' in error && error.code === 'SCENARIO_ALREADY_RUNNING');
+    await assert.rejects(runner.recoverAfterFault(), error => error instanceof Error && 'code' in error && error.code === 'SCENARIO_ALREADY_RUNNING');
+    release();
+    const result = await active;
+    assert.equal(result.status, 'SUCCEEDED', result.reason);
+    assert.equal(rows(runtime.calls('ExecuteIntents')[0]!.request.intents)[0]!.action, 'open_long');
+    const original = runtime.store.getTimeline().rounds[0]!;
+    await runner.recoverAfterFault();
+    await runner.recoverAfterFault();
+    assert.equal(runtime.calls('ExecuteIntents').length, 1);
+    assert.deepEqual(runtime.store.getTimeline().rounds, [original]);
+  });
+});
+
+test('late REST-backfilled protection fill uses the exchange timestamp and cannot reset the sixty-second cleanup clock', async () => {
+  await fixture('success', async runtime => {
+    runtime.protectionTrigger = 'sl'; runtime.triggerSourceDelayMs = 61000;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', { ...scenarioFor('S2'), max_hold_ms: 100 });
+    assert.equal(result.status, 'FAILED'); assert.match(result.reason, /ORPHAN_CLEANUP_TOO_SLOW/);
+    const metrics = runtime.store.getTimeline().rounds[0]!.metrics!;
+    assert.ok(Date.parse(metrics.trigger_observed_at!) - Date.parse(metrics.trigger_source_at!) >= 61000);
+    assert.equal(runtime.calls('ClosePosition').length, 0);
+    assert.equal(runtime.store.getTimeline().rounds[0]!.steps.at(-1)?.result, 'PASS');
+  });
+});
+
+test('a protection fill without a source timestamp remains UNKNOWN even when the account is clean', async () => {
+  await fixture('success', async runtime => {
+    runtime.protectionTrigger = 'sl'; runtime.triggerSourceDelayMs = null;
+    const result = await new ScenarioRunner(runtime, runtime.options()).run('MANUAL', { ...scenarioFor('S2'), max_hold_ms: 5 });
+    assert.equal(result.status, 'FAILED');
+    assert.equal(runtime.store.getTimeline().rounds[0]!.steps.find(step => step.step === 'hold')?.result, 'UNKNOWN');
+    assert.equal(runtime.store.getTimeline().rounds[0]!.metrics?.trigger_source_at, null);
+    assert.equal(runtime.calls('ClosePosition').length, 0);
+  });
+});
+
+test('private recovery can retry a previously rejected cancellation after fresh readback without resubmitting Entry', async () => {
+  await fixture('success', async runtime => {
+    runtime.startupEntry = true; runtime.startupCancelAccepted = false;
+    const runner = new ScenarioRunner(runtime, runtime.options());
+    const failed = await runner.run('MANUAL');
+    assert.equal(failed.status, 'FAILED');
+    const original = runtime.store.getTimeline().rounds[0]!;
+    assert.equal(runtime.calls('CancelOrder').length, 1);
+    runtime.startupCancelAccepted = true;
+    await runner.recoverAfterFault();
+    assert.equal(runtime.calls('CancelOrder').length, 2);
+    assert.equal(runtime.calls('ExecuteIntents').length, 0);
+    assert.deepEqual(runtime.store.getTimeline().rounds, [original]);
   });
 });

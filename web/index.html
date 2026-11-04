@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f17">
+  <meta name="description" content="rustcore 只读执行观测台。查看持仓与独立 SL/TP 校验，回放开仓、内核重启、恢复与平仓的完整时间线。示例假数据明确标注。">
+  <title>rustcore · 执行观测台</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳转到主要内容</a>
+  <aside class="sidebar" aria-label="主导航">
+    <a class="brand" href="#main" aria-label="rustcore 首页"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="m18 2 14 8v16l-14 8-14-8V10Z"/><path d="m4 10 14 8 14-8M18 18v16M11 6l14 8v8l-7 4-7-4v-8"/></svg><span>rustcore<span class="brand-dot">.</span></span></a>
+    <div class="sidebar-caption">EXECUTION OBSERVATORY</div>
+    <nav><a href="#overview" class="nav-link active"><span aria-hidden="true">◫</span>运行概览<span class="nav-key">01</span></a><a href="#timeline-section" class="nav-link"><span aria-hidden="true">≋</span>场景时间线<span class="nav-key">02</span></a><a href="#about" class="nav-link"><span aria-hidden="true">◇</span>关于演示<span class="nav-key">03</span></a></nav>
+    <div class="sidebar-bottom"><div class="network-icon" aria-hidden="true">⌘</div><strong>为执行的每一步留痕</strong><p>从开仓到恢复<br>让过程可以被看见。</p><a href="https://github.com/svip2025/rustcore" target="_blank" rel="noopener noreferrer">在 GitHub 查看内核 <span aria-hidden="true">↗</span></a><div class="readonly"><span class="dot"></span>只读演示 · 无交易操作</div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumbs"><span class="desktop-only">工作空间 <span class="slash">/</span></span> rustcore-demo <span class="tag testnet">TESTNET ONLY</span></div><a href="https://github.com/svip2025/rustcore-demo" target="_blank" rel="noopener noreferrer" class="repo-link">源代码 <span aria-hidden="true">↗</span></a></header>
+    <main id="main">
+      <section id="overview" class="page-heading"><div><p class="eyebrow"><span class="accent-line"></span> ENGINE EXECUTION / 01</p><h1>执行观测台<span class="heading-dot">.</span></h1><p class="subtitle">一次开仓，一次重启，一条完整的恢复路径。</p></div><div class="mode-switch" role="group" aria-label="选择数据读取模式"><button id="live-mode" aria-pressed="false"><span class="dot"></span>实时</button><button id="replay-mode" class="selected" aria-pressed="true"><span aria-hidden="true">↺</span>回放</button></div></section>
+      <div class="source-strip"><span id="mode-badge" class="mode-label">回放模式</span><span id="source-badge" class="tag mock">加载数据</span><p id="source-label">正在读取本地场景录制…</p><span id="view-time" class="mono"></span></div>
+      <p id="connection-message" class="connection-message" role="status" aria-live="polite">正在连接只读数据源；不可用时自动回放。</p>
+      <section id="replay-panel" class="replay-panel" aria-labelledby="replay-title">
+        <div class="replay-top"><div><span class="small-label">RECORDING PLAYER</span><h2 id="replay-title">把过程，重新看一遍。</h2><p id="recording-summary" class="recording-summary">正在读取场景历史…</p></div><div class="recording-selector"><label for="recording-select">场景录制</label><select id="recording-select"><option>正在加载…</option></select></div></div>
+        <div class="player-row"><button id="play-button" class="play-button" aria-label="播放录制" disabled>▶</button><span id="elapsed" class="player-time mono">00:00</span><div class="scrubber"><label for="replay-progress" class="sr-only">回放进度，单位毫秒</label><input id="replay-progress" type="range" min="0" max="100" value="0" aria-valuetext="正在加载" disabled><div id="progress-markers" class="progress-markers" aria-hidden="true"></div></div><span id="duration" class="player-time muted mono">00:00</span><label for="playback-speed" class="sr-only">回放速度</label><select id="playback-speed" class="speed-select"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></div>
+        <p id="recording-result" class="recording-result">录制最终结果正在读取…</p><div class="player-bottom"><span id="recording-date" class="muted">原始录制时间以 UTC 显示</span><div id="chapter-buttons" class="chapter-buttons"></div></div><details class="recording-history-panel"><summary>查看全部轮次与失败原因</summary><ul id="recording-history"></ul></details>
+      </section>
+      <div id="dashboard" aria-busy="true"><div class="loading-panel">正在准备观测数据…</div></div>
+      <section id="about" class="about-section" aria-labelledby="about-title"><div class="about-intro"><p class="eyebrow">UNDER THE HOOD / 03</p><h2 id="about-title">执行有边界，恢复有依据。</h2><p>rustcore 是 Rust 编写的交易执行内核，负责风控、订单执行、保护单与重启恢复。这个只读演示让每一步的预期、观察和结果都可以追溯。</p><div class="about-links"><a href="https://github.com/svip2025/rustcore" target="_blank" rel="noopener noreferrer">内核仓库 ↗</a><a href="https://github.com/svip2025/rustcore-demo" target="_blank" rel="noopener noreferrer">演示仓库 ↗</a></div></div><div class="architecture"><span class="small-label">执行架构 / READ-ONLY VIEW</span><div class="architecture-flow"><div><span>01</span><strong>caller</strong><small>场景编排 · 只读接口</small></div><b aria-hidden="true">→</b><div class="core-node"><span>02</span><strong>rustcore</strong><small>风控 · 执行 · 恢复</small></div><b aria-hidden="true">→</b><div><span>03</span><strong>Binance</strong><small>USDⓈ-M 测试网</small></div></div><p>现有测试网录制保留了一轮完整重启恢复和此前五轮失败。实时模式读取 caller 当前状态，回放保留原始结果；一次工程闭环不等于长期稳定性或交易价值的证据。</p></div></section>
+      <footer><span><strong>rustcore<span class="brand-dot">.</span></strong> <span class="footer-separator">/</span> Built to execute. Designed to recover.</span><span>仅测试网 · 非金融软件 · 不构成投资建议</span></footer>
+    </main>
+  </div>
+  <noscript><p class="noscript-message">启用 JavaScript 后可查看只读状态与录制回放。本站不提供下单操作。</p></noscript>
+</body>
+</html>

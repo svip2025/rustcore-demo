@@ -1,0 +1,20 @@
+[Unit]
+Description=Observe kernel memory, SQLite size, WebSocket reconnects and exchange clock
+
+[Service]
+Type=oneshot
+User=rustcore-demo
+Group=rustcore-demo
+WorkingDirectory=/opt/rustcore-demo/current
+ExecStart=/usr/bin/python3 scripts/sample-round2-systemd.py
+TimeoutStartSec=1min
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/rustcore-demo
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6

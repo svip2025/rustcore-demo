@@ -174,3 +174,25 @@ test("live stages, remote listeners, route overrides and shared database paths c
     }
   });
 });
+
+test('explicit 2A scenarios carry the exact requested ratios, direction and separate testnet policy', () => {
+  fixture((file, _directory, write) => {
+    write({ DEMO_SCENARIO: 'S2', DEMO_DIRECTION: 'SHORT' });
+    assert.deepEqual(loadDemoConfig(['--env', file]).scenario, {
+      scenario_id: 'S2', direction: 'SHORT', symbol: 'BTCUSDT', sl_pct: '0.0015', tp_pct: '0.03', max_hold_ms: 1800000,
+      exit_mode: 'WAIT_SL', policy_version: 'risk_policy_testnet_v1', funding_settlement_at: null,
+    });
+    write({ DEMO_SCENARIO: 'S5', DEMO_SL_PCT: '0.02', DEMO_TP_PCT: '0.04', DEMO_MAX_HOLD_MS: '120000' });
+    const custom = loadDemoConfig(['--env', file]).scenario!;
+    assert.equal(custom.direction, 'SHORT');
+    assert.equal(custom.sl_pct, '0.02');
+    assert.equal(custom.tp_pct, '0.04');
+    assert.equal(custom.policy_version, 'risk_policy_v3');
+    assert.equal(custom.max_hold_ms, 120000);
+    for (const changes of [{ DEMO_SCENARIO: 'S6' }, { DEMO_SL_PCT: '0.0015' },
+      { DEMO_SCENARIO: 'S2', DEMO_POLICY_VERSION: 'risk_policy_v3' }, { DEMO_SCENARIO: 'S3', DEMO_SL_PCT: '3' },
+      { DEMO_SCENARIO: 'S5', DEMO_MAX_HOLD_MS: '1800001' }]) {
+      write(changes); configError(() => loadDemoConfig(['--env', file]), 'CONFIG_SCENARIO');
+    }
+  });
+});
