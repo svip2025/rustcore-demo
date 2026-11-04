@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { readFile, unlink, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import type { Recording, RoundSummary, TimelineStep } from '../shared/schema.js';
+import type { Recording, RoundSummary, TimelineStep } from '../shared/schema-v1.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const paths = ['recordings/mock-success-v1.json', 'recordings/mock-failure-v1.json'];
@@ -17,7 +17,7 @@ const literals = await Promise.all(paths.map(async path => JSON.stringify(JSON.p
 const temporary = `${root}.recording-check-${randomUUID()}.ts`;
 try {
   await writeFile(temporary,
-    `import type { Recording } from './shared/schema.js';\n` +
+    `import type { Recording } from './shared/schema-v1.js';\n` +
     literals.map((value, i) => `const recording${i}: Recording = ${value};`).join('\n'),
     { flag: 'wx' });
   const checked = spawnSync(process.execPath, [

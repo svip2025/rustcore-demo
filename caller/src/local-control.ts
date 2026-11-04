@@ -1,9 +1,10 @@
 import { createServer, connect, type Server } from 'node:net';
 import { chmod, lstat, unlink } from 'node:fs/promises';
-import type { RoundSummary, SseEvent } from '../../shared/schema.js';
+import type { RoundSummary, SseEvent, ScenarioConfig } from '../../shared/schema.js';
 import { row, ScenarioFailure } from './facts.js';
 import type { ScenarioRunner } from './scenario.js';
 import type { DemoStore } from './store.js';
+import { validateScenario } from './scenario-config.js';
 
 /** Local Unix socket only. Filesystem 0600 is the command authorization boundary. */
 export async function openLocalControl(path: string, runner: Pick<ScenarioRunner, 'run'>, store: DemoStore): Promise<Server> {
@@ -25,10 +26,12 @@ export async function openLocalControl(path: string, runner: Pick<ScenarioRunner
       if (!input.includes('\n')) return;
       requested = true;
       let trigger: RoundSummary['trigger'];
+      let scenario: ScenarioConfig | undefined;
       try {
         const request = row(JSON.parse(input.trim()));
         if (request.command !== 'run' || !['SCHEDULED', 'MANUAL'].includes(String(request.trigger))) throw new Error('invalid');
         trigger = request.trigger as RoundSummary['trigger'];
+        if (request.scenario !== undefined) scenario = validateScenario(request.scenario);
       } catch { send({ event: 'error', code: 'LOCAL_REQUEST_INVALID', reason: '仅接受本机场景请求' }); socket.end(); return; }
       let activeRound: string | null = null;
       const unsubscribe = store.subscribe((event: SseEvent) => {
@@ -37,7 +40,7 @@ export async function openLocalControl(path: string, runner: Pick<ScenarioRunner
           send({ event: event.type, data: event.data });
       });
       socket.once('close', unsubscribe);
-      void runner.run(trigger).then(result => {
+      void runner.run(trigger, scenario).then(result => {
         unsubscribe(); send({ event: 'done', data: result }); socket.end();
       }, error => {
         unsubscribe(); send({ event: 'error', code: error instanceof ScenarioFailure ? error.code : 'LOCAL_SCENARIO_UNKNOWN', reason: '场景未能完成；请读取持久时间线，不能据此重发原开仓请求' }); socket.end();
@@ -52,12 +55,12 @@ export async function openLocalControl(path: string, runner: Pick<ScenarioRunner
   return server;
 }
 
-export async function requestLocalRound(path: string, trigger: RoundSummary['trigger'], onEvent: (event: Record<string, unknown>) => void): Promise<RoundSummary> {
+export async function requestLocalRound(path: string, trigger: RoundSummary['trigger'], onEvent: (event: Record<string, unknown>) => void, scenario?: ScenarioConfig): Promise<RoundSummary> {
   return new Promise((resolve, reject) => {
     const socket = connect(path), finish = (error: Error) => { socket.destroy(); reject(error); };
     let buffered = '', done = false;
     socket.setEncoding('utf8');
-    socket.on('connect', () => socket.write(JSON.stringify({ command: 'run', trigger }) + '\n'));
+    socket.on('connect', () => socket.write(JSON.stringify({ command: 'run', trigger, ...(scenario ? { scenario: validateScenario(scenario) } : {}) }) + '\n'));
     socket.on('error', () => finish(new ScenarioFailure('CALLER_CONTROL_UNAVAILABLE', '本机 caller 未运行或控制通道不可用')));
     socket.on('data', chunk => {
       buffered += chunk;

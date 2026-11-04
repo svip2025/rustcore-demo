@@ -1,8 +1,11 @@
 import { closeSync, constants, fstatSync, openSync, readFileSync } from "node:fs";
 import { dirname, isAbsolute, resolve } from "node:path";
-import type { BuildInfo, DataSource } from "../../shared/schema.js";
+import type { BuildInfo, DataSource, ScenarioConfig } from "../../shared/schema.js";
+
+import { scenarioFor, validateScenario } from "./scenario-config.js";
 
 export interface DemoConfig {
+  scenario?: ScenarioConfig;
   envFile: string;
   credentialId: string;
   grpcAddress: string;
@@ -173,9 +176,24 @@ export function loadDemoConfig(argv: readonly string[] = process.argv.slice(2)):
   const lockFile = absoluteFile(environment.DEMO_LOCK_FILE ?? resolve(dirname(callerDbFile), "scenario.lock"), "DEMO_LOCK_FILE");
   if (new Set([kernelDbFile, callerDbFile, lockFile]).size !== 3)
     fail("CONFIG_DATABASE", "内核数据库、caller 数据库和场景锁必须使用不同文件");
+  let scenario: ScenarioConfig | undefined;
+  if (environment.DEMO_SCENARIO !== undefined) {
+    const id = environment.DEMO_SCENARIO;
+    if (!['S1', 'S2', 'S3', 'S4', 'S5', 'F1', 'F2', 'F3', 'F4'].includes(id)) fail('CONFIG_SCENARIO', 'DEMO_SCENARIO 必须选择 2A 场景');
+    const preset = scenarioFor(id as ScenarioConfig['scenario_id'], undefined, environment.DEMO_FUNDING_SETTLEMENT_AT);
+    try { scenario = validateScenario({ ...preset,
+      direction: environment.DEMO_DIRECTION ?? preset.direction,
+      sl_pct: environment.DEMO_SL_PCT ?? preset.sl_pct,
+      tp_pct: environment.DEMO_TP_PCT ?? preset.tp_pct,
+      max_hold_ms: duration(environment, 'DEMO_MAX_HOLD_MS', preset.max_hold_ms),
+      policy_version: environment.DEMO_POLICY_VERSION ?? preset.policy_version,
+    }); } catch { fail('CONFIG_SCENARIO', '场景参数无效；没有改写参数或 policy'); }
+  } else if (['DEMO_DIRECTION', 'DEMO_SL_PCT', 'DEMO_TP_PCT', 'DEMO_MAX_HOLD_MS', 'DEMO_POLICY_VERSION', 'DEMO_FUNDING_SETTLEMENT_AT'].some(k => environment[k] !== undefined))
+    fail('CONFIG_SCENARIO', '配置场景参数时必须显式选择 DEMO_SCENARIO');
   environment.RUSTCORE_GRPC_ADDR = grpcAddress;
   environment.RUSTCORE_DB_URL = `sqlite://${kernelDbFile}`;
   return {
+    ...(scenario ? { scenario } : {}),
     envFile, credentialId, grpcAddress, kernelMode,
     kernelBinary: absoluteFile(environment.DEMO_KERNEL_BINARY ?? resolve("rustcore/target/release/rustcore"), "DEMO_KERNEL_BINARY"),
     kernelDbFile, callerDbFile, lockFile,

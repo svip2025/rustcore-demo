@@ -1,6 +1,21 @@
-# 公共数据契约 v1（已冻结）
+# 公共数据契约 v2（第二轮 2A 候选）
 
-唯一类型定义是 [`shared/schema.ts`](../shared/schema.ts)。caller、web、SSE 和录制/回放共同导入该文件；不在各端另写同名响应类型。`schema_version` 固定为 `1`。本版已纳入冻结前的修订（预算命名、版本与触发来源）；HTTP/SSE 已按该契约实现并通过实机检查，见 [CALLER-HANDOFF.md](CALLER-HANDOFF.md)。
+当前 producer 的唯一类型定义是 [`shared/schema.ts`](../shared/schema.ts)，HTTP、SSE 和新录制的 `schema_version=2`。原 v1 类型完整冻结在 [`shared/schema-v1.ts`](../shared/schema-v1.ts)，原录制不改写。v2 新增每轮场景与指标；这是离线工程候选，原 [CALLER-HANDOFF.md](CALLER-HANDOFF.md) 的实机结论不自动转移到本版。
+
+## v2 场景与指标
+
+每个 `RoundSummary`（含 `latest_round`、timeline 和 SSE round）新增必须字段 `scenario`、`metrics`；`RoundTimeline` 继承相同字段。旧 v1 经 [`shared/replay.ts`](../shared/replay.ts) 生成消费者视图时，两者明确为 `null`，不臆造原场景参数或费用。原 JSON、版本事实与已完成的 FAILED/UNKNOWN 均保留。
+
+`scenario` 固定记录 `scenario_id`（S1–S5 / F1–F4）、`direction`、`symbol=BTCUSDT`、请求 `sl_pct` / `tp_pct`、`max_hold_ms`、`exit_mode`、`policy_version` 和 `funding_settlement_at`。新场景的两个比例使用十进制字符串（`"0.0015"` 表示 0.15%）；已有预算比例仍为 number。`ACTIVE_CLOSE` 沿用九步；`WAIT_SL` / `WAIT_TP` 只执行 preflight、cleanup_before、open_position、verify_protection、hold、cleanup_after 六步，不伪造未执行的重启或主动平仓；`FUNDING_WINDOW` 执行前四步、hold、close_position、cleanup_after 七步。SUCCEEDED 仍要求本场景全部必要步骤按序 PASS；安全清理不能覆盖原失败。
+
+`metrics` 的完整字段见类型：各步骤耗时、实际观察到的 UNKNOWN 窗口及总时长、保护确认耗时、参考价格、计划 SL/TP、请求取整后的有效距离、tick / stop_grid、开平前后权益、保护触发与确认账户干净的时间，以及盈亏核对状态。保护确认耗时使用保守上界：从 caller 发出唯一 Entry RPC 之前计到同一完整 Algo 快照独立证明 SL/TP，涵盖请求、成交及观察延迟，避免首次看到成交太晚而低估时延。精确的交易所成交到保护生效时延仍须对照交易所时间与每小时钟差。保护触发同时保存本机接收时间 `trigger_observed_at` 和成交源时间 `trigger_source_at`，六十秒清理判据以源时间为起点，缺源时间不能通过。无法证实的数值为 `null`。
+
+`accounting_status=COMPLETE` 只在完整窗口的资金费用查询成功，且原 position 的全部实际 entry/exit 成交量匹配、费用与 realized PnL 均有可靠 USDT 数值时成立。`gross_pnl_usdt` 使用成交事件中的交易所损益，`fees_usdt` 为实际手续费，`funding_usdt` 为有符号资金收入，`net_pnl_usdt = gross - fees + funding`。账户权益直接读取内核交易所余额（本来已含资金费），不重复加算。`funding_entries` 每笔保留公开不可逆 ID、时间、BTCUSDT、USDT 和精确金额；缺页、重复 ID、金额总和不符或读失败均保持 UNKNOWN，不能以空列表或零替代。
+
+S2/S3 只有指定保护腿的实际成交事件与 fresh full-account flat / 无 Algo 共同满足才通过。最长持仓内未触发则 FAILED 并安全平仓；只有零仓位却无成交归因时 UNKNOWN。S4 必须在指定结算前十分钟的开仓窗口开始，结算后十分钟主动平仓，并确实取得该结算时刻的流水；错过窗口、未收取流水或费用不全均不能通过。以上离线分支验证不能代替测试网真实触发、资金流水格式与时序验证。
+
+consumer 在独立副本中规范化已知 v1 为 v2 视图，支持原 v1 与新 v2 录制。未知版本及混合 envelope 版本明确拒绝。公共对象不包含原 credential_id、交易所 UID、listenKey 或原始交易流水 ID；内部数据库保留去敏 ID 的关联依据。
+
 
 ## 接口与类型
 
@@ -24,7 +39,7 @@
 
 `Observation<T>` 的 `status` 与 `value` 一起读取：`AVAILABLE` 为完整可用观察，`PARTIAL` 为覆盖不全，`STALE` 为过期，`UNAVAILABLE` 为本次无法取得，`UNKNOWN` 为尚未建立事实。后三者可以带上一次已知值，但页面必须保留其状态和原始时间。只有完整、可用观察的 `[]` 才能证明没有持仓或挂单；`null` 不能显示为“空仓”。`ONLINE` 只说明内核可连接，不能代替恢复完成、可开仓或双保护通过。
 
-v1 的 `PositionView.symbol` 固定为 `BTCUSDT`。若账户存在其他品种的持仓，公开 `positions.status` 必须标为 `PARTIAL`，并在 `reason` 写明未覆盖的品种及原因，不能静默过滤后宣称完整或空仓；已有的 BTCUSDT 行仍可展示。公开范围限制不缩小内部风险预算的全账户敞口口径。
+v1/v2 的 `PositionView.symbol` 固定为 `BTCUSDT`。若账户存在其他品种的持仓，公开 `positions.status` 必须标为 `PARTIAL`，并在 `reason` 写明未覆盖的品种及原因，不能静默过滤后宣称完整或空仓；已有的 BTCUSDT 行仍可展示。公开范围限制不缩小内部风险预算的全账户敞口口径。
 
 预算的公开权益变化字段统一为 `approximate_today_pnl_usdt` 和 `approximate_today_pnl_pct`，两者都是近似值。内核 RPC 的 `today_realized_pnl_usdt/pct` 保持原名，caller 只在内部做对应映射；公开结构中不使用 `realized` 字段名。发布不以权益达到 100 USDT 为条件，真实低权益交由内核按策略拒绝，并保留实际拒单原因；口径见 [RISK-BUDGET.md](RISK-BUDGET.md)。
 
@@ -50,7 +65,7 @@ v1 的 `PositionView.symbol` 固定为 `BTCUSDT`。若账户存在其他品种�
 
 `RoundSummary.trigger` 必填且一轮内不变：定时触发为 `SCHEDULED`，本机人工发起为 `MANUAL`。时间线、`state.latest_round` 和 `round` 事件均携带它，页面应明确显示，不能用开始时间猜测触发方式。首轮失败后人工发起的新轮次必须使用新 ID 并标为 MANUAL。
 
-轮次为 `RUNNING`、`SUCCEEDED` 或 `FAILED`。只有完整走过九步且所有必要判据 PASS 才为 `SUCCEEDED`；任一步 FAIL 或最终仍 UNKNOWN 为 `FAILED`，并附原因。首轮 `not_started` 同样保留为 FAILED。清理成功不能将失败轮次改成成功；完成的步骤和轮次不可覆盖为另一个结论。新轮次也不删除旧轮次。
+轮次为 `RUNNING`、`SUCCEEDED` 或 `FAILED`。v1 只有完整走过九步且所有必要判据 PASS 才为 `SUCCEEDED`；v2 按上面的场景必要步骤判定；任一步 FAIL 或最终仍 UNKNOWN 为 `FAILED`，并附原因。首轮 `not_started` 同样保留为 FAILED。清理成功不能将失败轮次改成成功；完成的步骤和轮次不可覆盖为另一个结论。新轮次也不删除旧轮次。
 
 ## SL / TP 分开呈现
 
@@ -65,7 +80,7 @@ v1 的 `PositionView.symbol` 固定为 `BTCUSDT`。若账户存在其他品种�
 ```text
 id: evt-public-000042
 event: heartbeat
-data: {"schema_version":1,"event_id":"evt-public-000042","emitted_at":"2026-11-02T08:00:00.000Z","source":{"kind":"MOCK","label":"手写假数据，非真实交易记录"},"type":"heartbeat","data":{"at":"2026-11-02T08:00:00.000Z"}}
+data: {"schema_version":2,"event_id":"evt-public-000042","emitted_at":"2026-11-02T08:00:00.000Z","source":{"kind":"MOCK","label":"手写假数据，非真实交易记录"},"type":"heartbeat","data":{"at":"2026-11-02T08:00:00.000Z"}}
 
 ```
 
@@ -99,6 +114,6 @@ data: {"schema_version":1,"event_id":"evt-public-000042","emitted_at":"2026-11-0
 
 ## 兼容与验证
 
-第二部分可以现在按 v1 开发。字段重命名、删除、类型/单位变化、新增必须字段或封闭枚举成员都需要升版并同步更新文档、producer/consumer 和录制；冻结后不由任一端单独修改。消费者遇到未知 `schema_version` 应显示不支持，不能按 v1 强行解释。
+原 v1 继续冻结；2A 新 producer/consumer 按 v2 开发。字段重命名、删除、类型/单位变化、新增必须字段或封闭枚举成员都需要升版并同步更新文档、producer/consumer 和录制；冻结后不由任一端单独修改。消费者支持 1、2；遇到未知 `schema_version` 应显示不支持，不能强行解释。
 
-安装依赖后运行 `npm run typecheck` 和 `npm run check:recordings`。录制检查直接以这里的 TypeScript 类型检查 JSON，并检查轮次、保护腿及失败保留等必要一致性；不另外维护一套公共 schema。
+安装依赖后运行 `npm run typecheck` 和 `npm run check:recordings`。原 v1 录制检查直接以冻结 TypeScript 类型检查 JSON；v2 producer 到 SQLite、导出再到 consumer 的契约往返由 `caller/test/replay-v2.test.ts` 验证，`npm --prefix web test` 验证 v1 回放。上述检查覆盖轮次、保护腿及失败保留等必要一致性，不另外维护一套公共 schema。

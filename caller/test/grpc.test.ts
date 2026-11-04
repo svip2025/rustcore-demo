@@ -187,3 +187,25 @@ test("remote stream completion is surfaced once and never reconnects itself", as
   assert.equal(errors, 1);
   assert.equal(attempts, 1);
 });
+
+test('2A funding protobuf preserves signed decimal ledger rows and explicit complete-window evidence', async t => {
+  const address = await serve(t, { v2: {
+    GetFundingHistory: (call: grpc.ServerUnaryCall<Message, Message>, reply: grpc.sendUnaryData<Message>) => {
+      assert.equal(call.request.symbol, 'BTCUSDT');
+      assert.equal(call.request.start_time_ms, '1793790000000');
+      assert.equal(call.request.end_time_ms, '1793791200000');
+      assert.equal(call.request.schema_version, 1, 'public JSON v2 does not change RPC schema_version=1');
+      reply(null, { complete: true, start_time_ms: call.request.start_time_ms, end_time_ms: call.request.end_time_ms,
+        source_as_of_ms: '1793791200001', total_funding_usdt: '-0.12345678', reason: 'complete offline ledger fixture',
+        entries: [{ public_id: 'funding_opaque_mock', transaction_time_ms: '1793790600000', symbol: 'BTCUSDT', asset: 'USDT', amount_usdt: '-0.12345678' }], schema_version: 1 });
+    },
+  } });
+  const response = await client(t, address).unary('v2', 'GetFundingHistory', { credential_id: '9001', symbol: 'BTCUSDT',
+    start_time_ms: '1793790000000', end_time_ms: '1793791200000', schema_version: 1 });
+  assert.equal(response.complete, true);
+  assert.equal(response.source_as_of_ms, '1793791200001');
+  assert.equal(response.total_funding_usdt, '-0.12345678');
+  assert.equal(record((response.entries as unknown[])[0]).amount_usdt, '-0.12345678');
+  assert.equal(JSON.stringify(response).includes('listenKey'), false);
+  assert.equal(JSON.stringify(response).includes('credential_id'), false);
+});

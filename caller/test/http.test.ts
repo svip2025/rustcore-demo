@@ -23,7 +23,7 @@ async function event(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<S
   const data = JSON.parse(lines.find(line => line.startsWith('data: '))!.slice(6)) as SseEvent;
   assert.equal(lines.find(line => line.startsWith('event: ')), `event: ${data.type}`);
   assert.equal(lines.find(line => line.startsWith('id: ')), `id: ${data.event_id}`);
-  assert.equal(data.schema_version, 1);
+  assert.equal(data.schema_version, 2);
   assert.deepEqual(data.source, metadata.source);
   return data;
 }
@@ -51,7 +51,7 @@ test('state and timeline expose only the public store contract, preserve source 
   const timeline = await app.request('/api/timeline');
   assert.equal(timeline.status, 200);
   const body = await timeline.text();
-  assert.equal(JSON.parse(body).schema_version, 1);
+  assert.equal(JSON.parse(body).schema_version, 2);
   assert.deepEqual(JSON.parse(body).rounds, []);
   assert.equal(JSON.stringify({ body, initial }).includes(privateMarker), false);
   assert.equal(body.includes('fixture-credential'), false);

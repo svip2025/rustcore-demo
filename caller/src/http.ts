@@ -96,7 +96,7 @@ export function createReadOnlyApp(store: DemoStore, options: ReadOnlyHttpOptions
     // temporarily invalidate protection coverage without making HTTP unavailable.
     const healthy = state.rustcore.status === 'ONLINE' && recent(state.rustcore.checked_at, now)
       && state.account.status === 'AVAILABLE' && state.account.value !== null && recent(state.account.source_as_of, now);
-    return context.json({ schema_version: 1, status: healthy ? 'healthy' : 'degraded',
+    return context.json({ schema_version: 2, status: healthy ? 'healthy' : 'degraded',
       snapshot_complete: available(state, now),
       dependencies: { rustcore: state.rustcore.status, account: state.account.status,
         positions: state.positions.status, open_orders: state.open_orders.status,

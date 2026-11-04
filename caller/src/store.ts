@@ -3,7 +3,7 @@ import { DatabaseSync } from "node:sqlite";
 import type {
   BuildInfo, CheckResult, DataSource, Observation, Recording, RoundSummary,
   RoundTimeline, ScenarioStep, SseEvent, StateResponse, StepActual,
-  TimelineResponse, TimelineStep,
+  TimelineResponse, TimelineStep, ScenarioConfig, RoundMetrics,
 } from "../../shared/schema.js";
 
 export interface StoreOptions { source: DataSource; build: BuildInfo }
@@ -36,7 +36,7 @@ function unknown<T>(): Observation<T> {
 function initialState(options: StoreOptions): StateResponse {
   const at = iso();
   return {
-    schema_version: 1, generated_at: at, source: copy(options.source), build: copy(options.build),
+    schema_version: 2, generated_at: at, source: copy(options.source), build: copy(options.build),
     account: unknown(), positions: unknown(), open_orders: unknown(), protection: unknown(),
     risk_budget: {
       status: "NOT_PUBLISHED", source_as_of: null, published_at: null, age_ms: null,
@@ -125,7 +125,7 @@ export class DemoStore {
       : parse<StateResponse>(this.db.prepare("SELECT initial_state AS body FROM demo_rounds WHERE round_id=?")
         .get((data as RoundSummary | TimelineStep).round_id)).source;
     const event = {
-      schema_version: 1, event_id: "evt_" + randomUUID(), emitted_at: at,
+      schema_version: 2, event_id: "evt_" + randomUUID(), emitted_at: at,
       source: copy(source), type, data: copy(data),
     } as SseEvent;
     this.db.prepare("INSERT INTO demo_journal(event_id,emitted_at,body) VALUES(?,?,?)")
@@ -154,7 +154,7 @@ export class DemoStore {
       latest_round: latest ? parse<RoundSummary>(latest) : null };
   }
   private verifyMetadata(state: StateResponse): void {
-    if (state.schema_version !== 1 || !sameMetadata(state, this.options)) {
+    if (state.schema_version !== 2 || !sameMetadata(state, this.options)) {
       throw new Error("State source/build must match this caller build");
     }
     const active = this.db.prepare("SELECT initial_state AS body FROM demo_rounds WHERE status='RUNNING'").get();
@@ -202,7 +202,7 @@ export class DemoStore {
         boundary: page.boundary, last_started_at: last.started_at, last_round_id: last.round_id,
       } satisfies PageCursor));
     }
-    return { schema_version: 1, generated_at: this.now(), source: copy(this.options.source),
+    return { schema_version: 2, generated_at: this.now(), source: copy(this.options.source),
       rounds: summaries.map((summary): RoundTimeline => ({ ...summary, steps: this.roundSteps(summary.round_id) })),
       next_cursor: next };
   }
@@ -225,7 +225,7 @@ export class DemoStore {
     });
   }
 
-  startRound(trigger: RoundSummary["trigger"], roundId = "round_" + randomUUID(), at = this.now()): RoundSummary {
+  startRound(trigger: RoundSummary["trigger"], roundId = "round_" + randomUUID(), at = this.now(), scenario: ScenarioConfig | null = null): RoundSummary {
     iso(at);
     return this.transaction((events) => {
       if (trigger !== "SCHEDULED" && trigger !== "MANUAL") throw new Error("Invalid round trigger");
@@ -235,7 +235,7 @@ export class DemoStore {
       this.verifyMetadata(state);
       const initial = { ...state, generated_at: at };
       const timeline = { ...this.timeline(20), generated_at: at };
-      const round: RoundSummary = { round_id: roundId, trigger, status: "RUNNING", started_at: at, ended_at: null, reason: "Round started" };
+      const round: RoundSummary = { scenario: copy(scenario), metrics: null, round_id: roundId, trigger, status: "RUNNING", started_at: at, ended_at: null, reason: "Round started" };
       this.db.prepare("INSERT INTO demo_rounds(round_id,started_at,status,body,initial_state,initial_timeline,journal_start) VALUES(?,?,?,?,?,?,?)")
         .run(roundId, at, round.status, JSON.stringify(round), JSON.stringify(initial), JSON.stringify(timeline), BigInt(this.journalWatermark()));
       this.emit(events, "round", round, at);
@@ -282,6 +282,19 @@ export class DemoStore {
     });
   }
 
+  setRoundMetrics(roundId: string, metrics: RoundMetrics): void {
+    this.transaction(events => {
+      const previous = this.runningRound(roundId);
+      const round = { ...previous, metrics: copy(metrics) };
+      this.db.prepare('UPDATE demo_rounds SET body=? WHERE round_id=?').run(JSON.stringify(round), roundId);
+      const at = this.now();
+      this.emit(events, 'round', round, at);
+      const state = this.withRoundMetadata({ ...this.getState(), generated_at: at });
+      this.saveState(state);
+      this.emit(events, 'state', state, at);
+    });
+  }
+
   finishRound(roundId: string, status: "SUCCEEDED" | "FAILED", reason: string, at = this.now()): RoundSummary {
     iso(at);
     return this.transaction((events) => {
@@ -289,9 +302,13 @@ export class DemoStore {
       const steps = this.roundSteps(roundId);
       if (status !== "SUCCEEDED" && status !== "FAILED") throw new Error("Invalid final round status");
       if (steps.some((step) => step.phase === "RUNNING")) throw new Error("Finish the running step before finishing its round");
-      if (status === "SUCCEEDED" && (steps.length !== STEPS.length ||
-          steps.some((step, index) => step.step !== STEPS[index] || step.result !== "PASS"))) {
-        throw new Error("A successful round requires all nine steps in order, all PASS");
+      const required = previous.scenario?.exit_mode === 'WAIT_SL' || previous.scenario?.exit_mode === 'WAIT_TP'
+        ? ['preflight', 'cleanup_before', 'open_position', 'verify_protection', 'hold', 'cleanup_after']
+        : previous.scenario?.exit_mode === 'FUNDING_WINDOW'
+          ? ['preflight', 'cleanup_before', 'open_position', 'verify_protection', 'hold', 'close_position', 'cleanup_after'] : STEPS;
+      if (status === "SUCCEEDED" && (steps.length !== required.length ||
+          steps.some((step, index) => step.step !== required[index] || step.result !== "PASS"))) {
+        throw new Error(required === STEPS ? "A successful round requires all nine steps in order, all PASS" : "A successful round requires all declared scenario steps in order, all PASS");
       }
       if (at < previous.started_at) throw new Error("Round cannot finish before it started");
       const round: RoundSummary = { ...previous, status, reason, ended_at: at };
@@ -341,7 +358,7 @@ export class DemoStore {
       const initial = JSON.parse(String(row.initial_state)) as StateResponse;
       const events = this.db.prepare("SELECT body FROM demo_journal WHERE ordinal>? AND ordinal<=? ORDER BY ordinal")
         .all(BigInt(String(row.start_text)), BigInt(String(row.end_text))).map((item) => parse<SseEvent>(item));
-      return { schema_version: 1, recording_id: "recording_" + roundId, title: "Scenario " + round.status,
+      return { schema_version: 2, recording_id: "recording_" + roundId, title: "Scenario " + round.status,
         description: round.reason, source: copy(initial.source), build: copy(initial.build), created_at: this.now(),
         started_at: round.started_at, ended_at: round.ended_at, initial_state: initial,
         initial_timeline: JSON.parse(String(row.initial_timeline)) as TimelineResponse, events };
