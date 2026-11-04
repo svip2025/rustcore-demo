@@ -2,7 +2,8 @@
 Description=Run one testnet scenario every six hours
 
 [Timer]
-OnUnitActiveSec=6h
+OnCalendar=*-*-* 00/6:00:00 UTC
+Persistent=false
 AccuracySec=1s
 Unit=scenario.service
 

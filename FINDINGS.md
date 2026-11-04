@@ -152,6 +152,6 @@ legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一
 
 原 timer 同时有 `OnActiveSec=30s` 和 `OnUnitActiveSec=6h`。实际 manager reload 于 01:41:00.832599、01:43:39.545797 UTC 完成，约三十秒后分别触发上述额外轮次；timer 的激活时间和文件指纹没有变化。无交易 systemd 回归已复现：保留旧条件时，reload 后约 3.45 秒就产生第二次执行，未等正常的 60 秒周期。
 
-修复只删除 `OnActiveSec`，保留相对上次 service 启动的六小时周期；新 observer 先 arm，明确 bootstrap 现有 `scenario.service` 一次，在该首轮仍实际运行时启用 timer，并确认下一次触发时间有限。首轮失败不重复 bootstrap，timer/manual 仍走同一 caller 文件锁。修复后的无交易回归中，三次 reload 均不增加执行、不改变下一次时间，正常第二次执行间隔为 25.103 秒（测试把六小时缩短为 25 秒）。
+最终调度使用 `OnCalendar=*-*-* 00/6:00:00 UTC`，在 UTC 00、06、12、18 点各执行一次，`Persistent=false` 不补跑历史时点。新 observer 先 arm，再启用 timer，首轮也等待真实 calendar 触发；没有人工 bootstrap。timer/manual 仍走同一 caller 文件锁。无交易 calendar 回归以二十秒网格加速验证：连续三次 reload 不增加执行、不改变下一次时间，只有正常网格到期才产生第二次执行。
 
-首次合成检查的瞬时 oneshot 在启用 timer 前已退出并被回收，下一次时间为 `infinity`，该失败回执保留；修正测试启动顺序使其与真实 RUNNING 首轮一致后才通过。这个边界也写入启动文档：首轮已退出且锚丢失时停 timer、保留事实并查明，不补触发交易。修复不改 caller 业务、内核、风控或原录制；部署后另建 attempt 从零观察。
+另一份相对定时试验中，瞬时 oneshot 在启用 timer 前已退出并被回收，下一次时间为 `infinity`；失败回执保留。这也说明相对定时方案需要额外维持首次 service 的时间锚，最终 calendar 方案不依赖它。修复不改 caller 业务、内核、风控或原录制；部署后另建 attempt，从首个真正的 SCHEDULED/RUNNING 从零观察。
