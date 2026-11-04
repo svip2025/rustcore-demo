@@ -3,7 +3,7 @@ import { dirname, isAbsolute } from 'node:path';
 import { loadDemoConfig } from '../caller/src/config.js';
 import { requestLocalRound } from '../caller/src/local-control.js';
 import { scenarioFor } from '../caller/src/scenario-config.js';
-import { Round2Schedule, round2Plan } from '../caller/src/round2-schedule.js';
+import { ROUND_INTERVAL_MS, Round2Schedule, round2Plan } from '../caller/src/round2-schedule.js';
 import { DatabaseSync } from 'node:sqlite';
 
 process.umask(0o077);
@@ -34,14 +34,18 @@ try {
     if (action === 'restore') schedule.switchMode('baseline');
     if (action === 'tick') {
       // Read-only caller access. The caller retains the actual scenario lock and round lifecycle.
+      const now = Date.now();
       const db = new DatabaseSync(config.callerDbFile, { readOnly: true });
       let active = true;
       try {
         const row = db.prepare('SELECT body FROM demo_state WHERE id=1').get();
         if (!row || typeof row.body !== 'string') throw new Error('CALLER_STATE_UNAVAILABLE');
-        active = (JSON.parse(row.body) as { active_round_id: string | null }).active_round_id !== null;
+        const state = JSON.parse(row.body) as { active_round_id: string | null; latest_round: { started_at: string } | null };
+        const lastStarted = state.latest_round === null ? null : Date.parse(state.latest_round.started_at);
+        // Manual rounds are absent from the scheduler's claim database but obey the same start interval.
+        active = state.active_round_id !== null || (lastStarted !== null && (!Number.isFinite(lastStarted) || now - lastStarted < ROUND_INTERVAL_MS));
       } finally { db.close(); }
-      const slot = schedule.claim(Date.now(), active);
+      const slot = schedule.claim(now, active);
       if (slot) {
         try {
           const scenario = scenarioFor(slot.scenario_id, slot.direction, slot.funding_settlement_at ?? undefined);

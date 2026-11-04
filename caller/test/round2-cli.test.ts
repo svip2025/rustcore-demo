@@ -115,6 +115,46 @@ test('concurrent tick processes dispatch one IPC round; an active caller consume
   assert.equal(readSchedule(context.state).slots[0]?.disposition, 'FAILED');
 }));
 
+test('a completed recent MANUAL round blocks a new automatic IPC round even when scheduler has no claims and caller is idle', async () => fixture(async context => {
+  let calls = 0;
+  await context.server(async (trigger, scenario) => {
+    calls++;
+    const round = context.store.startRound(trigger, undefined, undefined, scenario);
+    return context.store.finishRound(round.round_id, 'FAILED', 'unexpected automatic round after recent manual execution');
+  });
+  const manual = context.store.startRound('MANUAL', 'recent-manual');
+  context.store.finishRound(manual.round_id, 'FAILED', 'retained completed manual round');
+  const retained = context.store.getTimeline().rounds[0]!;
+  assert.equal(context.store.getState().active_round_id, null);
+  assert.equal(context.store.getState().latest_round?.trigger, 'MANUAL');
+  assert.equal((await context.command('activate', ['--start', new Date(Date.now() - 1000).toISOString()])).code, 0);
+  assert.deepEqual(readSchedule(context.state).slots, [], 'the independent scheduler has never claimed this manual execution');
+  const tick = await context.command('tick');
+  assert.equal(calls, 0, 'no new opening scenario may reach caller IPC within thirty minutes of any real round start');
+  assert.equal(tick.code, 0);
+  assert.deepEqual(readSchedule(context.state).slots.map(slot => [slot.key, slot.disposition, slot.round_id]), [['automatic-0', 'BUSY', null]]);
+  assert.deepEqual(context.store.getTimeline().rounds, [retained]);
+}));
+
+test('a completed MANUAL round older than thirty minutes does not block a due automatic IPC round', async () => fixture(async context => {
+  let calls = 0;
+  await context.server(async (trigger, scenario) => {
+    calls++;
+    const round = context.store.startRound(trigger, undefined, undefined, scenario);
+    return context.store.finishRound(round.round_id, 'FAILED', 'retained due automatic round after spacing elapsed');
+  });
+  const startedAt = new Date(Date.now() - 31 * 60_000).toISOString();
+  const manual = context.store.startRound('MANUAL', 'older-manual', startedAt);
+  context.store.finishRound(manual.round_id, 'FAILED', 'retained older manual round', startedAt);
+  assert.equal(context.store.getState().active_round_id, null);
+  assert.equal((await context.command('activate', ['--start', new Date(Date.now() - 1000).toISOString()])).code, 0);
+  const tick = await context.command('tick');
+  assert.equal(calls, 1);
+  assert.equal(tick.code, 1, 'the actual offline caller failure remains visible');
+  assert.equal(context.store.getTimeline().rounds.length, 2);
+  assert.equal(readSchedule(context.state).slots[0]?.disposition, 'FAILED');
+}));
+
 test('fault CLI requires explicit test-VPS acknowledgement before reading config or changing a database', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'r2-cli-ack-'));
   try {
