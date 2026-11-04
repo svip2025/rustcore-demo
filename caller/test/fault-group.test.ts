@@ -92,23 +92,45 @@ test('F1/F2 proved crash recovers before separate immediate S1 and preserves ori
   });
 });
 
-test('F1/F2 unproved boundaries cannot start recovery confirmation or release automatic scheduling', async () => {
+test('F1/F2 unproved boundaries wait for original round, attempt recovery and keep group RUNNING without S1', async () => {
   for (const group of [1, 2]) await fixture(group, async (schedule, store, initial) => {
     let now = initial, runs = 0, recovered = 0;
-    const pending = deferred<RoundSummary>();
-    let faultScenario!: ScenarioConfig;
-    await assert.rejects(runFaultGroup({ schedule, group, now: () => now,
+    const pending = deferred<RoundSummary>(), boundaryUnproved = deferred<void>();
+    let roundId!: string;
+    const rejected = assert.rejects(runFaultGroup({ schedule, group, now: () => now,
       command: async command => {
         if (command.command === 'snapshot') return { complete: true, clean: true };
-        if (command.command === 'recover') recovered++;
-        return { phase: 'ARMED' };
-      }, run: async scenario => { runs++; faultScenario = scenario; return pending.promise; },
-      network: async () => {}, pause: async ms => { now += ms; },
+        if (command.command === 'status') {
+          if (group === 1) boundaryUnproved.resolve();
+          return { phase: group === 1 ? 'UNKNOWN' : 'ARMED' };
+        }
+        if (command.command === 'recover') {
+          recovered++;
+          assert.equal(store.getState().active_round_id, null, 'recovery must wait until the original run ends');
+          assert.equal(store.getTimeline().rounds[0]?.status, 'FAILED');
+          if (group === 2) throw new Error('SIMULATED_RECOVERY_FAILURE');
+          return { clean: true };
+        }
+        return {};
+      }, run: async scenario => {
+        runs++; roundId = store.startRound('MANUAL', undefined, undefined, scenario).round_id;
+        return pending.promise;
+      }, network: async () => {}, pause: async ms => {
+        now += ms; if (now >= initial + 120_000) boundaryUnproved.resolve();
+      },
     }), /FAULT_BOUNDARY_NOT_PROVEN/);
-    pending.resolve(complete(store, faultScenario, false));
-    assert.equal(runs, 1); assert.equal(recovered, 0);
+    await boundaryUnproved.promise;
+    await new Promise<void>(resolve => setImmediate(resolve));
+    assert.equal(recovered, 0, 'an unproved boundary must not race recovery against an active original round');
+    assert.equal(store.getState().active_round_id, roundId);
+    pending.resolve(store.finishRound(roundId, 'FAILED', 'Original boundary-unproved failure; retained'));
+    await rejected;
+    assert.equal(runs, 1, 'no S1 may be started for an unproved fault boundary');
+    assert.equal(recovered, 1, 'even a missed boundary must disarm and attempt safety cleanup');
+    assert.equal(schedule.db.prepare('SELECT status FROM fault_groups WHERE group_no=?').get(group)?.status, 'RUNNING');
     assert.equal(schedule.claim(START + 30 * HOUR_MS, false), null);
     assert.equal(store.getTimeline().rounds[0]?.status, 'FAILED');
+    assert.equal(store.getTimeline().rounds[0]?.reason, 'Original boundary-unproved failure; retained');
   });
 });
 
@@ -119,7 +141,7 @@ test('F3 network failure preserves FAILED and keeps group blocking; no S1 is man
     run: async (scenario, publish) => { runs.push(scenario.scenario_id); publish(event); return complete(store, scenario, false); },
     network: async seconds => { durations.push(seconds); throw new Error('SIMULATED_NETWORK_INSTALL_FAILED'); }, pause: async () => {},
   }), /SIMULATED_NETWORK_INSTALL_FAILED/);
-  assert.deepEqual(durations, [60]); assert.deepEqual(runs, ['F3']); assert.deepEqual(commands, ['snapshot', 'network']);
+  assert.deepEqual(durations, [60]); assert.deepEqual(runs, ['F3']); assert.deepEqual(commands, ['snapshot', 'network', 'recover']);
   assert.equal(store.getTimeline().rounds[0]?.status, 'FAILED');
   assert.equal(schedule.claim(START + 30 * HOUR_MS, false), null);
 }));
