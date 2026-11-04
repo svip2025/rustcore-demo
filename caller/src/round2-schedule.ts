@@ -21,7 +21,7 @@ export function round2Plan(start: number): ScheduleSlot[] {
   for (let settlement = Math.ceil((start + 10 * MINUTE) / (8 * HOUR_MS)) * 8 * HOUR_MS;
     settlement + 10 * MINUTE <= start + 48 * HOUR_MS; settlement += 8 * HOUR_MS) {
     const due = settlement - 10 * MINUTE, elapsed = due - start;
-    if (elapsed < 2 * HOUR_MS || (elapsed >= 24 * HOUR_MS && elapsed < 30 * HOUR_MS)) continue;
+    if (elapsed < 2 * HOUR_MS || (elapsed < 30 * HOUR_MS && elapsed + 20 * MINUTE > 24 * HOUR_MS)) continue;
     funding.push({ key: `funding-${settlement}`, due_at_ms: due, scenario_id: 'S4', direction: 'LONG',
       funding_settlement_at: new Date(settlement).toISOString() });
   }

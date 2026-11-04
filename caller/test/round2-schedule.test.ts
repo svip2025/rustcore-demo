@@ -23,6 +23,18 @@ test('2A absolute plan preserves smoke, funding windows, alternating sides and s
   }
 });
 
+test('an S4 holding window cannot overlap the supervised fault interval', () => {
+  const alignedStart = Date.parse('2026-11-08T00:00:00.000Z');
+  const plan = round2Plan(alignedStart);
+  const funding = plan.filter(slot => slot.scenario_id === 'S4');
+  assert.ok(funding.length >= 4);
+  for (const slot of funding) {
+    const ending = Date.parse(slot.funding_settlement_at!) + 600_000;
+    assert.ok(ending <= alignedStart + 24 * H || slot.due_at_ms >= alignedStart + 30 * H,
+      'S4 must not continue inside the fault window where all other automatic scenarios pause');
+  }
+});
+
 test('reload, two scheduler owners and clock boundaries cannot repeat or catch up a claim', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'r2-schedule-')), path = join(dir, 'schedule.db');
   let one = new Round2Schedule(path), two: Round2Schedule | undefined;

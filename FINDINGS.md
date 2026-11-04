@@ -163,3 +163,9 @@ legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一
 2026-11-04 先以真实 SQLite 和受控本地 WebSocket 帧复现 RED：`round2_valid_listen_key_expired_stops_reader_before_next_frame` 断言合法失效帧必须结束读取失败。修复在读取器 envelope 路径立即处理该事件，撤销 ready、推进恢复 generation，并复用重连、补成交与 REST 对账流程。同名回归及受测试网守卫限制的主动断流/失效注入专项已 GREEN。证据名为 `f15-listenkey-red-clean.log`、`kernel-round2-green-3.log`；完整本地索引见本次 `RUSTCORE-ROUND2-PREP.md` 交接。
 
 该结论仅证明本地受控事件和数据库恢复分支。真实测试网 listenKey 生命周期、失效通知格式和断流期间真实止损触发后的清理仍为“待测试网实测”。未修改第一轮运行版本或原监控；F-13、F-14 编号与原始事实保持不变。
+
+## F-16：2A 候选排期未覆盖完整资金费窗口与 MANUAL 间隔
+
+前置候选 `4e8ab2662a6864bf3e8edfbbdc6b76460481c29b` 的 S4 插入判断仅检查开仓时刻，导致 T0 对齐资金费结算时，23h50m 开始的 S4 会持仓进入 24–30h 故障段；普通 dispatcher 又只比较自己认领的轮次及 caller 当前是否运行，未计入刚结束的 MANUAL 轮。两个问题均发生在未部署候选，不能归因于第一轮冻结版本。
+
+修复前的独立真实 CLI/SQLite 用例与排期断言分别保留 `scheduler-manual-spacing-red.log`、`scheduler-funding-overlap-red.log`。后续候选按 S4 完整二十分钟窗口排除故障段，并读取 caller 的实际 latest_round 开始时间，距最近任意轮不足三十分钟时将正常自动 slot 保留为 BUSY。负责人明确允许的同组故障/S1 例外仍只由 MANUAL 故障工具执行，不扩散到普通 dispatcher。修复后专项与全量/CI 结果见最终交接索引；没有修改工单基线或任何运行中服务。
