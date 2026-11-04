@@ -169,3 +169,9 @@ legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一
 前置候选 `4e8ab2662a6864bf3e8edfbbdc6b76460481c29b` 的 S4 插入判断仅检查开仓时刻，导致 T0 对齐资金费结算时，23h50m 开始的 S4 会持仓进入 24–30h 故障段；普通 dispatcher 又只比较自己认领的轮次及 caller 当前是否运行，未计入刚结束的 MANUAL 轮。两个问题均发生在未部署候选，不能归因于第一轮冻结版本。
 
 修复前的独立真实 CLI/SQLite 用例与排期断言分别保留 `scheduler-manual-spacing-red.log`、`scheduler-funding-overlap-red.log`。后续候选按 S4 完整二十分钟窗口排除故障段，并读取 caller 的实际 latest_round 开始时间，距最近任意轮不足三十分钟时将正常自动 slot 保留为 BUSY。负责人明确允许的同组故障/S1 例外仍只由 MANUAL 故障工具执行，不扩散到普通 dispatcher。修复后专项与全量/CI 结果见最终交接索引；没有修改工单基线或任何运行中服务。
+
+## F-17：慢 CI 暴露模拟交易所共享限流桶和旧快照夹具的时间竞赛
+
+候选内核 `854cd95fdd07804863601611dd8f9ec56eeab17b` 的本地全量为 1417 PASS / 0 FAIL，但 [CI 41826496251](https://github.com/svip2025/rustcore/actions/runs/41826496251) 的核心测试为 1290 PASS / 2 FAIL，不能将本地 PASS 作为远端通过。`exchange_close_contract_vector` 的模拟对账在继承的进程级限流队列超时；`exchange_close_never_finalizes_from_a_position_read_older_than_the_close_order` 则要求整次真实 Reconcile 在人为预设的未来八秒之前完成，慢 CI 已越过该前提。完整远端日志保留为 `kernel-ci-854cd95-failed.log`。原 CI 未保存桶余额；后续零 token/零 refill 是独立受控机制复现，不冒称原 CI 的余额实测。
+
+后续修复只针对夹具隔离与确定性时序：每个模拟交易所使用独立 route，旧读数测试通过可控读数开始点证明实际 interleaving。资金安全判据仍是旧读数不得终结平仓，随后严格更新的读数才能终结；不调整生产风控或超时，不跳过用例。最终候选的专项、全量、fmt/clippy 与适用 CI 必须重新实际通过，结果以交接回执为准。
