@@ -4,7 +4,7 @@
 
 ## 起点与证据
 
-先冻结已部署 release、构建指纹和私有配置，再启动观测，随后由现有 systemd timer 触发场景。**起点只取观测启动后首次实际看见的 `SCHEDULED`、`RUNNING` 轮次的 `started_at`**；不取 systemctl 启动时间，也不从历史已完成轮次补算。等待期间每 5 秒读 state/timeline；错过 RUNNING 就等待下一轮。窗口终点是该起点加 48 小时。
+先保持 `scenario.timer` 停止，冻结已部署 release、构建指纹和私有配置，再启动观测。确认新 observer 已 `WAITING_FOR_SCHEDULED` 后，只显式 bootstrap 一次 `scenario.service`；实际确认首轮 `SCHEDULED/RUNNING` 已被 observer 记录后，再启动 timer。**起点只取观测启动后首次实际看见的 `SCHEDULED`、`RUNNING` 轮次的 `started_at`**；不取 systemctl 启动时间，也不从历史已完成轮次补算。等待期间每 5 秒读 state/timeline；未观察到 RUNNING 不得重复 bootstrap，应先查明原因并保留失败事实。窗口终点是该起点加 48 小时。
 
 启动后的每 5 分钟保存健康读回、轮次摘要、caller/core RSS 和峰值、磁盘余量、两个数据库及 WAL/SHM 大小。缺失资源记为 null，不伪造为零。JSON 只保存公开轮次状态/原因和资源数字；配置仅存整体 SHA256，不保存环境内容、密钥、进程命令行或原始异常正文。
 
@@ -19,6 +19,31 @@ python3 deploy/observe-48h.py run \
 ```
 
 默认代码目录为 `/opt/rustcore-demo/current`，API 为 `http://127.0.0.1:8787`，私有配置为 `/etc/rustcore-demo/env`，数据目录为 `/var/lib/rustcore-demo`。脚本须由能读取这些配置和资源的本机用户运行，并通过部署进程管理或持久终端保持运行。示例命令本身不会启用 timer。首次运行要求 release 和 submodule 为干净 checkout；证据目录必须不存在，不能复用旧目录。
+
+使用已部署的 `rustcore-observe@<新attempt>.service` 或上述持久观测进程，确认已 armed 后执行一次：
+
+```sh
+sudo systemctl start --no-block scenario.service
+sudo -u rustcore-demo python3 /opt/rustcore-demo/current/deploy/observe-48h.py status \
+  --output /var/lib/rustcore-demo/observations/attempt-001
+```
+
+等待 status 为 `RUNNING`，并确认 `first_round_id` 和 `start` 来自此次新轮次，再读取 service 当前状态：
+
+```sh
+sudo systemctl show scenario.service --property=ActiveState --property=SubState --property=MainPID
+```
+
+确认该 service 仍在运行（`Type=oneshot` 通常为 `ActiveState=activating`、`SubState=start`，且 `MainPID` 非零），不要只看 observer 缓存的 RUNNING，然后执行：
+
+```sh
+sudo systemctl enable --now scenario.timer
+sudo systemctl show scenario.timer --property=NextElapseUSecMonotonic --value
+```
+
+`NextElapseUSecMonotonic` 必须有有限值，不能是 `infinity` 或空值。若首轮已退出、启动锚丢失或 timer 没有有限的下一次触发，停止 timer，保留该轮及 attempt 事实并查明原因，不补触发交易，也不声称后续已调度。
+
+该 service 始终使用 `--trigger SCHEDULED`，与 MANUAL 场景共用 caller 原有文件锁。timer 只保留 `OnUnitActiveSec=6h`，从上次 service 启动起每六小时触发；启动 timer 或 `daemon-reload` 不再附加首轮。首轮即使 FAILED 也原样保留；确认 timer 已有有限下次触发后，后续按正常六小时间隔运行，不重复 bootstrap 或重试到成功。完整的 systemd arm/bootstrap 命令见 [DEPLOYMENT.md](DEPLOYMENT.md#启动和停止-48-小时观测)。
 
 release 可保持 root:root 且服务用户只读；每次 Git 查询仅以命令级 `safe.directory` 精确信任解析后的该 release 或 submodule，不修改全局 Git 配置或代码属主。操作员可继续用重复的 `--freeze-file` 纳入前端 BUILD-INFO、原始发布 tgz、Caddyfile 和其他 unit/config 文件，只保存这些文件的整体校验值。
 
@@ -48,6 +73,6 @@ python3 deploy/observe-48h.py stop \
 
 操作员也可用 CODE_CHANGE、BUILD_CHANGE、CONFIG_CHANGE、OPERATOR_STOP、EXTERNAL_TESTNET 标记中止类别；脚本约五秒内读取停止请求，不停止 caller、kernel 或 timer。纯场景失败和外部测试网错误原样记录，默认不自动停止观察，也不重试到成功；操作员区分真实程序 bug 与外部失败。修复或变更后，使用新的 attempt 目录，从新的首轮 SCHEDULED/RUNNING 重新计时，不能覆盖或拼接旧窗口。
 
-观测进程意外退出也不能把空白时段当作连续观测或重启后续算；保留该目录并开始新 attempt。冻结检查按采样执行，操作员已知发生变更或程序 bug 时应立即使用 stop，不能等待下一次采样替自己追溯中止时间。
+观测进程意外退出或主机重启后，都不能把空白时段当作连续观测或续算原窗口；保留并中止原 attempt，保持 timer 停止，由操作员重新 arm 新 observer、bootstrap 一次 `scenario.service`，确认 SCHEDULED/RUNNING 后再启用 timer。仅恢复 timer 不能代替首轮 bootstrap。冻结检查按采样执行，操作员已知发生变更或程序 bug 时应立即使用 stop，不能等待下一次采样替自己追溯中止时间。
 
 纯合成时钟检查：`python3 deploy/observe-48h.py self-test`。此模式不访问 HTTP/服务、不写真实观测文件，输出明确标为 synthetic；不能拿它当作八轮测试网成功或真实 48 小时结果。

@@ -145,3 +145,13 @@ legacy fallback 仅用于缺少 execution provenance 的记录：仍要求唯一
 修复前真库回归 `exchange_close_reconcile_releases_exact_original_entry_reservation` 已实际 RED（实际 `237.125`、期望 `100`），修复后已 GREEN；另七项专项检查通过，涵盖 MySQL 并发、SQLite 回滚、进程重启、legacy 及守卫条件。本地全量测试 exit 0，顶层聚合为 **1400 PASS / 0 FAIL / 31 ignored**，不重复计入 filtered 子 helper；`RUSTCORE_REQUIRE_MYSQL_TESTS=1` 且 MySQL fixture 健康，fmt / clippy 通过。[CI 41632219712](https://github.com/svip2025/rustcore/actions/runs/41632219712) 的 test、fmt、clippy 三项均成功。修复提交 `9d78049fda170939bfa21cbbd0e837eb88e5af2f` 已通过 [PR #3](https://github.com/svip2025/rustcore/pull/3) 合并，merge commit 为 `cdd7916458855375a4dfe5b543e8a47b2d75fc78`。
 
 存量释放由后续成功对账按上述 fresh-flat 判据执行；部署读回及新 48 小时窗口见运行回执。旧 `attempt-001` 和全部原始失败记录保留；新 attempt 从新的首个 SCHEDULED/RUNNING 重新计时，规则见 [RUN-48H.md](docs/RUN-48H.md)。本节的修复与测试通过不代表 48 小时观测通过。
+
+## F-14：systemd 重载后重复执行首触发条件
+
+`attempt-002` 于 2026-11-04 06:40:38.799 UTC 标为 `STOPPED / DEPLOYMENT_BUG`，停止未来 timer，保留 caller、内核和全部五轮录制。五轮九步均 PASS，但后两轮于 01:41:31.609、01:44:10.580 UTC 额外启动，偏离六小时间隔，不能据此宣布该窗口通过。五笔原 Entry 预留都有等额释放 marker，停表前只读余额为零；额外两轮之间没有直接池余额采样，对应第四轮后 / 第五轮前证据保留 UNKNOWN。
+
+原 timer 同时有 `OnActiveSec=30s` 和 `OnUnitActiveSec=6h`。实际 manager reload 于 01:41:00.832599、01:43:39.545797 UTC 完成，约三十秒后分别触发上述额外轮次；timer 的激活时间和文件指纹没有变化。无交易 systemd 回归已复现：保留旧条件时，reload 后约 3.45 秒就产生第二次执行，未等正常的 60 秒周期。
+
+修复只删除 `OnActiveSec`，保留相对上次 service 启动的六小时周期；新 observer 先 arm，明确 bootstrap 现有 `scenario.service` 一次，在该首轮仍实际运行时启用 timer，并确认下一次触发时间有限。首轮失败不重复 bootstrap，timer/manual 仍走同一 caller 文件锁。修复后的无交易回归中，三次 reload 均不增加执行、不改变下一次时间，正常第二次执行间隔为 25.103 秒（测试把六小时缩短为 25 秒）。
+
+首次合成检查的瞬时 oneshot 在启用 timer 前已退出并被回收，下一次时间为 `infinity`，该失败回执保留；修正测试启动顺序使其与真实 RUNNING 首轮一致后才通过。这个边界也写入启动文档：首轮已退出且锚丢失时停 timer、保留事实并查明，不补触发交易。修复不改 caller 业务、内核、风控或原录制；部署后另建 attempt 从零观察。

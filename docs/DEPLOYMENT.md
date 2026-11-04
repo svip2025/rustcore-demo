@@ -50,7 +50,7 @@ sudo journalctl -u caller.service -u rustcore.service -n 80 --no-pager
 | 单元 | 行为 |
 | --- | --- |
 | `rustcore.service` / `caller.service` | 独立服务账户运行，`Restart=always`；core 重启期间 caller 继续保存状态 |
-| `scenario.timer` → `scenario.service` | 激活后约 30 秒首触发，随后每 6 小时触发 `--trigger SCHEDULED`；与手工场景共用 `/var/lib/rustcore-demo/scenario.lock`，不另套场景锁 |
+| `scenario.timer` → `scenario.service` | 只按 `scenario.service` 上次启动起每 6 小时触发 `--trigger SCHEDULED`；首轮由操作员明确 bootstrap 一次。与手工场景共用 `/var/lib/rustcore-demo/scenario.lock`，不另套场景锁 |
 | `rustcore-health.timer` | 每 5 分钟只读检查本机 health；失败进入该单元的状态/日志，不自动触发交易 |
 | `rustcore-backup.timer` | 每日 UTC 03:15，随机延迟最多 5 分钟，在线备份两个 SQLite，保留最近 7 份完整代次 |
 | `rustcore-recordings.path` | 已完成录制变化后发布公开副本及 index，保留成功和失败；Caddy 从 `/recordings/` 读取 |
@@ -59,18 +59,43 @@ sudo journalctl -u caller.service -u rustcore.service -n 80 --no-pager
 
 ## 启动和停止 48 小时观测
 
-先按 [RUN-48H.md](RUN-48H.md) 启动 observer，并纳入实际 env、units/timer、Caddyfile、前端 BUILD-INFO 和原始 tgz 的冻结指纹。它必须先 armed，随后才能启动 timer：
+先保持 timer 停止，按 [RUN-48H.md](RUN-48H.md) 启动 observer，并纳入实际 env、units/timer、Caddyfile、前端 BUILD-INFO 和原始 tgz 的冻结指纹。必须先确认新 observer 已 armed：
 
 ```sh
 sudo install -d -o rustcore-demo -g rustcore-demo -m 700 /var/lib/rustcore-demo/observations
+sudo systemctl stop scenario.timer
 sudo systemctl start rustcore-observe@attempt-001.service
 sudo -u rustcore-demo /usr/bin/python3 /opt/rustcore-demo/current/deploy/observe-48h.py status \
   --output /var/lib/rustcore-demo/observations/attempt-001
+```
+
+确认状态为 `WAITING_FOR_SCHEDULED` 后，显式启动一次现有 service，作为首轮 `SCHEDULED`，不要重复执行 bootstrap：
+
+```sh
+sudo systemctl start --no-block scenario.service
+sudo -u rustcore-demo /usr/bin/python3 /opt/rustcore-demo/current/deploy/observe-48h.py status \
+  --output /var/lib/rustcore-demo/observations/attempt-001
+```
+
+等 observer 实际观察到该轮 `SCHEDULED/RUNNING`，其状态变为 `RUNNING` 且记录了 `first_round_id`、`start` 后，还须读取 service 当前状态：
+
+```sh
+sudo systemctl show scenario.service --property=ActiveState --property=SubState --property=MainPID
+```
+
+确认该次 service 仍在运行（`Type=oneshot` 通常为 `ActiveState=activating`、`SubState=start`，且 `MainPID` 非零），再启用 timer；不能只凭 observer 缓存中的 RUNNING 判断：
+
+```sh
 sudo systemctl enable --now scenario.timer
+sudo systemctl show scenario.timer --property=NextElapseUSecMonotonic --value
 sudo systemctl status scenario.timer scenario.service --no-pager
 ```
 
-`attempt-001` 为示例，操作时使用实际新建的私有 attempt 目录。`WAITING_FOR_SCHEDULED` 表示已 arm、尚未计时；首个实际观测到的 SCHEDULED/RUNNING 轮次 `started_at` 才是起点，终点为其后 48 小时，以该目录 `summary.json` 为准。当前没有真实起点或终点，不用服务启动时间代替。
+`NextElapseUSecMonotonic` 必须是有限的下次触发值，不能是 `infinity` 或空值。若首轮已退出、启动锚丢失或 timer 没有有限的下一次触发，停止 timer，保留该轮及 attempt 事实并查明原因；不得补触发交易或声称后续已调度。
+
+`attempt-001` 为示例，操作时使用实际新建的私有 attempt 目录。`WAITING_FOR_SCHEDULED` 表示已 arm、尚未计时；首个实际观测到的 SCHEDULED/RUNNING 轮次 `started_at` 才是起点，终点为其后 48 小时，以该目录 `summary.json` 为准。bootstrap 的失败轮次原样保留；不得重复启动 service 来重试到成功。未观察到 RUNNING 时先查明原因，不用服务启动时间补算起点。
+
+timer 没有 `OnActiveSec` 首触发，启动 timer 或 `daemon-reload` 不承担 bootstrap。主机重启后须人工保留并中止原 attempt，重新 arm 新 observer、bootstrap 一次并启用 timer，原 48 小时窗口不能接着续算。
 
 暂停新的场景触发并中止本次观察：
 
