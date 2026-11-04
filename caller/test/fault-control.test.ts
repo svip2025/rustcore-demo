@@ -158,14 +158,18 @@ test('controller crash/recover uses the actual owned child handle and preserves 
   try {
     await child.start(); await waitCount(1);
     const original = child.processId;
+    assert.equal(controller.status().kernel_process_id, original, 'private sampling reads the currently owned child');
     await controller.execute({ command: 'arm', fault: 'F1' });
     await controller.onBoundary({ fault: 'F1', phase: 'REQUEST_FORWARDED_RESPONSE_HELD', at: new Date().toISOString() });
     assert.equal(child.isRunning, false);
+    assert.equal(controller.status().kernel_process_id, null, 'an exited child cannot remain a sampling target');
     assert.equal((await child.waitForExit()).signal, 'SIGKILL');
     assert.equal(count(), 1);
     const result = await controller.execute({ command: 'recover' });
     assert.equal(result.clean, true); assert.equal(child.isRunning, true);
     assert.notEqual(child.processId, original); assert.equal(count(), 2);
+    assert.equal(controller.status().kernel_process_id, child.processId, 'private sampling follows the restarted child');
+    assert.equal(JSON.stringify(store.getState()).includes('kernel_process_id'), false, 'the private PID never enters HTTP/SSE state');
     assert.equal(store.getTimeline().rounds.length, 0);
   } finally { await child.stop(); kernelDb.close(); store.close(); await rm(directory, { recursive: true, force: true }); }
 });
@@ -186,4 +190,16 @@ test('a fault that never reaches its boundary can be disarmed and cleaned withou
     assert.equal(proxy.status.armed, null);
     assert.equal(store.db.prepare('SELECT COUNT(*) AS n FROM demo_fault_snapshots').get()!.n, 2);
   } finally { store.close(); await rm(directory, { recursive: true, force: true }); }
+});
+
+test('private status sampling uses a short independent IPC timeout and destroys its socket while recovery remains queued', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'fault-short-sample-'));
+  const socket = join(directory, 'fault.sock');
+  const server = await openFaultControl(socket, { execute: async () => new Promise<never>(() => {}) });
+  try {
+    await assert.rejects(requestFaultControl(socket, { command: 'status' }, { timeoutMs: 10 }),
+      error => error instanceof ScenarioFailure && error.code === 'FAULT_CONTROL_TIMEOUT');
+    await assert.rejects(requestFaultControl(socket, { command: 'status' }, { timeoutMs: 0 }),
+      error => error instanceof ScenarioFailure && error.code === 'FAULT_CONTROL_TIMEOUT_INVALID');
+  } finally { await new Promise<void>(resolve => server.close(() => resolve())); await rm(directory, { recursive: true, force: true }); }
 });

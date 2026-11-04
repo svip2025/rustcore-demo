@@ -95,7 +95,7 @@ export class FaultController {
   private current: Receipt | null = null;
   private queue: Promise<unknown> = Promise.resolve();
   constructor(private readonly runtime: Runtime, private readonly runner: Pick<ScenarioRunner, 'recoverAfterFault'>,
-    private readonly kernel: Pick<ManagedKernel, 'crash' | 'isRunning'>, private readonly proxy: ControlledFaultProxy) {
+    private readonly kernel: Pick<ManagedKernel, 'crash' | 'isRunning'> & { readonly processId?: number | undefined }, private readonly proxy: ControlledFaultProxy) {
     requireFaultMode(runtime.config);
     runtime.store.db.exec('CREATE TABLE IF NOT EXISTS demo_fault_receipts (receipt_id TEXT PRIMARY KEY, body TEXT NOT NULL) STRICT');
     runtime.store.db.exec('CREATE TABLE IF NOT EXISTS demo_fault_snapshots (receipt_id TEXT NOT NULL, phase TEXT NOT NULL, body TEXT NOT NULL, PRIMARY KEY(receipt_id,phase)) STRICT');
@@ -119,7 +119,7 @@ export class FaultController {
   status(): Row {
     return { receipt_id: this.current?.receipt_id ?? null, fault: this.current?.fault ?? null, phase: this.current?.phase ?? 'IDLE',
       code: this.current?.code ?? null, clean: this.current?.phase === 'CLEAN', boundary: this.current?.boundary ?? null,
-      proxy: this.proxy.status, kernel_running: this.kernel.isRunning };
+      proxy: this.proxy.status, kernel_running: this.kernel.isRunning, kernel_process_id: this.kernel.processId ?? null };
   }
   async onBoundary(event: FaultBoundary): Promise<void> {
     if (!this.current || this.current.fault !== event.fault || this.current.phase !== 'ARMED') throw new ScenarioFailure('FAULT_BOUNDARY_UNARMED');
@@ -232,11 +232,16 @@ export async function openFaultControl(path: string, controller: Pick<FaultContr
   await chmod(path, 0o600);
   return server;
 }
-export async function requestFaultControl(path: string, command: FaultCommand): Promise<Row> {
+export async function requestFaultControl(path: string, command: FaultCommand, options: { timeoutMs?: number } = {}): Promise<Row> {
   parseCommand(command);
+  const timeoutMs = options.timeoutMs ?? 360_000;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1) throw new ScenarioFailure('FAULT_CONTROL_TIMEOUT_INVALID');
   return new Promise((resolve, reject) => {
     const socket = connect(path); let input = '', done = false;
-    socket.setEncoding('utf8'); socket.setTimeout(360_000, () => { socket.destroy(); reject(new ScenarioFailure('FAULT_CONTROL_TIMEOUT')); });
+    socket.setEncoding('utf8'); socket.setTimeout(timeoutMs, () => {
+      const failure = new ScenarioFailure('FAULT_CONTROL_TIMEOUT');
+      done = true; socket.destroy(); reject(failure);
+    });
     socket.on('connect', () => socket.write(JSON.stringify(command) + '\n'));
     socket.on('error', () => reject(new ScenarioFailure('FAULT_CONTROL_UNAVAILABLE')));
     socket.on('data', chunk => {
